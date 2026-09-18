@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixed English Quiz 🌟</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fcf4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ffebee 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #e3f2fd 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            padding: 35px;
+            border: 6px solid #ffcdd2;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #d81b60;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: #fff0f5;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #f48fb1;
+        }
+
+        .question-box {
+            margin: 20px 0 25px 0;
+            padding: 30px 20px;
+            background-color: #e3f2fd;
+            border-radius: 25px;
+            border: 4px solid #90caf9;
+            font-size: 1.5em;
+            color: #1565c0;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        .instruction {
+            font-size: 1.1em;
+            color: #78909c;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        /* Styles for Fill in the Blanks */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px 20px;
+            font-size: 1.4em;
+            font-family: inherit;
+            border: 4px solid #b3e5fc;
+            border-radius: 20px;
+            text-align: center;
+            color: #0277bd;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #29b6f6;
+            box-shadow: inset 0 4px 6px rgba(41, 182, 246, 0.1), 0 0 10px rgba(41, 182, 246, 0.3);
+        }
+
+        .submit-btn {
+            background-color: #29b6f6;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            box-shadow: 0 6px 0 #0288d1;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #0288d1;
+            background-color: #4fc3f7;
+        }
+
+        .submit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #0288d1;
+        }
+
+        /* Styles for MCQ */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: #fff3e0;
+            border: 4px solid #ffcc80;
+            padding: 18px 20px;
+            font-size: 1.4em;
+            font-family: inherit;
+            color: #e65100;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            transform: scale(1.03);
+            background-color: #ffe0b2;
+        }
+
+        .option-btn.correct-mcq {
+            background-color: #c8e6c9 !important;
+            border-color: #81c784 !important;
+            color: #1b5e20 !important;
+            animation: bounce 0.5s;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: #ffcdd2 !important;
+            border-color: #e57373 !important;
+            color: #b71c1c !important;
+            animation: shake 0.5s;
+        }
+
+        /* General UI */
+        .explanation-box {
+            display: none;
+            background-color: #e8f5e9;
+            border: 4px solid #81c784;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #2e7d32;
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.wrong-bg {
+            background-color: #ffebee;
+            border-color: #e57373;
+            color: #c62828;
+        }
+        
+        .exp-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed currentcolor;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #424242;
+        }
+
+        .exp-detail strong {
+            color: #d81b60;
+        }
+
+        .next-btn {
+            background-color: #ff9800;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #f57c00;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #f57c00;
+        }
+
+        .next-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #f57c00;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #d81b60;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #ab47bc;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #8e24aa;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #8e24aa;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>📝 Câu: <span id="current-question">1</span>/23</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction" id="instruction">Loading...</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area">
+            <!-- Sẽ hiển thị Input hoặc Buttons tùy loại câu hỏi -->
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Tuyệt vời! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #486581;">Bạn đã hoàn thành xuất sắc bài kiểm tra Tổng hợp!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #486581;">Điểm số của bạn: <br><span style="font-size: 2.5em; color: #29b6f6;" id="final-score"></span> / 230 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại nhé! 🎈</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // DẠNG 1: FILL IN THE BLANK (IDIOMS)
+            { 
+                type: "fill",
+                q: "He realized he was wasting his life, so he decided to turn over a new ________ and study harder.", 
+                ans: "leaf", 
+                idiom: "Turn over a new leaf", 
+                meaning: "Thay đổi theo hướng tích cực hơn, làm lại từ đầu.",
+                ex: "He promised to turn over a new leaf and stop being late."
+            },
+            { 
+                type: "fill",
+                q: "Before you buy that expensive car, you should weigh up the pros and ________ carefully.", 
+                ans: "cons", 
+                idiom: "Weigh up the pros and cons", 
+                meaning: "Cân nhắc kỹ lưỡng ưu điểm và nhược điểm.",
+                ex: "We need to weigh up the pros and cons of moving to a new city."
+            },
+            { 
+                type: "fill",
+                q: "She had to burn the midnight ________ to finish her essay before the deadline.", 
+                ans: "oil", 
+                idiom: "Burn the midnight oil", 
+                meaning: "Thức khuya để học tập hoặc làm việc.",
+                ex: "Exam time is approaching, so I have to burn the midnight oil."
+            },
+            { 
+                type: "fill",
+                q: "As the manager, you will have a company car at your ________.", 
+                ans: "disposal", 
+                idiom: "At one's disposal", 
+                meaning: "Có sẵn để tùy ý sử dụng.",
+                ex: "We have a large library at our disposal for research."
+            },
+            { 
+                type: "fill",
+                q: "The comedian's hilarious performance really brought down the ________.", 
+                ans: "house", 
+                idiom: "Bring down the house", 
+                meaning: "Làm cho khán giả hưởng ứng nhiệt liệt, vỗ tay tán thưởng vang dội.",
+                ex: "Her amazing song brought down the house at the talent show."
+            },
+            { 
+                type: "fill",
+                q: "My boss is so strict. He always tries to find ________ with my work.", 
+                ans: "fault", 
+                idiom: "Find fault with", 
+                meaning: "Tìm lỗi, bới móc, bắt bẻ ai đó/cái gì.",
+                ex: "It is easy to find fault with the work of others."
+            },
+            { 
+                type: "fill",
+                q: "Please don't take it ________, but I think you need to rewrite this report.", 
+                ans: "amiss", 
+                idiom: "Take it amiss / Take sth amiss", 
+                meaning: "Để bụng, thấy khó chịu, phật ý vì lời nói/hành động nào đó.",
+                ex: "I was just joking! I hope you didn't take it amiss."
+            },
+            { 
+                type: "fill",
+                q: "I really dropped a ________ when I asked her about her ex-boyfriend.", 
+                ans: "brick", 
+                idiom: "Drop a brick", 
+                meaning: "Lỡ lời, nói hớ hênh làm người khác bối rối/buồn bực.",
+                ex: "He dropped a brick by mentioning the surprise party."
+            },
+
+            // DẠNG 2: MCQ (TỪ VỰNG TỪ ẢNH)
+            {
+                type: "mcq",
+                q: "Phản ánh",
+                opts: ["reflect", "settle", "expose", "vary"],
+                ans: "reflect",
+                meaning: "Phản ánh, phản chiếu.",
+                ex: "His actions reflect his thoughts. (Hành động phản ánh suy nghĩ của anh ấy)."
+            },
+            {
+                type: "mcq",
+                q: "Người thi đấu, đối thủ",
+                opts: ["alternative", "competitor", "elegant", "appropriate"],
+                ans: "competitor",
+                meaning: "Người thi đấu, đối thủ cạnh tranh.",
+                ex: "She is a strong competitor in the tournament. (Cô ấy là một đối thủ đáng gờm trong giải đấu)."
+            },
+            {
+                type: "mcq",
+                q: "Định cư, ổn định",
+                opts: ["adopt", "determine", "settle", "vary"],
+                ans: "settle",
+                meaning: "Định cư, ổn định cuộc sống.",
+                ex: "They decided to settle in a quiet village. (Họ quyết định định cư ở một ngôi làng yên tĩnh)."
+            },
+            {
+                type: "mcq",
+                q: "Đàng hoàng, đúng đắn, thích đáng",
+                opts: ["unwritten", "proper", "superstitious", "conventional"],
+                ans: "proper",
+                meaning: "Đúng đắn, đàng hoàng, chuẩn mực.",
+                ex: "Make sure you use the proper tools for the job. (Đảm bảo bạn dùng đúng dụng cụ thích hợp cho công việc)."
+            },
+            {
+                type: "mcq",
+                q: "Sự thay thế / Phương án thay thế",
+                opts: ["competitor", "alternative", "expose", "coming-of-age"],
+                ans: "alternative",
+                meaning: "Sự thay thế, phương án dự phòng.",
+                ex: "We need to find an alternative plan just in case. (Chúng ta cần tìm một kế hoạch thay thế phòng hờ)."
+            },
+            {
+                type: "mcq",
+                q: "Mê tín",
+                opts: ["superstitious", "elegant", "unwritten", "proper"],
+                ans: "superstitious",
+                meaning: "Mê tín dị đoan.",
+                ex: "Some superstitious people believe black cats bring bad luck. (Một số người mê tín tin rằng mèo đen mang lại xui xẻo)."
+            },
+            {
+                type: "mcq",
+                q: "Truyền thống, theo tập quán",
+                opts: ["conventional", "alternative", "appropriate", "superstitious"],
+                ans: "conventional",
+                meaning: "Theo truyền thống, thông thường.",
+                ex: "She prefers conventional medicine to natural remedies. (Cô ấy thích y học truyền thống hơn là bài thuốc tự nhiên)."
+            },
+            {
+                type: "mcq",
+                q: "Chấp nhận, thông qua, làm theo",
+                opts: ["vary", "expose", "adopt", "settle"],
+                ans: "adopt",
+                meaning: "Chấp nhận, thông qua (kế hoạch/phương pháp) hoặc nhận nuôi.",
+                ex: "The company decided to adopt a new approach to marketing. (Công ty quyết định áp dụng cách tiếp cận mới cho marketing)."
+            },
+            {
+                type: "mcq",
+                q: "Quyết định, xác định",
+                opts: ["reflect", "determine", "adopt", "vary"],
+                ans: "determine",
+                meaning: "Quyết định, xác định điều gì đó.",
+                ex: "Your grades will determine which university you can enter. (Điểm số sẽ quyết định bạn vào được trường đại học nào)."
+            },
+            {
+                type: "mcq",
+                q: "Lễ trưởng thành / Giai đoạn trưởng thành",
+                opts: ["coming-of-age", "competitor", "alternative", "conventional"],
+                ans: "coming-of-age",
+                meaning: "Lễ trưởng thành, sự chuyển giao sang tuổi người lớn.",
+                ex: "The novel is a beautiful coming-of-age story about a young girl. (Cuốn tiểu thuyết là một câu chuyện tuổi trưởng thành tuyệt đẹp)."
+            },
+            {
+                type: "mcq",
+                q: "Thanh lịch, tao nhã",
+                opts: ["unwritten", "proper", "elegant", "superstitious"],
+                ans: "elegant",
+                meaning: "Thanh lịch, sang trọng, tao nhã.",
+                ex: "She looked very elegant in her beautiful long dress. (Cô ấy trông rất thanh lịch trong chiếc váy dài tuyệt đẹp)."
+            },
+            {
+                type: "mcq",
+                q: "Để lộ, phơi bày",
+                opts: ["expose", "reflect", "settle", "determine"],
+                ans: "expose",
+                meaning: "Để lộ ra, phơi bày sự thật.",
+                ex: "He smiled, exposing a set of perfectly white teeth. (Anh mỉm cười, để lộ hàm răng trắng hoàn hảo)."
+            },
+            {
+                type: "mcq",
+                q: "Khác nhau, biến đổi",
+                opts: ["adopt", "vary", "determine", "reflect"],
+                ans: "vary",
+                meaning: "Khác nhau, đa dạng, thay đổi theo điều kiện.",
+                ex: "Prices vary depending on the time of year. (Giá cả thay đổi tùy theo thời điểm trong năm)."
+            },
+            {
+                type: "mcq",
+                q: "Phù hợp, thích hợp",
+                opts: ["appropriate", "conventional", "elegant", "unwritten"],
+                ans: "appropriate",
+                meaning: "Phù hợp, thích hợp với hoàn cảnh.",
+                ex: "Jeans are not appropriate for a formal wedding. (Quần jean không phù hợp cho một đám cưới trang trọng)."
+            },
+            {
+                type: "mcq",
+                q: "Không thành văn (luật lệ, quy tắc)",
+                opts: ["superstitious", "unwritten", "proper", "elegant"],
+                ans: "unwritten",
+                meaning: "Luật bất thành văn, không được viết ra nhưng ai cũng hiểu.",
+                ex: "There is an unwritten rule that you should not talk loudly in the library. (Có một luật bất thành văn là không nên nói to trong thư viện)."
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const instructionEl = document.getElementById("instruction");
+        const questionEl = document.getElementById("question");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Xáo trộn toàn bộ câu hỏi (vừa điền từ vừa chọn đáp án)
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            dynamicAreaEl.innerHTML = "";
+            
+            const currentQ = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            
+            if (currentQ.type === "fill") {
+                // Layout cho dạng Điền từ
+                instructionEl.innerText = "Hãy điền MỘT từ tiếng Anh vào chỗ trống:";
+                const formattedQ = currentQ.q.replace("________", "<span style='color: #29b6f6; border-bottom: 3px dashed #29b6f6; padding: 0 15px;'>?</span>");
+                questionEl.innerHTML = formattedQ;
+                questionEl.style.backgroundColor = "#e3f2fd";
+                questionEl.style.borderColor = "#90caf9";
+
+                dynamicAreaEl.innerHTML = `
+                    <div class="input-area">
+                        <input type="text" id="answer-input" placeholder="Nhập từ còn thiếu..." autocomplete="off">
+                        <button class="submit-btn" onclick="checkFillAnswer()">Kiểm tra ✔️</button>
+                    </div>
+                `;
+
+                const inputEl = document.getElementById("answer-input");
+                inputEl.focus();
+                inputEl.addEventListener("keypress", function(event) {
+                    if (event.key === "Enter" && !inputEl.disabled) {
+                        event.preventDefault();
+                        checkFillAnswer();
+                    }
+                });
+
+            } else {
+                // Layout cho dạng Trắc nghiệm
+                instructionEl.innerText = "Chọn từ tiếng Anh tương ứng với nghĩa sau:";
+                questionEl.innerHTML = `"${currentQ.q}"`;
+                questionEl.style.backgroundColor = "#fff3e0";
+                questionEl.style.borderColor = "#ffcc80";
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = "options-grid";
+                
+                // Shuffle options
+                let opts = [...currentQ.opts].sort(() => Math.random() - 0.5);
+                
+                opts.forEach(opt => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    if(opt === currentQ.ans) btn.dataset.correct = "true";
+                    btn.onclick = () => {
+                        initAudio();
+                        checkMCQAnswer(btn, opt);
+                    };
+                    optionsContainer.appendChild(btn);
+                });
+                
+                dynamicAreaEl.appendChild(optionsContainer);
+            }
+        }
+
+        // Kiểm tra đáp án Điền Từ
+        function checkFillAnswer() {
+            initAudio();
+            const currentQ = currentQuestions[currentQuestionIndex];
+            const inputEl = document.getElementById("answer-input");
+            const submitBtn = document.querySelector(".submit-btn");
+            
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const correctAnswer = currentQ.ans.toLowerCase();
+            
+            if (userAnswer === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let resultTitle = "";
+
+            if (userAnswer === correctAnswer) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                explanationEl.classList.remove("wrong-bg");
+                resultTitle = "<span class='exp-title correct-title'>🎉 Chính xác! Bạn giỏi quá!</span>";
+                questionEl.innerHTML = currentQ.q.replace("________", `<span style='color: #4caf50; font-weight: 900; text-decoration: underline;'>${currentQ.ans.toUpperCase()}</span>`);
+            } else {
+                playSound('wrong');
+                explanationEl.classList.add("wrong-bg");
+                resultTitle = `<span class='exp-title wrong-title'>❌ Sai mất rồi! Từ đúng phải là: <b>${currentQ.ans.toUpperCase()}</b></span>`;
+                questionEl.innerHTML = currentQ.q.replace("________", `<span style='color: #e57373; font-weight: 900; text-decoration: underline;'>${currentQ.ans.toUpperCase()}</span>`);
+            }
+
+            showExplanation(resultTitle, currentQ.idiom, currentQ.meaning, currentQ.ex);
+        }
+
+        // Kiểm tra đáp án Trắc nghiệm
+        function checkMCQAnswer(selectedBtn, selectedText) {
+            const currentQ = currentQuestions[currentQuestionIndex];
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let resultTitle = "";
+
+            if (selectedText === currentQ.ans) {
+                selectedBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                explanationEl.classList.remove("wrong-bg");
+                resultTitle = "<span class='exp-title correct-title'>🎉 Giỏi quá! Đáp án đúng rồi!</span>";
+            } else {
+                selectedBtn.classList.add("wrong-mcq");
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✔️";
+                    }
+                });
+                playSound('wrong');
+                explanationEl.classList.add("wrong-bg");
+                resultTitle = `<span class='exp-title wrong-title'>❌ Tiếc quá! Từ đúng phải là: <b>${currentQ.ans.toUpperCase()}</b></span>`;
+            }
+
+            showExplanation(resultTitle, currentQ.ans.toUpperCase(), currentQ.meaning, currentQ.ex);
+        }
+
+        // Hiển thị khung giải thích chung
+        function showExplanation(title, keyword, meaning, example) {
+            const expHTML = `
+                ${title}
+                <div class='exp-detail'>
+                    📌 <strong>${keyword}</strong><br>
+                    💡 Ý nghĩa: ${meaning}<br>
+                    📖 Ví dụ: <i>${example}</i>
+                </div>
+            `;
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+            nextBtn.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
