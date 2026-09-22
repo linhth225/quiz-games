@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synonym Hunter Game 🎯 (Full 24 Words)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f3e8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #e9d5ff 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #d8b4fe 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(107, 33, 168, 0.15);
+            padding: 35px;
+            border: 6px solid #c084fc;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #6b21a8;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: #faf5ff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #a855f7;
+        }
+
+        .instruction {
+            font-size: 1.2em;
+            color: #7e22ce;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .question-box {
+            margin: 20px 0 25px 0;
+            padding: 30px 20px;
+            background-color: #fdf4ff;
+            border-radius: 25px;
+            border: 4px solid #f0abfc;
+            font-size: 2em;
+            color: #86198f;
+            font-weight: 900;
+            line-height: 1.4;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Styles for MCQ */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: #f8fafc;
+            border: 4px solid #cbd5e1;
+            padding: 18px 15px;
+            font-size: 1.3em;
+            font-family: inherit;
+            color: #334155;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 85px;
+        }
+
+        .option-btn:hover {
+            transform: scale(1.03);
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .option-btn.correct-mcq {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+            animation: bounce 0.5s;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            animation: shake 0.5s;
+        }
+
+        /* General UI */
+        .explanation-box {
+            display: none;
+            background-color: #f0fdf4;
+            border: 4px solid #4ade80;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #166534;
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.wrong-bg {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+        
+        .exp-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed currentcolor;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .exp-detail strong {
+            color: #a21caf;
+            font-size: 1.2em;
+        }
+
+        .next-btn {
+            background-color: #a855f7;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #7e22ce;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #7e22ce;
+            background-color: #c084fc;
+        }
+
+        .next-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #7e22ce;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #9333ea;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #ec4899;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #be185d;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #be185d;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>🎯 Câu: <span id="current-question">1</span>/24</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction">Tìm TỪ ĐỒNG NGHĨA (Synonym) cho cụm từ sau:</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area">
+            <!-- Options will be injected here -->
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Tuyệt vời! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #475569;">Bạn đã vượt qua toàn bộ thử thách Từ Đồng Nghĩa!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #475569;">Điểm số của bạn: <br><span style="font-size: 2.5em; color: #a855f7;" id="final-score"></span> / 240 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại nhé! 🎈</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // Từ ảnh 1 (9 từ)
+            { 
+                word: "be conscious of sth", 
+                correct: "be aware of", 
+                wrong: ["be ignorant of", "take control of", "be responsible for"],
+                vi: "ý thức, nhận thức rõ về điều gì", 
+                ex: "Everyone should be conscious of the risks before investing money." 
+            },
+            { 
+                word: "high-profile vacancy", 
+                correct: "prominent job opening", 
+                wrong: ["low-level position", "secret assignment", "temporary task"],
+                vi: "vị trí tuyển dụng nổi bật/nhiều người biết đến", 
+                ex: "The company is looking for an experienced CEO to fill this high-profile vacancy." 
+            },
+            { 
+                word: "play the game", 
+                correct: "conform strategically", 
+                wrong: ["join a sports team", "cheat on a test", "ignore the rules"],
+                vi: "hành xử theo những quy tắc ngầm để đạt mục tiêu", 
+                ex: "To get promoted in that strict office, you sometimes have to play the game." 
+            },
+            { 
+                word: "handle the stress", 
+                correct: "cope with pressure", 
+                wrong: ["create anxiety", "avoid hard work", "complain about life"],
+                vi: "đối phó với áp lực", 
+                ex: "A good manager must know how to handle the stress during busy seasons." 
+            },
+            { 
+                word: "appeal to sb", 
+                correct: "attract or interest", 
+                wrong: ["beg for mercy", "argue with someone", "apologize deeply"],
+                vi: "hấp dẫn, phù hợp với ai", 
+                ex: "This new modern phone design will definitely appeal to younger customers." 
+            },
+            { 
+                word: "squander one's wealth", 
+                correct: "throw away one's fortune", 
+                wrong: ["invest wisely", "save for the future", "inherit property"],
+                vi: "phung phí tài sản", 
+                ex: "He squandered his wealth on expensive cars and endless parties." 
+            },
+            { 
+                word: "indulge in consumer goods", 
+                correct: "buy products extravagantly", 
+                wrong: ["boycott all shops", "manufacture items", "recycle old materials"],
+                vi: "thỏa sức mua sắm hàng tiêu dùng", 
+                ex: "People often indulge in consumer goods during big holiday sales." 
+            },
+            { 
+                word: "obsess about sth", 
+                correct: "become preoccupied with", 
+                wrong: ["completely forget", "briefly mention", "carelessly ignore"],
+                vi: "ám ảnh/quá bận tâm về điều gì", 
+                ex: "Don't obsess about your past mistakes; focus on the future instead." 
+            },
+            { 
+                word: "set out to do sth", 
+                correct: "aim to or seek to", 
+                wrong: ["give up easily", "refuse to try", "finish doing something"],
+                vi: "bắt đầu với mục tiêu làm gì", 
+                ex: "She set out to become the best doctor in the city." 
+            },
+            
+            // Từ ảnh 2 (15 từ)
+            { 
+                word: "clear-cut", 
+                correct: "definite and straightforward", 
+                wrong: ["complex and confusing", "partially completed", "hidden from view"],
+                vi: "rõ ràng, không mơ hồ", 
+                ex: "The rules of the game are clear-cut so everyone can understand." 
+            },
+            { 
+                word: "a novel experiment", 
+                correct: "an innovative test", 
+                wrong: ["a long story book", "a failed attempt", "a traditional method"],
+                vi: "một thí nghiệm mới lạ", 
+                ex: "They conducted a novel experiment to study how plants react to music." 
+            },
+            { 
+                word: "prove a hypothesis", 
+                correct: "validate an assumption", 
+                wrong: ["guess a formula", "reject a theory", "calculate the results"],
+                vi: "chứng minh giả thuyết", 
+                ex: "The scientist needs more data to prove his hypothesis." 
+            },
+            { 
+                word: "rise to the occasion", 
+                correct: "perform well under pressure", 
+                wrong: ["wake up early", "complain about the task", "attend a formal event"],
+                vi: "thể hiện tốt khi gặp tình huống thử thách", 
+                ex: "When the lead actor fell ill, the understudy rose to the occasion." 
+            },
+            { 
+                word: "grow a thick skin", 
+                correct: "become less sensitive to criticism", 
+                wrong: ["gain weight quickly", "develop a skin disease", "wear heavy clothes"],
+                vi: "trở nên chai lì trước lời chỉ trích", 
+                ex: "You need to grow a thick skin if you want to be a famous singer." 
+            },
+            { 
+                word: "dwell on sth", 
+                correct: "brood over or fixate on", 
+                wrong: ["live in a large house", "quickly forget about", "move to a new place"],
+                vi: "cứ mãi suy nghĩ về điều tiêu cực", 
+                ex: "It's no use dwelling on your past failures; focus on the present." 
+            },
+            { 
+                word: "demonstrate", 
+                correct: "exhibit or indicate clearly", 
+                wrong: ["hide the evidence", "destroy the building", "complain loudly"],
+                vi: "thể hiện, chứng minh", 
+                ex: "The teacher will demonstrate how to do the chemical experiment." 
+            },
+            { 
+                word: "intuitive", 
+                correct: "instinctive and natural", 
+                wrong: ["logical and calculated", "hard to understand", "completely random"],
+                vi: "mang tính trực giác", 
+                ex: "The software has a very intuitive interface, so it's easy to use." 
+            },
+            { 
+                word: "daunting", 
+                correct: "intimidating or overwhelming", 
+                wrong: ["exciting and fun", "easy to accomplish", "boring and dull"],
+                vi: "đáng sợ, khiến người ta mất tự tin", 
+                ex: "Climbing Mount Everest is a daunting challenge for anyone." 
+            },
+            { 
+                word: "creep in", 
+                correct: "slowly and quietly emerge", 
+                wrong: ["run away quickly", "shout out loud", "disappear suddenly"],
+                vi: "bắt đầu xuất hiện dần dần", 
+                ex: "Doubts began to creep in as the deadline approached." 
+            },
+            { 
+                word: "fleeting moment", 
+                correct: "very short-lived experience", 
+                wrong: ["long-lasting memory", "running competition", "heavy storm"],
+                vi: "khoảnh khắc thoáng qua", 
+                ex: "For a fleeting moment, I thought I saw him in the crowd." 
+            },
+            { 
+                word: "triumphant", 
+                correct: "feeling victorious or successful", 
+                wrong: ["feeling sad and defeated", "loud and noisy", "scared and anxious"],
+                vi: "đắc thắng", 
+                ex: "The team made a triumphant return with the gold medal." 
+            },
+            { 
+                word: "faint-hearted", 
+                correct: "lacking courage or cowardly", 
+                wrong: ["having a heart attack", "very brave and bold", "physically exhausted"],
+                vi: "nhút nhát, thiếu can đảm", 
+                ex: "This scary roller coaster is not for the faint-hearted." 
+            },
+            { 
+                word: "rigorous", 
+                correct: "thorough and strictly intense", 
+                wrong: ["lazy and careless", "flexible and easy", "soft and gentle"],
+                vi: "nghiêm ngặt / cường độ cao", 
+                ex: "The astronauts have to go through a rigorous training program." 
+            },
+            { 
+                word: "put sb off", 
+                correct: "discourage or deter someone", 
+                wrong: ["turn off the lights", "delay a meeting", "encourage and motivate"],
+                vi: "làm ai nản chí / chùn bước", 
+                ex: "The terrible weather put us off going to the beach." 
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Generate question pool and shuffle
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            dynamicAreaEl.innerHTML = "";
+            
+            const currentItem = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            
+            // Set question text (The word to find synonym for)
+            questionEl.innerHTML = currentItem.word;
+
+            // Generate options (1 correct + 3 wrong)
+            let options = [currentItem.correct, ...currentItem.wrong];
+            options = options.sort(() => Math.random() - 0.5); // Shuffle options
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = "options-grid";
+            
+            options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                if(opt === currentItem.correct) btn.dataset.correct = "true";
+                btn.onclick = () => {
+                    initAudio();
+                    checkMCQAnswer(btn, opt, currentItem);
+                };
+                optionsContainer.appendChild(btn);
+            });
+            
+            dynamicAreaEl.appendChild(optionsContainer);
+        }
+
+        function checkMCQAnswer(selectedBtn, selectedText, currentItem) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let resultTitle = "";
+
+            if (selectedText === currentItem.correct) {
+                selectedBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                explanationEl.classList.remove("wrong-bg");
+                resultTitle = "<span class='exp-title correct-title'>🎉 Chính xác tuyệt đối!</span>";
+            } else {
+                selectedBtn.classList.add("wrong-mcq");
+                // Highlight the correct answer
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✔️";
+                    }
+                });
+                playSound('wrong');
+                explanationEl.classList.add("wrong-bg");
+                resultTitle = `<span class='exp-title wrong-title'>❌ Rất tiếc! Từ đồng nghĩa đúng là: <b>${currentItem.correct}</b></span>`;
+            }
+
+            // Show explanation with context
+            const expHTML = `
+                ${resultTitle}
+                <div class='exp-detail'>
+                    📌 Từ gốc: <strong>${currentItem.word}</strong><br>
+                    🇻🇳 Ý nghĩa: ${currentItem.vi}<br>
+                    📖 Ví dụ: <i>${currentItem.ex}</i>
+                </div>
+            `;
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+            nextBtn.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
