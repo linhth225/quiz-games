@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary & Idiom Fill-in-the-Blank 🌟</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fffbeb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #fef3c7 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #fde68a 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(217, 119, 6, 0.15);
+            padding: 35px;
+            border: 6px solid #fcd34d;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #d97706;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: #fffbeb;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #fbbf24;
+        }
+
+        .instruction {
+            font-size: 1.2em;
+            color: #b45309;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .meaning-box {
+            font-size: 1.3em;
+            color: #ea580c;
+            background-color: #ffedd5;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #f97316;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .question-box {
+            margin: 20px 0 25px 0;
+            padding: 25px 20px;
+            background-color: #f0fdf4;
+            border-radius: 25px;
+            border: 4px solid #86efac;
+            font-size: 2em;
+            color: #166534;
+            font-weight: 900;
+            line-height: 1.4;
+        }
+
+        .hint-text {
+            color: #6366f1;
+            font-size: 0.9em;
+            font-style: italic;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px 20px;
+            font-size: 1.4em;
+            font-family: inherit;
+            border: 4px solid #93c5fd;
+            border-radius: 20px;
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        input[type="text"]:focus {
+            border-color: #3b82f6;
+            box-shadow: inset 0 4px 6px rgba(59, 130, 246, 0.1), 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .submit-btn {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            box-shadow: 0 6px 0 #2563eb;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #2563eb;
+            background-color: #60a5fa;
+        }
+
+        .submit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #2563eb;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #f0fdf4;
+            border: 4px solid #4ade80;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #166534;
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.wrong-bg {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+        
+        .exp-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .encouragement {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #be123c;
+            margin-bottom: 10px;
+            display: block;
+            font-style: italic;
+        }
+        
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed currentcolor;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .exp-detail strong {
+            color: #ea580c;
+            font-size: 1.2em;
+        }
+
+        .next-btn {
+            background-color: #f59e0b;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #d97706;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #d97706;
+            background-color: #fbbf24;
+        }
+
+        .next-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #d97706;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #d97706;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #ec4899;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #be185d;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #be185d;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>📝 Câu: <span id="current-question">1</span>/30</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction">Điền MỘT từ tiếng Anh vào chỗ trống:</div>
+        
+        <div class="meaning-box" id="meaning">Loading...</div>
+        
+        <div class="question-box" id="question">
+            Loading...
+        </div>
+        
+        <div class="input-area" id="input-area">
+            <input type="text" id="answer-input" placeholder="Nhập từ của bạn..." autocomplete="off">
+            <button class="submit-btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra ✔️</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Tuyệt vời! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #475569;">Bạn đã vượt qua chuỗi câu hỏi Từ vựng & Thành ngữ!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #475569;">Điểm số của bạn: <br><span style="font-size: 2.5em; color: #f59e0b;" id="final-score"></span> / 300 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại nhé! 🎈</button>
+    </div>
+
+    <script>
+        const quizData = [
+            { q: "Refrain ________ st / doing st", ans: "from", vi: "kiềm chế không làm gì", hint: "", ex: "Please refrain from smoking in this area." },
+            { q: "Keep up ________", ans: "appearances", vi: "giữ thể diện (giả vờ/ cư xử như là mọi việc đều ổn)", hint: "", ex: "Even though they were struggling financially, they tried to keep up appearances." },
+            { q: "A ________ conclusion", ans: "foregone", vi: "một kết quả hiển nhiên", hint: "", ex: "The victory was a foregone conclusion." },
+            { q: "Come ________", ans: "off", vi: "thành công diễn ra như kế hoạch dự kiến", hint: "", ex: "The surprise party came off perfectly." },
+            { q: "To be hard ________", ans: "up", vi: "đang bị kẹt tiền", hint: "", ex: "I'm a bit hard up at the moment, can I borrow $10?" },
+            { q: "Put ________", ans: "out", vi: "dập tắt (lửa, thuốc lá)", hint: "", ex: "The firefighters managed to put out the fire." },
+            { q: "Take possession ________ st", ans: "of", vi: "chiếm hữu", hint: "", ex: "The bank will take possession of the house if you don't pay." },
+            { q: "Persist ________ st/ doing st", ans: "in", vi: "kiên trì làm gì / cố chấp", hint: "", ex: "Why do you persist in interrupting me?" },
+            { q: "Bring ________ (topic, subject)", ans: "up", vi: "đưa ra, nêu ra (1 vấn đề)", hint: "", ex: "I hate to bring this up, but we need to discuss the budget." },
+            { q: "Put up ________", ans: "with", vi: "chịu đựng cái gì", hint: "", ex: "I don't know how she puts up with his bad behavior." },
+            { q: "Apply oneself ________ st", ans: "to", vi: "chú tâm vào việc gì", hint: "", ex: "You need to apply yourself to your studies if you want to pass." },
+            { q: "To pay compliments ________ sb", ans: "on", vi: "khen ngợi ai", hint: "", ex: "He paid her compliments on her beautiful dress." },
+            { q: "________ an attempt to do st / at doing st", ans: "Make", vi: "nỗ lực làm gì", hint: "", ex: "She made an attempt to smile despite her pain." },
+            { q: "To be charged ________ (a crime)", ans: "with", vi: "bị buộc tội gì", hint: "", ex: "He was charged with stealing the car." },
+            { q: "To ________ influence on", ans: "exert", vi: "gây ảnh hưởng đến...", hint: "This word starts with 'e'", ex: "Parents exert a strong influence on their children's choices." },
+            { q: "Take pity ________ sb", ans: "on", vi: "thương cảm, thương hại ai", hint: "", ex: "She took pity on the stray dog and brought it home." },
+            { q: "Brush up ________ st", ans: "on", vi: "ôn lại (kiến thức)", hint: "", ex: "I need to brush up on my French before visiting Paris." },
+            { q: "________ = mistake", ans: "Oversight", vi: "sự sai sót, nhầm lẫn", hint: "This word starts with 'o'", ex: "Due to an administrative oversight, you were not invited." },
+            { q: "To be / go down the ________", ans: "drain", vi: "đổ sông đổ biển", hint: "", ex: "If the project is canceled, all our hard work will go down the drain." },
+            { q: "Own up ________ st/ doing st", ans: "to", vi: "thừa nhận, thú nhận làm gì", hint: "", ex: "He finally owned up to breaking the window." },
+            { q: "Break the ________", ans: "ice", vi: "phá tan bầu không khí ngượng ngùng", hint: "", ex: "A funny joke is a great way to break the ice." },
+            { q: "Blow one's own ________", ans: "trumpet", vi: "khoe khoang về bản thân", hint: "", ex: "I don't like to blow my own trumpet, but I am the best player here." },
+            { q: "Put one's ________ on the table", ans: "cards", vi: "ngửa bài (nói thẳng thắn ý định)", hint: "", ex: "Let's put our cards on the table and discuss this honestly." },
+            { q: "Miss the ________", ans: "boat", vi: "lỡ mất cơ hội", hint: "", ex: "If you don't apply now, you might miss the boat." },
+            { q: "Hear a ________ drop", ans: "pin", vi: "để mô tả không gian rất yên lặng", hint: "", ex: "The room was so quiet you could hear a pin drop." },
+            { q: "Blow / run hot and ________", ans: "cold", vi: "thay đổi ý định liên tục", hint: "", ex: "He blows hot and cold about moving to a new city." },
+            { q: "Call the ________", ans: "shots", vi: "nắm quyền quyết định", hint: "", ex: "In this company, the director calls the shots." },
+            { q: "Draw the ________", ans: "line", vi: "vạch ra ranh giới (cái mức đó là không chấp nhận)", hint: "", ex: "I'll help you, but I draw the line at doing your homework." },
+            { q: "________ the bill", ans: "Foot", vi: "thanh toán hóa đơn", hint: "", ex: "His parents will foot the bill for his college education." },
+            { q: "Carry the ________", ans: "can", vi: "chịu trách nhiệm (thay cho người khác)", hint: "", ex: "When things went wrong, he was the one left to carry the can." }
+        ];
+
+        const encouragements = [
+            "Đừng buồn nhé, thử lại lần sau! 💪", 
+            "Chưa đúng mất rồi, cố lên nào! ✨", 
+            "Sai một ly đi một dặm, học kỹ lại từ này nhé! 📚", 
+            "Gần đúng rồi, đừng bỏ cuộc! 🎯", 
+            "Sai rồi! Hãy xem kỹ giải thích để nhớ lâu hơn nhé! 🧠"
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const meaningEl = document.getElementById("meaning");
+        const inputEl = document.getElementById("answer-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Xáo trộn 30 câu
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            inputEl.value = "";
+            inputEl.disabled = false;
+            submitBtn.style.display = "block";
+            
+            const currentQ = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            
+            // Render meaning and question
+            meaningEl.innerHTML = `🇻🇳 Nghĩa: <b>${currentQ.vi}</b>`;
+            
+            let formattedQ = currentQ.q.replace("________", "<span style='color: #3b82f6; border-bottom: 3px dashed #3b82f6; padding: 0 20px;'>?</span>");
+            if (currentQ.hint) {
+                formattedQ += `<span class='hint-text'>(${currentQ.hint})</span>`;
+            }
+            questionEl.innerHTML = formattedQ;
+            
+            inputEl.focus();
+        }
+
+        inputEl.addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && !inputEl.disabled) {
+                event.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        function checkAnswer() {
+            initAudio();
+            const currentQ = currentQuestions[currentQuestionIndex];
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const correctAnswer = currentQ.ans.toLowerCase();
+            
+            if (userAnswer === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let resultTitle = "";
+            let encouragementText = "";
+
+            if (userAnswer === correctAnswer) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                explanationEl.classList.remove("wrong-bg");
+                resultTitle = "<span class='exp-title correct-title'>🎉 Chính xác! Bạn rất xuất sắc!</span>";
+                questionEl.innerHTML = currentQ.q.replace("________", `<span style='color: #16a34a; font-weight: 900; text-decoration: underline;'>${currentQ.ans}</span>`);
+            } else {
+                playSound('wrong');
+                explanationEl.classList.add("wrong-bg");
+                resultTitle = `<span class='exp-title wrong-title'>❌ Từ đúng phải là: <b>${currentQ.ans}</b></span>`;
+                const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+                encouragementText = `<span class='encouragement'>${randomEncouragement}</span>`;
+                questionEl.innerHTML = currentQ.q.replace("________", `<span style='color: #dc2626; font-weight: 900; text-decoration: underline;'>${currentQ.ans}</span>`);
+            }
+
+            // Clean up exact phrase for explanation to look complete
+            const fullPhrase = currentQ.q.replace("________", currentQ.ans);
+
+            const expHTML = `
+                ${resultTitle}
+                ${encouragementText}
+                <div class='exp-detail'>
+                    📌 Cụm từ: <strong>${fullPhrase}</strong><br>
+                    🇻🇳 Ý nghĩa: ${currentQ.vi}<br>
+                    📖 Ví dụ: <i>${currentQ.ex}</i>
+                </div>
+            `;
+
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+            nextBtn.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
