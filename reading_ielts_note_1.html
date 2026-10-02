@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary & Idioms Elegant Mastery 🎓</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Nunito:wght@400;600;800&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #e2e8f0 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #cbd5e1 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 780px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+            padding: 40px;
+            border-top: 8px solid #334155;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #475569;
+            font-weight: 800;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        .badge-container {
+            margin-bottom: 20px;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-mcq { background-color: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+        .badge-fill { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+
+        .instruction {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4em;
+            color: #334155;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .question-box {
+            margin: 10px 0 30px 0;
+            padding: 30px 20px;
+            background-color: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            font-size: 1.8em;
+            color: #0f172a;
+            font-weight: 800;
+            line-height: 1.5;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .meaning-sub {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.6em;
+            display: block;
+            margin-top: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* MCQ Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 550px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            padding: 18px 15px;
+            font-size: 1.25em;
+            font-family: inherit;
+            color: #334155;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            border-color: #94a3b8;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-btn.correct-mcq {
+            background-color: #ecfdf5 !important;
+            border-color: #10b981 !important;
+            color: #047857 !important;
+            animation: bounce 0.4s;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+            animation: shake 0.4s;
+        }
+
+        /* Fill in blanks */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 16px 24px;
+            font-size: 1.4em;
+            font-family: inherit;
+            border: 3px solid #cbd5e1;
+            border-radius: 16px;
+            text-align: center;
+            color: #0f172a;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+            background-color: #f8fafc;
+        }
+
+        input[type="text"]:focus {
+            border-color: #334155;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(51, 65, 85, 0.1);
+        }
+
+        .submit-btn {
+            background-color: #334155;
+            color: #fff;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.25em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px -1px rgba(51, 65, 85, 0.3);
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            background-color: #1e293b;
+            box-shadow: 0 10px 15px -3px rgba(51, 65, 85, 0.4);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            color: #334155;
+            font-size: 1.15em;
+            line-height: 1.6;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+        }
+
+        .explanation-box.correct-bg { border-color: #34d399; background-color: #f0fdf4; }
+        .explanation-box.wrong-bg { border-color: #fb7185; background-color: #fff1f2; }
+        
+        .exp-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-weight: 700;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .audio-btn {
+            background-color: #334155;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 46px;
+            height: 46px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+        }
+
+        .audio-btn:hover { transform: scale(1.1); background-color: #0f172a; }
+
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-weight: 500;
+            color: #475569;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+        }
+
+        .exp-detail strong {
+            color: #0f172a;
+            font-size: 1.2em;
+            font-family: 'Playfair Display', serif;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .next-btn {
+            background-color: #10b981;
+            color: #fff;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.3em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: all 0.3s;
+            display: none;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            background-color: #059669;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+        }
+
+        #result-screen { display: none; }
+
+        #result-screen h2 {
+            color: #0f172a;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .restart-btn {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.4em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            margin-top: 30px;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            background-color: #2563eb;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-question">1</span>/20</span>
+            <span>✨ ĐIỂM: <span id="score">0</span></span>
+        </div>
+
+        <div class="badge-container">
+            <span class="type-badge" id="type-badge">MCQ</span>
+        </div>
+        
+        <div class="instruction" id="instruction">Loading...</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area"></div>
+        <div class="explanation-box" id="explanation"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp Tục ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>Xin Chúc Mừng! 🎉</h2>
+        <p style="font-size: 1.2em; font-weight: 600; color: #64748b;">Bạn đã hoàn thành trọn bộ bài tập ôn luyện.</p>
+        <p style="font-size: 1.2em; font-weight: 600; color: #334155; margin-top: 20px;">Tổng điểm của bạn:</p>
+        <div style="font-size: 4em; font-weight: 800; color: #10b981; margin: 10px 0;"><span id="final-score"></span> / 200</div>
+        <button class="restart-btn" onclick="restartGame()">Làm Lại Lần Nữa 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // VOCABULARY (MCQ) - 9 questions
+            { type: "mcq", vi: "có quyền sử dụng, tiếp cận", ans: "have access to", def: "be able to use, obtain", ex: "Everyone has access to healthcare and education.", options: ["have access to", "extensively", "versatile", "necessitate"] },
+            { type: "mcq", vi: "rộng rãi, nhiều", ans: "extensively", def: "widely, broadly", ex: "She also travelled extensively in Turkey.", options: ["extensively", "employ", "offset", "arise"] },
+            { type: "mcq", vi: "đa năng, linh hoạt", ans: "versatile", def: "adaptable, flexible", ex: "Delivering this versatile energy source.", options: ["versatile", "entail", "dispose of", "have access to"] },
+            { type: "mcq", vi: "đòi hỏi, bắt buộc", ans: "necessitate", def: "requires, demands", ex: "Drilling necessitates building floating platforms.", options: ["necessitate", "employ", "arise", "extensively"] },
+            { type: "mcq", vi: "sử dụng", ans: "employ", def: "use, apply", ex: "Special technology is employed.", options: ["employ", "dispose of", "versatile", "entail"] },
+            { type: "mcq", vi: "đòi hỏi, kéo theo", ans: "entail", def: "involves, requires", ex: "Extraction entails high costs.", options: ["entail", "offset", "arise", "necessitate"] },
+            { type: "mcq", vi: "xử lý, loại bỏ", ans: "dispose of", def: "getting rid of", ex: "Costs include disposing of unwanted materials.", options: ["dispose of", "have access to", "employ", "extensively"] },
+            { type: "mcq", vi: "bù đắp", ans: "offset", def: "compensate for, balance", ex: "Sold to offset the expense.", options: ["offset", "entail", "versatile", "dispose of"] },
+            { type: "mcq", vi: "phát sinh", ans: "arise", def: "occur, emerge", ex: "Problems can arise during drilling.", options: ["arise", "necessitate", "employ", "offset"] },
+
+            // IDIOMS (FILL IN THE BLANK) - 11 questions
+            { type: "fill", q: "To go with the ________", full: "To go with the flow", ans: "flow", vi: "thuận theo tự nhiên, tùy cơ ứng biến", ex: "Instead of fighting the changes, it's better to just go with the flow." },
+            { type: "fill", q: "Keep one's ________ on", full: "Keep one's shirt on", ans: "shirt", vi: "giữ bình tĩnh", ex: "Tell him to keep his shirt on; we'll be there in 5 minutes." },
+            { type: "fill", q: "At the drop of a ________", full: "At the drop of a hat", ans: "hat", vi: "ngay lập tức", ex: "He was ready to leave at the drop of a hat." },
+            { type: "fill", q: "At the ________ hour", full: "At the eleventh hour", ans: "eleventh", vi: "vào phút chót", ex: "They changed the plan at the eleventh hour." },
+            { type: "fill", q: "At a ________ end", full: "At a loose end", ans: "loose", vi: "rảnh rỗi, không có việc gì làm", ex: "If you find yourself at a loose end, you can help me clean the house." },
+            { type: "fill", q: "A ________ story", full: "A tall story", ans: "tall", vi: "1 câu chuyện hoang đường", ex: "Nobody believed his tall story about seeing a UFO." },
+            { type: "fill", q: "Behind ________ doors", full: "Behind closed doors", ans: "closed", vi: "một cách bí mật", ex: "The meeting was held behind closed doors." },
+            { type: "fill", q: "White-________ workers", full: "White-collar workers", ans: "collar", vi: "công nhân cổ cồn trắng (lao động trí óc)", ex: "Many white-collar workers are now working from home." },
+            { type: "fill", q: "________-collar workers", full: "Blue-collar workers", ans: "Blue", vi: "công nhân cổ cồn xanh (lao động chân tay)", ex: "Blue-collar workers play a vital role in the manufacturing industry." },
+            { type: "fill", q: "On the ________", full: "On the mend", ans: "mend", vi: "đang hồi phục (sau khi ốm)", ex: "My grandfather is finally on the mend after his surgery." },
+            { type: "fill", q: "On pins and ________", full: "On pins and needles", ans: "needles", vi: "đứng ngồi không yên, hồi hộp, lo lắng", ex: "She was on pins and needles waiting for the exam results." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const instructionEl = document.getElementById("instruction");
+        const typeBadgeEl = document.getElementById("type-badge");
+        const questionEl = document.getElementById("question");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(isCorrect) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (isCorrect) {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Global Enter Key Listener
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const nextBtn = document.getElementById("next-btn");
+                const submitBtn = document.getElementById("submit-btn");
+                const resultScreen = document.getElementById("result-screen");
+                
+                if (resultScreen.style.display === "block") return;
+
+                if (nextBtn.style.display === "block") {
+                    event.preventDefault();
+                    nextQuestion();
+                } else if (submitBtn && submitBtn.style.display !== "none") {
+                    event.preventDefault();
+                    checkFill();
+                }
+            }
+        });
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function getRandomDistractors(correctWord, allData, count = 3) {
+            const allWords = allData.filter(d => d.type === "mcq").map(v => v.ans);
+            const distractors = allWords.filter(w => w !== correctWord);
+            return distractors.sort(() => Math.random() - 0.5).slice(0, count);
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            dynamicAreaEl.innerHTML = "";
+            
+            const item = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+
+            if (item.type === "mcq") {
+                typeBadgeEl.className = "type-badge badge-mcq";
+                typeBadgeEl.innerText = "Trắc Nghiệm Từ Vựng";
+                instructionEl.innerText = "Chọn từ tiếng Anh phù hợp với nghĩa sau:";
+                questionEl.innerHTML = `"${item.vi}"`;
+
+                // Generate Options dynamically
+                const distractors = getRandomDistractors(item.ans, quizData, 3);
+                let opts = [item.ans, ...distractors].sort(() => Math.random() - 0.5);
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = "options-grid";
+                
+                opts.forEach(opt => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    if(opt === item.ans) btn.dataset.correct = "true";
+                    btn.onclick = () => {
+                        initAudio();
+                        checkMCQ(btn, opt, item);
+                    };
+                    optionsContainer.appendChild(btn);
+                });
+                dynamicAreaEl.appendChild(optionsContainer);
+            } else {
+                typeBadgeEl.className = "type-badge badge-fill";
+                typeBadgeEl.innerText = "Điền Từ Thành Ngữ";
+                instructionEl.innerText = "Điền MỘT từ còn thiếu vào thành ngữ/cụm từ sau:";
+                
+                const formattedQ = item.q.replace("________", `<span style="color: #cbd5e1; border-bottom: 3px solid #e2e8f0; padding: 0 15px;">?</span>`);
+                questionEl.innerHTML = `${formattedQ} <span class="meaning-sub">💡 Nghĩa: ${item.vi}</span>`;
+
+                dynamicAreaEl.innerHTML = `
+                    <div class="input-area">
+                        <input type="text" id="blank-input" placeholder="Gõ từ của bạn..." autocomplete="off">
+                        <button class="submit-btn" id="submit-btn" onclick="checkFill()">Kiểm Tra ➔</button>
+                    </div>
+                `;
+                document.getElementById("blank-input").focus();
+            }
+        }
+
+        function checkMCQ(selectedBtn, selectedText, item) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let isCorrect = selectedText === item.ans;
+            
+            if (isCorrect) {
+                selectedBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.classList.add("correct-bg");
+            } else {
+                selectedBtn.classList.add("wrong-mcq");
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✔️";
+                    }
+                });
+                playSound(false);
+                explanationEl.classList.add("wrong-bg");
+            }
+
+            speakWord(item.ans);
+            renderExplanation(isCorrect, item.ans, item.vi, item.ex);
+        }
+
+        function checkFill() {
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const inputEl = document.getElementById("blank-input");
+            const submitBtn = document.getElementById("submit-btn");
+
+            const userAns = inputEl.value.trim().toLowerCase();
+            const correctAns = item.ans.toLowerCase();
+
+            if (userAns === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let isCorrect = userAns === correctAns;
+
+            if (isCorrect) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.classList.add("correct-bg");
+                questionEl.innerHTML = item.q.replace("________", `<span style="color: #10b981; border-bottom: 3px solid #10b981; padding: 0 10px;">${item.ans}</span>`) + `<span class="meaning-sub">💡 Nghĩa: ${item.vi}</span>`;
+            } else {
+                playSound(false);
+                explanationEl.classList.add("wrong-bg");
+                questionEl.innerHTML = item.q.replace("________", `<span style="color: #ef4444; border-bottom: 3px solid #ef4444; text-decoration: line-through; padding: 0 10px;">${userAns}</span> <span style="color: #10b981; font-weight: 800;">${item.ans}</span>`) + `<span class="meaning-sub">💡 Nghĩa: ${item.vi}</span>`;
+            }
+
+            speakWord(item.full);
+            renderExplanation(isCorrect, item.full, item.vi, item.ex);
+        }
+
+        function renderExplanation(isCorrect, term, vi, ex) {
+            let titleText = isCorrect ? "🎉 Chính xác tuyệt đối!" : "❌ Rất tiếc! Đáp án đúng ở bên dưới.";
+            let titleColor = isCorrect ? "#10b981" : "#ef4444";
+
+            const expHTML = `
+                <div class='exp-title' style="color: ${titleColor};">
+                    <span>${titleText}</span>
+                    <button class='audio-btn' onclick="speakWord('${term}')" title='Nghe phát âm'>🔊</button>
+                </div>
+                <div class='exp-detail'>
+                    <strong>${term}</strong>
+                    Nghĩa Tiếng Việt: <b>${vi}</b><br><br>
+                    <i>Ví dụ ngữ cảnh:</i><br>
+                    <span style="color: #0f766e;">"${ex}"</span>
+                </div>
+            `;
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            
+            setTimeout(() => {
+                nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
