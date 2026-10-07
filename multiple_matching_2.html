@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Vocabulary & Idiom Mastery 🎓</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;800;900&display=swap');
+
+        :root {
+            --primary: #0f766e;
+            --secondary: #d4af37;
+            --bg-color: #f0fdfa;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-light: #0d9488;
+            --success: #059669;
+            --error: #e11d48;
+            --success-bg: #ecfdf5;
+            --error-bg: #fff1f2;
+            --font-main: 'Nunito', sans-serif;
+            --font-heading: 'Baloo 2', cursive;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #ccfbf1 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #99f6e4 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 780px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(13, 148, 136, 0.15);
+            padding: 35px 40px;
+            border: 6px solid #5eead4;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 1.3em;
+            background: #f0fdfa;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 3px dashed #2dd4bf;
+            font-family: var(--font-heading);
+        }
+
+        .badge-container {
+            margin-bottom: 20px;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #0284c7;
+            background-color: #e0f2fe;
+            border: 2px solid #bae6fd;
+            font-family: var(--font-heading);
+        }
+
+        .badge-fill {
+            background-color: #fef3c7;
+            color: #b45309;
+            border: 2px solid #fde68a;
+        }
+
+        .instruction {
+            font-size: 1.3em;
+            color: var(--text-light);
+            font-weight: 800;
+            margin-bottom: 15px;
+            font-family: var(--font-heading);
+        }
+
+        .question-box {
+            margin: 0 0 25px 0;
+            padding: 25px 20px;
+            background-color: #fffbeb;
+            border-radius: 20px;
+            border: 4px solid #fde047;
+            font-size: 1.8em;
+            color: #b45309;
+            font-weight: 900;
+            line-height: 1.4;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .question-box.mcq-style {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #1e293b;
+        }
+
+        /* MCQ Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 550px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 4px solid #cbd5e1;
+            padding: 15px 15px;
+            font-size: 1.4em;
+            font-family: var(--font-heading);
+            color: var(--text-main);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 75px;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-4px);
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .option-btn.correct-mcq {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success) !important;
+            color: var(--success) !important;
+            font-weight: 800;
+            animation: bounce 0.5s;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: var(--error-bg) !important;
+            border-color: var(--error) !important;
+            color: var(--error) !important;
+            text-decoration: line-through;
+            animation: shake 0.5s;
+        }
+
+        /* Fill in blanks */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 16px 20px;
+            font-size: 1.4em;
+            font-family: inherit;
+            border: 4px solid #cbd5e1;
+            border-radius: 18px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 800;
+            outline: none;
+            transition: all 0.3s;
+            background-color: #f8fafc;
+        }
+
+        input[type="text"]:focus {
+            border-color: #2dd4bf;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 5px rgba(45, 212, 191, 0.2);
+        }
+
+        .submit-btn {
+            background-color: #0d9488;
+            color: #ffffff;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.3em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            box-shadow: 0 6px 0 #0f766e;
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(2px);
+            background-color: #14b8a6;
+            box-shadow: 0 4px 0 #0f766e;
+        }
+
+        .submit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #0f766e;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #ffffff;
+            border: 4px solid #e2e8f0;
+            padding: 25px;
+            margin-top: 15px;
+            border-radius: 20px;
+            color: var(--text-main);
+            font-size: 1.15em;
+            line-height: 1.6;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .explanation-box.correct-bg { background-color: var(--success-bg); border-color: var(--success); }
+        .explanation-box.wrong-bg { background-color: var(--error-bg); border-color: var(--error); }
+        
+        .exp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.4em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #cbd5e1;
+            font-family: var(--font-heading);
+        }
+
+        .correct-text { color: var(--success); }
+        .wrong-text { color: var(--error); }
+
+        .audio-btn {
+            background-color: #8b5cf6;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.3em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #6d28d9;
+            flex-shrink: 0;
+        }
+
+        .audio-btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 #6d28d9; background-color: #a78bfa; }
+
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .exp-detail .word-title {
+            color: #8b5cf6;
+            font-size: 1.6em;
+            font-weight: 900;
+            font-family: var(--font-heading);
+        }
+
+        .exp-detail .ipa {
+            color: var(--text-light);
+            font-size: 1em;
+            font-family: monospace;
+            background-color: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-left: 10px;
+            font-weight: 700;
+        }
+
+        .meaning-text {
+            display: block;
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #0f172a;
+        }
+
+        .example-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8fafc;
+            border-left: 5px solid #3b82f6;
+            border-radius: 10px;
+            font-style: italic;
+        }
+
+        .next-btn {
+            background-color: #10b981;
+            color: #fff;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.4em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: var(--font-heading);
+            transition: all 0.2s;
+            display: none;
+            margin: 25px auto 0 auto;
+            box-shadow: 0 6px 0 #047857;
+            letter-spacing: 1px;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            background-color: #34d399;
+            box-shadow: 0 4px 0 #047857;
+        }
+
+        #result-screen { display: none; }
+
+        #result-screen h2 {
+            color: var(--primary);
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-family: var(--font-heading);
+        }
+
+        .restart-btn {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: var(--font-heading);
+            margin-top: 30px;
+            box-shadow: 0 6px 0 #1d4ed8;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #1d4ed8;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>🚀 CÂU HỎI: <span id="current-question">1</span>/20</span>
+            <span>⭐ ĐIỂM: <span id="score">0</span></span>
+        </div>
+
+        <div class="badge-container">
+            <span class="type-badge" id="type-badge">TỪ VỰNG (MCQ)</span>
+        </div>
+        
+        <div class="instruction" id="instruction">Loading...</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area"></div>
+        <div class="explanation-box" id="explanation"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp Tục Nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>Tuyệt Quá Đi! 🎉</h2>
+        <p style="font-size: 1.3em; font-weight: 700; color: #475569; margin-bottom: 20px;">Bạn đã nắm vững danh sách Từ vựng & Thành ngữ.</p>
+        <p style="font-size: 1.2em; font-weight: 700; color: #94a3b8;">Điểm số của bạn:</p>
+        <div style="font-size: 4.5em; font-weight: 900; color: var(--success); margin: 10px 0;"><span id="final-score"></span> / 200</div>
+        <button class="restart-btn" onclick="restartGame()">Chơi Lại Nhé 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // MCQ: Các từ đơn lẻ / Collocation ngắn
+            { type: "mcq", en: "coincide with", ipa: "/ˌkəʊɪnˈsaɪd wɪð/", vi: "Trùng với về thời gian; đồng thời xảy ra", ex: "The marathon coincided with their wedding anniversary, making the event particularly meaningful." },
+            { type: "mcq", en: "perseverance", ipa: "/ˌpɜːsɪˈvɪərəns/", vi: "Sự kiên trì, bền bỉ trước khó khăn", ex: "Completing a marathon requires considerable perseverance." },
+            { type: "mcq", en: "take off", ipa: "/teɪk ɒf/", vi: "Trở nên phổ biến hoặc phát triển nhanh chóng", ex: "Although plant-based alternatives are widely available, they have yet to take off in some markets." },
+            { type: "mcq", en: "staple", ipa: "/ˈsteɪpəl/", vi: "Lương thực, thực phẩm chủ yếu", ex: "Rice remains a staple food for millions of people in Asia." },
+            { type: "mcq", en: "viable", ipa: "/ˈvaɪəbl/", vi: "Có tính khả thi, có thể thực hiện thành công", ex: "Lab-grown meat may become a viable alternative to conventional livestock farming." },
+            { type: "mcq", en: "innate", ipa: "/ɪˈneɪt/", vi: "Bẩm sinh, vốn có từ khi sinh ra", ex: "Some researchers argue that humans have an innate tendency to respond positively to nature." },
+            { type: "mcq", en: "pore over", ipa: "/pɔːr ˈəʊvə(r)/", vi: "Đọc hoặc nghiên cứu kỹ lưỡng, chăm chú", ex: "As a child, she would pore over illustrated books about endangered animals for hours." },
+
+            // FILL IN THE BLANK: Các Idioms / Collocation dài (Đã thêm context 'usage' minh họa ngữ cảnh)
+            { type: "fill", ans: "plunge", full: "take the plunge", ipa: "/teɪk ðə plʌndʒ/", vi: "Quyết định làm điều gì đó mạo hiểm hoặc khó khăn sau khi do dự", ex: "After months of hesitation, she finally took the ________ and entered her first marathon.", usage: "Dùng khi ai đó quyết định làm một việc khó khăn, mạo hiểm sau một thời gian dài đắn đo. Trong câu này, cô ấy đã đắn đo nhiều tháng trước khi 'nhắm mắt đưa chân' đăng ký chạy marathon." },
+            { type: "fill", ans: "snap", full: "a snap decision", ipa: "/ə snæp dɪˈsɪʒən/", vi: "Quyết định nhanh chóng, gần như không suy nghĩ kỹ", ex: "Entering the race was a ________ decision that completely changed her lifestyle.", usage: "Dùng để chỉ một quyết định vội vàng, chớp nhoáng. Trong câu, việc đăng ký cuộc đua là một quyết định bộc phát nhất thời đã thay đổi hoàn toàn lối sống của cô ấy." },
+            { type: "fill", ans: "act", full: "get one's act together", ipa: "/ɡet wʌnz ækt təˈɡeðə(r)/", vi: "Chấn chỉnh bản thân, bắt đầu hành động có tổ chức và nghiêm túc", ex: "He realised that he needed to get his ________ together if he wanted to achieve his fitness goals.", usage: "Dùng khi khuyên ai đó (hoặc tự nhủ) phải xốc lại tinh thần, làm việc đàng hoàng hơn. Ngữ cảnh: Anh ấy nhận ra mình phải nghiêm túc tập luyện mới mong đạt mục tiêu thể hình." },
+            { type: "fill", ans: "toll", full: "take a toll on", ipa: "/teɪk ə təʊl ɒn/", vi: "Gây ảnh hưởng tiêu cực, gây tổn hại đến", ex: "Months of intensive training can take a ________ on both the body and the mind.", usage: "Dùng để diễn tả việc gì đó gây ra sự hao mòn, thiệt hại dần dần (thường về sức khỏe, tinh thần). Ngữ cảnh: Huấn luyện cường độ cao nhiều tháng trời vắt kiệt cả thể xác lẫn tinh thần." },
+            { type: "fill", ans: "appetite", full: "insatiable appetite for", ipa: "/ɪnˈseɪʃəbl ˈæpɪtaɪt fə(r)/", vi: "Nhu cầu hoặc ham muốn không ngừng đối với thứ gì", ex: "The world's insatiable ________ for meat has placed increasing pressure on agricultural resources.", usage: "Dùng để miêu tả lòng tham, sự thèm khát vô độ. Ngữ cảnh: Nhu cầu tiêu thụ thịt không ngừng nghỉ của thế giới đang đè nặng lên tài nguyên nông nghiệp." },
+            { type: "fill", ans: "forefront", full: "at the forefront of", ipa: "/ət ðə ˈfɔːfrʌnt əv/", vi: "Ở vị trí tiên phong trong lĩnh vực nào đó", ex: "Scientists at the ________ of food technology are developing alternatives to conventional meat.", usage: "Dùng để nói về vị trí tiên phong, dẫn đầu trong một phong trào, lĩnh vực. Ngữ cảnh: Các nhà khoa học đi đầu trong công nghệ thực phẩm đang tìm ra giải pháp thịt thay thế." },
+            { type: "fill", ans: "resort", full: "resort to sth", ipa: "/rɪˈzɔːt tə/", vi: "Phải dùng đến hoặc viện đến một biện pháp (khi không còn lựa chọn khác)", ex: "Farmers should adopt sustainable methods rather than ________ to excessive chemical fertilisers.", usage: "Dùng khi phải miễn cưỡng sử dụng một giải pháp tiêu cực vì không còn cách nào tốt hơn. Ngữ cảnh: Khuyên nông dân không nên 'bần cùng' phải lạm dụng phân bón hóa học." },
+            { type: "fill", ans: "applicable", full: "be applicable to", ipa: "/bi əˈplɪkəbl tə/", vi: "Có thể được áp dụng cho", ex: "The technology developed for rice cultivation may also be ________ to wheat and other staple crops.", usage: "Dùng để chỉ tính ứng dụng, có thể dùng được cho đối tượng khác. Ngữ cảnh: Công nghệ trồng lúa có thể mang ra áp dụng cho cả lúa mì và cây lương thực khác." },
+            { type: "fill", ans: "prone", full: "be prone to", ipa: "/bi prəʊn tə/", vi: "Dễ gặp, dễ mắc hoặc có xu hướng bị ảnh hưởng bởi điều gì", ex: "Certain fish species are more ________ to disease when raised in overcrowded conditions.", usage: "Dùng để diễn tả xu hướng dễ mắc phải điều gì đó tiêu cực (bệnh tật, tai nạn). Ngữ cảnh: Sống trong điều kiện chật chội khiến một số loài cá dễ bị nhiễm bệnh hơn." },
+            { type: "fill", ans: "action", full: "a call to action", ipa: "/ə kɔːl tu ˈækʃn/", vi: "Lời kêu gọi hành động", ex: "The book serves as a call to ________, urging readers to take responsibility for wildlife conservation.", usage: "Dùng để chỉ một lời hiệu triệu, thúc giục mọi người phải hành động ngay. Ngữ cảnh: Cuốn sách như một hồi chuông hối thúc độc giả đứng lên bảo vệ động vật hoang dã." },
+            { type: "fill", ans: "boot", full: "to boot", ipa: "/tə buːt/", vi: "Hơn nữa, thêm vào đó (bổ sung một ưu điểm)", ex: "The book is informative and entertaining to ________, making it accessible to readers of all ages.", usage: "Thành ngữ dùng ở cuối câu để nhấn mạnh thêm một điểm tốt/xấu. Ngữ cảnh: Cuốn sách không chỉ nhiều thông tin mà lại còn giải trí nữa, rất phù hợp với mọi lứa tuổi." },
+            { type: "fill", ans: "world", full: "a whole new world opens up", ipa: "/ə həʊl njuː wɜːld ˈəʊpənz ʌp/", vi: "Một thế giới hoàn toàn mới mở ra, mang lại nhiều cơ hội khám phá", ex: "Once she began studying insects, a whole new ________ opened up, revealing the complexity of ecosystems.", usage: "Dùng khi khám phá ra một lĩnh vực mới mẻ, hấp dẫn mà trước đây chưa biết tới. Ngữ cảnh: Việc nghiên cứu côn trùng đã mở ra trước mắt cô một chân trời kiến thức mới về hệ sinh thái." },
+            { type: "fill", ans: "heart", full: "get to the heart of", ipa: "/get tə ðə hɑːt əv/", vi: "Đi vào trọng tâm, làm sáng tỏ bản chất cốt lõi của vấn đề", ex: "The book gets to the ________ of the debate over how economic development affects biodiversity.", usage: "Dùng khi đi thẳng vào điểm cốt lõi, phần quan trọng nhất của vấn đề. Ngữ cảnh: Cuốn sách đã chạm thẳng đến tâm điểm của cuộc tranh luận về kinh tế và đa dạng sinh học." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const optionsAreaEl = document.getElementById("options-area");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+        const typeBadgeEl = document.getElementById("type-badge");
+        const instructionEl = document.getElementById("instruction");
+
+        // Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(isCorrect) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (isCorrect) {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-GB'; 
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Global Enter Key Listener - Xử lý mượt mà
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const resultScreen = document.getElementById("result-screen");
+                if (resultScreen.style.display === "block") return;
+
+                if (nextBtn.style.display === "block") {
+                    event.preventDefault();
+                    nextQuestion();
+                } else {
+                    const submitBtn = document.getElementById("submit-btn");
+                    if (submitBtn && submitBtn.style.display !== "none") {
+                        event.preventDefault();
+                        checkFill();
+                    }
+                }
+            }
+        });
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Xáo trộn 20 câu hỏi
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function getRandomDistractors(correctWord, count = 3) {
+            const allMcq = quizData.filter(v => v.type === 'mcq').map(v => v.en);
+            const distractors = allMcq.filter(w => w !== correctWord);
+            // Kéo thêm từ vựng ở mảng fill nếu mảng mcq không đủ
+            if (distractors.length < count) {
+                const extra = quizData.filter(v => v.type === 'fill').map(v => v.full);
+                distractors.push(...extra);
+            }
+            return distractors.sort(() => Math.random() - 0.5).slice(0, count);
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            dynamicAreaEl.innerHTML = "";
+            
+            const item = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+
+            if (item.type === "mcq") {
+                typeBadgeEl.className = "type-badge";
+                typeBadgeEl.innerText = "TỪ VỰNG (MCQ)";
+                instructionEl.innerText = "Hãy chọn từ/cụm từ tiếng Anh tương ứng với nghĩa sau:";
+                questionEl.className = "question-box mcq-style";
+                questionEl.innerHTML = `"${item.vi}"`;
+
+                const distractors = getRandomDistractors(item.en, 3);
+                let opts = [item.en, ...distractors].sort(() => Math.random() - 0.5);
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = "options-grid";
+                
+                opts.forEach(opt => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    if(opt === item.en) btn.dataset.correct = "true";
+                    btn.onclick = () => {
+                        initAudio();
+                        checkMCQ(btn, opt, item);
+                    };
+                    optionsContainer.appendChild(btn);
+                });
+                dynamicAreaEl.appendChild(optionsContainer);
+            } else {
+                typeBadgeEl.className = "type-badge badge-fill";
+                typeBadgeEl.innerText = "THÀNH NGỮ (ĐIỀN TỪ)";
+                instructionEl.innerText = "Hãy điền MỘT từ còn thiếu vào thành ngữ trong câu sau:";
+                questionEl.className = "question-box";
+                
+                const formattedQ = item.ex.replace("________", `<span style="color: #cbd5e1; border-bottom: 3px solid #e2e8f0; padding: 0 15px;">?</span>`);
+                
+                // HIỂN THỊ NGHĨA TRONG DẤU NGOẶC ĐƠN BÊN DƯỚI CÂU HỎI NHƯ YÊU CẦU
+                questionEl.innerHTML = `${formattedQ} <br><span style="font-size: 0.65em; color: #0d9488; font-family: 'Nunito', sans-serif; font-weight: 800; display: block; margin-top: 15px;">(Nghĩa: ${item.vi})</span>`;
+
+                dynamicAreaEl.innerHTML = `
+                    <div class="input-area">
+                        <input type="text" id="blank-input" placeholder="Gõ từ cần điền..." autocomplete="off">
+                        <button class="submit-btn" id="submit-btn" onclick="checkFill()">Kiểm tra đáp án</button>
+                    </div>
+                `;
+                document.getElementById("blank-input").focus();
+            }
+        }
+
+        function checkMCQ(selectedBtn, selectedText, item) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let isCorrect = selectedText === item.en;
+            let headerHTML = "";
+
+            if (isCorrect) {
+                selectedBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.classList.add("correct-bg");
+                headerHTML = `
+                    <div class='exp-header correct-text'>
+                        <span>🎉 Chính xác tuyệt đối!</span>
+                        <button class='audio-btn' onclick="speakWord('${item.en}')" title='Nghe phát âm'>🔊</button>
+                    </div>`;
+            } else {
+                selectedBtn.classList.add("wrong-mcq");
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✓";
+                    }
+                });
+                playSound(false);
+                explanationEl.classList.add("wrong-bg");
+                headerHTML = `
+                    <div class='exp-header wrong-text'>
+                        <span>❌ Sai rồi! Đáp án đúng là: <b>${item.en}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${item.en}')" title='Nghe phát âm'>🔊</button>
+                    </div>`;
+            }
+
+            speakWord(item.en);
+
+            const expHTML = `
+                ${headerHTML}
+                <div class='exp-detail'>
+                    <span class='word-title'>${item.en}</span> <span class='ipa'>${item.ipa}</span>
+                    <span class='meaning-text'>Nghĩa: <b>${item.vi}</b></span>
+                    <div class="example-box">
+                        ${item.ex}
+                    </div>
+                </div>
+            `;
+            
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            setTimeout(() => { nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function checkFill() {
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const inputEl = document.getElementById("blank-input");
+            const submitBtn = document.getElementById("submit-btn");
+
+            const userAns = inputEl.value.trim().toLowerCase();
+            const correctAns = item.ans.toLowerCase();
+
+            if (userAns === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let isCorrect = userAns === correctAns;
+            let headerHTML = "";
+
+            if (isCorrect) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.classList.add("correct-bg");
+                questionEl.innerHTML = item.ex.replace("________", `<span style="color: var(--success); border-bottom: 3px solid var(--success); padding: 0 10px;">${item.ans}</span>`) + `<br><span style="font-size: 0.65em; color: #0d9488; font-family: 'Nunito', sans-serif; font-weight: 800; display: block; margin-top: 15px;">(Nghĩa: ${item.vi})</span>`;
+                headerHTML = `
+                    <div class='exp-header correct-text'>
+                        <span>🎉 Rất xuất sắc!</span>
+                        <button class='audio-btn' onclick="speakWord('${item.full}')" title='Nghe phát âm'>🔊</button>
+                    </div>`;
+            } else {
+                playSound(false);
+                explanationEl.classList.add("wrong-bg");
+                questionEl.innerHTML = item.ex.replace("________", `<span style="color: var(--error); border-bottom: 3px solid var(--error); text-decoration: line-through; padding: 0 10px;">${userAns}</span> <span style="color: var(--success); border-bottom: 3px solid var(--success); padding: 0 10px;">${item.ans}</span>`) + `<br><span style="font-size: 0.65em; color: #0d9488; font-family: 'Nunito', sans-serif; font-weight: 800; display: block; margin-top: 15px;">(Nghĩa: ${item.vi})</span>`;
+                headerHTML = `
+                    <div class='exp-header wrong-text'>
+                        <span>❌ Sai rồi! Từ cần điền là: <b>${item.ans}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${item.full}')" title='Nghe phát âm'>🔊</button>
+                    </div>`;
+            }
+
+            speakWord(item.full);
+
+            // BỔ SUNG PHẦN GIẢI THÍCH NGỮ CẢNH (USAGE) NHƯ YÊU CẦU
+            const expHTML = `
+                ${headerHTML}
+                <div class='exp-detail'>
+                    <span class='word-title'>${item.full}</span> <span class='ipa'>${item.ipa}</span>
+                    <span class='meaning-text'>Nghĩa: <b>${item.vi}</b></span>
+                    <div class="example-box" style="margin-top: 15px; border-left: 4px solid var(--success);">
+                        ${item.usage}
+                    </div>
+                </div>
+            `;
+            
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            setTimeout(() => { nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
