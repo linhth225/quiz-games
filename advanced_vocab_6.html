@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite English Scholar 🎓</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;600;800;900&display=swap');
+
+        :root {
+            --primary: #1e3a8a; /* Navy Blue */
+            --secondary: #d4af37; /* Gold */
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --error: #e11d48;
+            --error-bg: #fff1f2;
+            --font-main: 'Nunito', sans-serif;
+            --font-serif: 'Merriweather', serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 850px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.25);
+            padding: 45px;
+            border-top: 8px solid var(--primary);
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .badge-mcq { background-color: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+        .badge-fill { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+        .instruction {
+            font-size: 1.25em;
+            color: var(--text-gray);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .question-box {
+            margin: 0 0 30px 0;
+            font-size: 1.6em;
+            color: var(--primary);
+            font-weight: 700;
+            line-height: 1.6;
+            font-family: var(--font-serif);
+            background-color: var(--bg-light);
+            padding: 30px 25px;
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .hint-box {
+            font-family: var(--font-main);
+            font-size: 0.7em;
+            color: #0f766e;
+            background-color: #ccfbf1;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        /* MCQ Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            padding: 16px 20px;
+            font-size: 1.3em;
+            font-family: var(--font-main);
+            color: var(--text-dark);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.1);
+        }
+
+        .option-btn.selected-option {
+            background-color: #fef3c7;
+            border-color: var(--secondary);
+            color: #b45309;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+        }
+
+        .option-btn.correct-mcq {
+            background-color: var(--success-bg) !important;
+            border-color: var(--success) !important;
+            color: var(--success) !important;
+            font-weight: 900;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: var(--error-bg) !important;
+            border-color: var(--error) !important;
+            color: var(--error) !important;
+            text-decoration: line-through;
+        }
+
+        /* Fill in blanks */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 18px 25px;
+            font-size: 1.4em;
+            font-family: inherit;
+            border: 3px solid #cbd5e1;
+            border-radius: 16px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 800;
+            outline: none;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 5px rgba(212, 175, 55, 0.15);
+        }
+
+        .submit-btn {
+            background-color: var(--secondary);
+            color: #ffffff;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.3em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            background-color: #c5a031;
+            box-shadow: 0 10px 15px -3px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 20px;
+            color: var(--text-dark);
+            font-size: 1.15em;
+            line-height: 1.7;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        .explanation-box.correct-bg { border-left: 8px solid var(--success); }
+        .explanation-box.wrong-bg { border-left: 8px solid var(--error); }
+        
+        .exp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.4em;
+            font-weight: 900;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .audio-btn {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.3em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3);
+            flex-shrink: 0;
+        }
+
+        .audio-btn:hover { transform: scale(1.1); background-color: #172554; }
+
+        .exp-content {
+            background-color: var(--bg-light);
+            padding: 20px 25px;
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .exp-content .word-title {
+            color: var(--primary);
+            font-size: 1.6em;
+            font-weight: 800;
+            font-family: var(--font-serif);
+            display: inline-block;
+        }
+
+        .exp-content .ipa {
+            color: var(--text-gray);
+            font-size: 1em;
+            font-family: monospace;
+            background-color: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-left: 10px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        .distractor-text {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #475569;
+            background-color: #fffbeb;
+            padding: 15px;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+        }
+
+        .example-box {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-left: 5px solid var(--primary);
+            border-radius: 10px;
+            font-style: italic;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .next-btn {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.25em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 900;
+            transition: all 0.3s;
+            display: none;
+            margin: 30px auto 0 auto;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            background-color: #172554;
+        }
+
+        #result-screen { display: none; }
+
+        #result-screen h2 {
+            color: var(--primary);
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-family: var(--font-serif);
+        }
+
+        .restart-btn {
+            background-color: var(--secondary);
+            color: #fff;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.3em;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 35px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 15px -3px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            background-color: #c5a031;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-question">1</span>/40</span>
+            <span>🏆 ĐIỂM: <span id="score">0</span></span>
+        </div>
+
+        <div id="badge-area"></div>
+        <div class="instruction" id="instruction">Loading...</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area"></div>
+        <div class="explanation-box" id="explanation"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp Tục ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>Hoàn Thành Xuất Sắc! 🎓</h2>
+        <p style="font-size: 1.3em; font-weight: 600; color: var(--text-gray); margin-bottom: 20px;">Bạn đã hoàn thành bài kiểm tra Vocabulary & Idioms.</p>
+        <p style="font-size: 1.2em; font-weight: 800; color: var(--text-dark);">Tổng điểm của bạn:</p>
+        <div style="font-size: 5em; font-weight: 900; color: var(--primary); margin: 10px 0;"><span id="final-score"></span> / 400</div>
+        <button class="restart-btn" onclick="restartGame()">Luyện Tập Lại 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // MCQ (30 CÂU TỪ ẢNH 1 & 2)
+            { type: "mcq", q: "The old lady was becoming increasingly affected by ________ .", options: ["senility", "masculinity", "virility", "chivalry"], ans: "senility", read_phrase: "senility", ipa: "/səˈnɪləti/", vi: "sự lão suy, lú lẫn do tuổi già", ex_right: "Phù hợp với ngữ cảnh 'old lady' (bà lão). Bệnh lú lẫn thường ảnh hưởng đến người già.", ex_wrong: "• <b>masculinity</b>: sự nam tính<br>• <b>virility</b>: sinh lực đàn ông<br>• <b>chivalry</b>: tinh thần hiệp sĩ." },
+            { type: "mcq", q: "His ________ excuses invariably exasperated the manager.", options: ["feeble", "frail", "robust", "wealthy"], ans: "feeble", read_phrase: "feeble excuses", ipa: "/ˈfiːbl/", vi: "yếu ớt, thiếu sức thuyết phục", ex_right: "Collocation 'feeble excuses' nghĩa là những lời bào chữa mỏng manh, không đáng tin.", ex_wrong: "• <b>frail</b>: ốm yếu (thể chất).<br>• <b>robust</b>: tráng kiện.<br>• <b>wealthy</b>: giàu có." },
+            { type: "mcq", q: "Don't trust him; he's cruel, ________ and unscrupulous.", options: ["loving", "slack", "treacherous", "trustworthy"], ans: "treacherous", read_phrase: "treacherous", ipa: "/ˈtretʃərəs/", vi: "phản trắc, bội bạc", ex_right: "Từ này cùng trường nghĩa tiêu cực với 'cruel' (độc ác) và 'unscrupulous' (vô lương tâm).", ex_wrong: "• <b>loving</b>: yêu thương (trái nghĩa).<br>• <b>slack</b>: lỏng lẻo.<br>• <b>trustworthy</b>: đáng tin cậy (trái nghĩa)." },
+            { type: "mcq", q: "Many poets have ________ the beauties of the countryside.", options: ["extolled", "feared", "excited", "inhibited"], ans: "extolled", read_phrase: "extol the beauties", ipa: "/ɪkˈstəʊld/", vi: "tán dương, ca ngợi", ex_right: "Các nhà thơ thường 'ca ngợi' (extol) vẻ đẹp của thiên nhiên.", ex_wrong: "• <b>feared</b>: sợ hãi.<br>• <b>excited</b>: làm cho hào hứng.<br>• <b>inhibited</b>: ngăn chặn, kiềm chế." },
+            { type: "mcq", q: "The team's coach insisted on a program of ________ training before the big game.", options: ["rigorous", "slack", "severe", "positive"], ans: "rigorous", read_phrase: "rigorous training", ipa: "/ˈrɪɡərəs/", vi: "nghiêm ngặt, khắt khe", ex_right: "Collocation 'rigorous training' = quá trình huấn luyện cường độ cao, khắt khe.", ex_wrong: "• <b>slack</b>: chểnh mảng.<br>• <b>severe</b>: khắc nghiệt (thời tiết).<br>• <b>positive</b>: tích cực." },
+            { type: "mcq", q: "Prices at Greek hotels are still affordable, but in Switzerland they are ________ .", options: ["moderate", "inaccessible", "reasonable", "exorbitant"], ans: "exorbitant", read_phrase: "exorbitant prices", ipa: "/ɪɡˈzɔːbɪtənt/", vi: "đắt cắt cổ, giá quá cao", ex_right: "Câu mang ý tương phản với 'affordable' (giá phải chăng) ở vế trước.", ex_wrong: "• <b>moderate</b> & <b>reasonable</b>: giá cả vừa phải.<br>• <b>inaccessible</b>: không thể tiếp cận được." },
+            { type: "mcq", q: "The crash ________ the motorway for several hours.", options: ["prevented", "hindered", "obstructed", "inhibited"], ans: "obstructed", read_phrase: "obstruct the motorway", ipa: "/əbˈstrʌktɪd/", vi: "làm tắc nghẽn, cản trở", ex_right: "Dùng để chỉ việc một vật thể (vụ tai nạn) chắn ngang đường, làm tắc nghẽn giao thông.", ex_wrong: "• <b>prevented</b>: ngăn chặn.<br>• <b>hindered</b>: gây khó khăn.<br>• <b>inhibited</b>: ức chế tâm lý." },
+            { type: "mcq", q: "The plague, otherwise known as the Black Death, was a ________ disease.", options: ["contagious", "contiguous", "contingent", "congenial"], ans: "contagious", read_phrase: "contagious disease", ipa: "/kənˈteɪdʒəs/", vi: "lây nhiễm, truyền nhiễm", ex_right: "Dịch hạch (plague) là một căn bệnh lây truyền qua tiếp xúc.", ex_wrong: "• <b>contiguous</b>: liền kề.<br>• <b>contingent</b>: ngẫu nhiên.<br>• <b>congenial</b>: dễ chịu." },
+            { type: "mcq", q: "The young man felt ________ in the presence of so many young ladies.", options: ["inhospitable", "hindered", "inhibited", "prohibited"], ans: "inhibited", read_phrase: "feel inhibited", ipa: "/ɪnˈhɪbɪtɪd/", vi: "rụt rè, gượng gạo, thiếu tự nhiên", ex_right: "Chỉ trạng thái tâm lý xấu hổ, thiếu tự nhiên khi đứng trước phụ nữ.", ex_wrong: "• <b>inhospitable</b>: không hiếu khách.<br>• <b>hindered</b>: bị cản trở.<br>• <b>prohibited</b>: bị cấm đoán." },
+            { type: "mcq", q: "It was obvious that the child suffered from a serious speech ________ .", options: ["handicap", "impediment", "inhibition", "hindrance"], ans: "impediment", read_phrase: "speech impediment", ipa: "/ɪmˈpedɪmənt/", vi: "chướng ngại, tật", ex_right: "Collocation cố định 'speech impediment' = tật nói lắp, ngọng.", ex_wrong: "• <b>handicap</b>: khuyết tật thể chất.<br>• <b>inhibition</b>: sự ức chế.<br>• <b>hindrance</b>: sự cản trở." },
+            { type: "mcq", q: "His driving license has been ________ on the grounds of drink driving.", options: ["repealed", "revoked", "nullified", "recalled"], ans: "revoked", read_phrase: "revoke a driving license", ipa: "/rɪˈvəʊkt/", vi: "tước, thu hồi (giấy phép)", ex_right: "Dùng chuyên biệt cho việc chính quyền thu hồi bằng lái xe, hộ chiếu.", ex_wrong: "• <b>repealed</b>: bãi bỏ đạo luật.<br>• <b>nullified</b>: vô hiệu hóa.<br>• <b>recalled</b>: triệu hồi sản phẩm lỗi." },
+            { type: "mcq", q: "The Conservatives declared their intention of ________ the whole Act once they came into power.", options: ["repulsing", "repelling", "impelling", "repealing"], ans: "repealing", read_phrase: "repeal an act", ipa: "/rɪˈpiːlɪŋ/", vi: "bãi bỏ (đạo luật)", ex_right: "Dùng chuyên trong luật pháp, nghĩa là chính thức bãi bỏ một đạo luật (Act).", ex_wrong: "• <b>repulsing/repelling</b>: đẩy lùi.<br>• <b>impelling</b>: thôi thúc." },
+            { type: "mcq", q: "The problem of petty crime has largely been ________ .", options: ["annihilated", "exterminated", "eradicated", "decimated"], ans: "eradicated", read_phrase: "eradicate crime", ipa: "/ɪˈrædɪkeɪtɪd/", vi: "diệt trừ, xóa bỏ tận gốc", ex_right: "Dùng để nói về việc xóa sổ một vấn đề xã hội (tội phạm, bệnh tật).", ex_wrong: "• <b>annihilated</b>: tiêu diệt (quân sự).<br>• <b>exterminated</b>: tiêu diệt sâu bọ.<br>• <b>decimated</b>: tàn sát số lượng lớn." },
+            { type: "mcq", q: "Mary is a(n) ________ liar. She was even arrested for lying to a police officer.", options: ["physical", "congenital", "naive", "abnormal"], ans: "congenital", read_phrase: "congenital liar", ipa: "/kənˈdʒenɪtl/", vi: "bẩm sinh", ex_right: "Collocation 'a congenital liar' = một kẻ nói dối bẩm sinh.", ex_wrong: "• <b>physical</b>: thể chất.<br>• <b>naive</b>: ngây thơ.<br>• <b>abnormal</b>: bất thường." },
+            { type: "mcq", q: "Fortunately, everything went off without a ________ .", options: ["hope", "solution", "alternative", "hitch"], ans: "hitch", read_phrase: "without a hitch", ipa: "/hɪtʃ/", vi: "sự vướng mắc, sự cố", ex_right: "Idiom 'without a hitch' = một cách trơn tru, suôn sẻ, không gặp sự cố nào.", ex_wrong: "• Các từ hope (hi vọng), solution (giải pháp), alternative (thay thế) không tạo thành idiom trong cấu trúc này." },
+            { type: "mcq", q: "The Prime Minister will decide whether to release the prisoner or not; that's his ________ .", options: ["prerogative", "derogatory", "abdication", "humanity"], ans: "prerogative", read_phrase: "prerogative", ipa: "/prɪˈrɒɡətɪv/", vi: "đặc quyền", ex_right: "Chỉ quyền lợi đặc biệt dành riêng cho một người có chức vụ cao.", ex_wrong: "• <b>derogatory</b>: xúc phạm.<br>• <b>abdication</b>: thoái vị.<br>• <b>humanity</b>: nhân loại." },
+            { type: "mcq", q: "The new town development has begun to ________ on the surrounding green belt.", options: ["reach", "encroach", "enter", "intrude"], ans: "encroach", read_phrase: "encroach on", ipa: "/ɪnˈkrəʊtʃ/", vi: "xâm lấn, lấn chiếm", ex_right: "Đi với giới từ 'on'. Nghĩa là lấn chiếm dần dần lãnh thổ. Ngữ cảnh: đô thị hóa xâm lấn vành đai xanh.", ex_wrong: "• <b>reach/enter</b>: không đi với 'on'.<br>• <b>intrude</b>: đột nhập, xen ngang." },
+            { type: "mcq", q: "I was informed by the police officer that he would be forced to take me into ________ .", options: ["guardianship", "bail", "custody", "protection"], ans: "custody", read_phrase: "take into custody", ipa: "/ˈkʌstədi/", vi: "sự giam giữ", ex_right: "Collocation pháp lý: 'take somebody into custody' = bắt giam ai đó.", ex_wrong: "• <b>guardianship</b>: quyền giám hộ.<br>• <b>bail</b>: tiền bảo lãnh.<br>• <b>protection</b>: sự bảo vệ." },
+            { type: "mcq", q: "My inquiries did not ________ any information of value.", options: ["elicit", "arouse", "illicit", "swell"], ans: "elicit", read_phrase: "elicit information", ipa: "/ɪˈlɪsɪt/", vi: "khơi ra, moi móc (thông tin)", ex_right: "Dùng khi cố gắng gợi ra, lấy được thông tin từ ai đó.", ex_wrong: "• <b>arouse</b>: khơi dậy (cảm xúc).<br>• <b>illicit</b>: bất hợp pháp.<br>• <b>swell</b>: phồng rộp." },
+            { type: "mcq", q: "Charles was not sure which profession to enter, but finally ________ for law.", options: ["chose", "opted", "accepted", "selected"], ans: "opted", read_phrase: "opt for", ipa: "/ɒptɪd/", vi: "lựa chọn", ex_right: "Chỉ động từ 'opt' đi kèm với giới từ 'for' (opt for sth = chọn cái gì).", ex_wrong: "• <b>chose, accepted, selected</b> đều là ngoại động từ, không đi với 'for'." },
+            { type: "mcq", q: "His ________ sarcasm exasperated me.", options: ["biting", "decorous", "benevolent", "fearful"], ans: "biting", read_phrase: "biting sarcasm", ipa: "/ˈbaɪtɪŋ/", vi: "cay độc, chua chát", ex_right: "Collocation 'biting sarcasm' = lời mỉa mai cay độc, sắc bén.", ex_wrong: "• <b>decorous</b>: lịch sự.<br>• <b>benevolent</b>: nhân từ.<br>• <b>fearful</b>: sợ hãi." },
+            { type: "mcq", q: "He found it all but impossible to bear the ________ of a nomadic life.", options: ["amenities", "sourness", "decorum", "harshness"], ans: "harshness", read_phrase: "harshness", ipa: "/ˈhɑːʃnəs/", vi: "sự khắc nghiệt", ex_right: "Chỉ sự khó khăn, khắc nghiệt của lối sống du mục (nomadic life).", ex_wrong: "• <b>amenities</b>: tiện nghi.<br>• <b>sourness</b>: vị chua.<br>• <b>decorum</b>: sự đứng đắn." },
+            { type: "mcq", q: "He ________ the illusion that he will live to be a hundred.", options: ["grows", "relishes", "develops", "cherishes"], ans: "cherishes", read_phrase: "cherish an illusion", ipa: "/ˈtʃerɪʃɪz/", vi: "ấp ủ", ex_right: "Collocation 'cherish an illusion' = ấp ủ/nuôi dưỡng một ảo tưởng trong đầu.", ex_wrong: "• Tiếng Anh người bản xứ chỉ dùng 'cherish' cho cụm collocation này." },
+            { type: "mcq", q: "Samantha was dressed in a very ________ trouser suit.", options: ["contemptible", "decorous", "stinging", "becoming"], ans: "becoming", read_phrase: "a becoming suit", ipa: "/bɪˈkʌmɪŋ/", vi: "phù hợp, tôn dáng", ex_right: "Tính từ 'becoming' (dùng cho quần áo) nghĩa là rất vừa vặn và làm tôn lên vẻ đẹp.", ex_wrong: "• <b>contemptible</b>: đáng khinh.<br>• <b>decorous</b>: đoan trang (chỉ hành vi).<br>• <b>stinging</b>: châm chích." },
+            { type: "mcq", q: "It takes a very determined person to achieve results as good as this; you really have to put your ________ to it.", options: ["mind", "head", "brain", "thoughts"], ans: "mind", read_phrase: "put your mind to it", ipa: "/maɪnd/", vi: "tâm trí", ex_right: "Idiom 'put your mind to sth' = quyết tâm làm việc gì đó, dồn tâm trí vào nó.", ex_wrong: "• Dù head, brain mang nghĩa tương tự nhưng không nằm trong thành ngữ cố định này." },
+            { type: "mcq", q: "They are always on the ________ young and versatile people.", options: ["search for", "lookout for", "need for", "terms of"], ans: "lookout for", read_phrase: "on the lookout for", ipa: "/ˈlʊkaʊt fɔː(r)/", vi: "tìm kiếm", ex_right: "Idiom 'be on the lookout for sb/sth' = đang trong quá trình tìm kiếm ai/cái gì.", ex_wrong: "• Không có cấu trúc 'on the search for' (chỉ có 'in search of')." },
+            { type: "mcq", q: "There's a ________ balance between success and failure.", options: ["small", "narrow", "fine", "light"], ans: "fine", read_phrase: "a fine balance", ipa: "/faɪn/", vi: "mong manh", ex_right: "Collocation 'a fine balance' / 'a fine line' = ranh giới/sự cân bằng rất đỗi mong manh.", ex_wrong: "• Các từ small, narrow, light không đi kèm với 'balance' trong ngữ cảnh này." },
+            { type: "mcq", q: "My camera was stolen from my bag at the airport, so I ________ a claim on my insurance.", options: ["had", "did", "took", "made"], ans: "made", read_phrase: "make a claim", ipa: "/meɪd/", vi: "đưa ra yêu cầu", ex_right: "Collocation 'make a claim' = yêu cầu bồi thường bảo hiểm.", ex_wrong: "• Không dùng had, did hay took với danh từ 'claim'." },
+            { type: "mcq", q: "Reports that he earns more than $5m a year are ________ exaggerated.", options: ["grossly", "perfectly", "absolutely", "extremely"], ans: "grossly", read_phrase: "grossly exaggerated", ipa: "/ˈɡrəʊsli/", vi: "hết sức, cực kỳ", ex_right: "Collocation cố định 'grossly exaggerated' = bị phóng đại quá mức, thổi phồng sai sự thật.", ex_wrong: "• Perfectly, absolutely không dùng để bổ nghĩa cho 'exaggerated'." },
+            { type: "mcq", q: "The manager hesitated to assign the job to the newcomer as he was ________ .", options: ["wet behind the ears", "feeling your ears burning", "ringing in your ears", "keeping your ears open"], ans: "wet behind the ears", read_phrase: "wet behind the ears", ipa: "/wet bɪˈhaɪnd ði ɪəz/", vi: "còn non nớt, thiếu kinh nghiệm", ex_right: "Thành ngữ ám chỉ người lính mới/nhân viên mới chưa có trải nghiệm.", ex_wrong: "• <b>ears burning</b>: cảm giác ai đó đang nói xấu mình.<br>• <b>ringing in your ears</b>: tiếng ù tai.<br>• <b>keep ears open</b>: cẩn thận lắng nghe." },
+
+            // FILL IN THE BLANK (10 IDIOMS TỪ ẢNH CUỐI)
+            { type: "fill", vi: "Không thể nào biết trước/nói trước được điều gì", phrase: "________ no telling", ans: "There's", full: "There's no telling", ipa: "/ðeəz nəʊ ˈtelɪŋ/", ex_usage: "Dùng để diễn tả sự việc trong tương lai là không thể dự đoán hay chắc chắn được.", ex_eng: "There's no telling what the weather will be like tomorrow." },
+            { type: "fill", vi: "Buồn bã, chán nản, mặt mày ủ rũ", phrase: "Down in the ________", ans: "mouth", full: "Down in the mouth", ipa: "/daʊn ɪn ðə maʊθ/", ex_usage: "Dùng để miêu tả vẻ ngoài hoặc cảm xúc của ai đó đang rất buồn bã, thất vọng.", ex_eng: "He's been looking a bit down in the mouth since he failed the exam." },
+            { type: "fill", vi: "Siết chặt quản lý, áp đặt các biện pháp nghiêm ngặt", phrase: "________ down on someone/something", ans: "Clamp", full: "Clamp down on someone/something", ipa: "/klæmp daʊn ɒn/", ex_usage: "Dùng khi chính quyền, nhà trường hoặc tổ chức đưa ra biện pháp mạnh tay để ngăn chặn việc làm sai trái.", ex_eng: "The police are clamping down on illegal street racing." },
+            { type: "fill", vi: "Bảo vệ, bênh vực, đứng về phía ai đó", phrase: "________ up for someone", ans: "Stick", full: "Stick up for someone", ipa: "/stɪk ʌp fɔː(r)/", ex_usage: "Dùng khi bạn lên tiếng bảo vệ một người đang bị bắt nạt, chỉ trích hoặc đối xử bất công.", ex_eng: "Thank you for sticking up for me in the meeting." },
+            { type: "fill", vi: "Bị lãng quên, tuột khỏi tâm trí", phrase: "Slip one's ________", ans: "mind", full: "Slip one's mind", ipa: "/slɪp wʌnz maɪnd/", ex_usage: "Dùng khi bạn định làm một việc gì đó nhưng lại hoàn toàn quên khuấy đi mất.", ex_eng: "I meant to call her, but it completely slipped my mind." },
+            { type: "fill", vi: "Gợi ý, ẩn ý, thả thính/bóng gió về điều gì", phrase: "Drop/Give a ________", ans: "hint", full: "Drop a hint / Give a hint", ipa: "/drɒp ə hɪnt/", ex_usage: "Dùng khi ai đó đưa ra manh mối hoặc nói bóng gió thay vì nói thẳng ra.", ex_eng: "She dropped a hint that she wanted a new watch for her birthday." },
+            { type: "fill", vi: "Đang trong quá trình cạnh tranh, tranh giành cái gì", phrase: "In ________ for something", ans: "contention", full: "In contention for something", ipa: "/ɪn kənˈtenʃn fɔː(r)/", ex_usage: "Thường dùng trong thể thao hoặc kinh doanh, ám chỉ ai đó có cơ hội giành chiến thắng.", ex_eng: "He is currently in contention for the gold medal." },
+            { type: "fill", vi: "Quá chú tâm, say mê, bị cuốn vào cái gì", phrase: "________ up in something", ans: "Wrapped", full: "Wrapped up in something", ipa: "/ræpt ʌp ɪn/", ex_usage: "Dùng khi bạn quá tập trung vào việc gì (công việc, suy nghĩ) đến mức không để ý xung quanh.", ex_eng: "She was so wrapped up in her book that she didn't hear me arrive." },
+            { type: "fill", vi: "Không phải là đối thủ, kém xa ai đó về năng lực", phrase: "Be no ________ for someone", ans: "match", full: "Be no match for someone", ipa: "/bi nəʊ mætʃ fɔː(r)/", ex_usage: "Dùng để thừa nhận sự lép vế, yếu hơn hẳn so với đối phương trong một cuộc thi hay tranh luận.", ex_eng: "I play tennis well, but I am no match for him." },
+            { type: "fill", vi: "Một chút nào cả (dùng để nhấn mạnh trong câu phủ định)", phrase: "In the ________", ans: "least", full: "In the least", ipa: "/ɪn ðə liːst/", ex_usage: "Dùng ở cuối câu phủ định để tăng sắc thái mạnh mẽ (tương đương với 'not at all').", ex_eng: "I was not offended in the least by his comments." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        
+        let selectedOptionText = null;
+        let selectedOptionBtn = null;
+
+        const questionEl = document.getElementById("question");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+        const badgeAreaEl = document.getElementById("badge-area");
+        const instructionEl = document.getElementById("instruction");
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSound(isCorrect) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (isCorrect) {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(250, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function cleanTextForSpeech(text) {
+            return text.replace(/\bsomeone\b|\bsomething\b|\bsb\b|\bsth\b|\bone's\b|\b\/\b/gi, '')
+                       .replace(/\s+/g, ' ')
+                       .trim();
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const cleanText = cleanTextForSpeech(text);
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'en-GB'; 
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const resultScreen = document.getElementById("result-screen");
+                if (resultScreen.style.display === "block") return;
+
+                if (nextBtn.style.display === "block") {
+                    event.preventDefault();
+                    nextQuestion();
+                } else {
+                    const submitBtn = document.getElementById("submit-btn");
+                    if (submitBtn && submitBtn.style.display !== "none" && !submitBtn.disabled) {
+                        event.preventDefault();
+                        if (currentQuestions[currentQuestionIndex].type === "mcq") {
+                            checkMCQ();
+                        } else {
+                            checkFill();
+                        }
+                    }
+                }
+            }
+        });
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            dynamicAreaEl.innerHTML = "";
+            selectedOptionText = null;
+            selectedOptionBtn = null;
+            
+            const item = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+
+            if (item.type === "mcq") {
+                badgeAreaEl.innerHTML = `<span class="badge badge-mcq">MULTIPLE CHOICE (MCQ)</span>`;
+                instructionEl.innerText = "B1: Chọn 1 đáp án. B2: Bấm Kiểm tra để xem giải thích:";
+                questionEl.innerHTML = item.q;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = "options-grid";
+                
+                item.options.forEach(opt => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    btn.onclick = () => {
+                        initAudio();
+                        // Deselect all
+                        const allBtns = optionsContainer.querySelectorAll('.option-btn');
+                        allBtns.forEach(b => b.classList.remove('selected-option'));
+                        // Select this
+                        btn.classList.add('selected-option');
+                        selectedOptionText = opt;
+                        selectedOptionBtn = btn;
+                        
+                        // Enable Submit
+                        const submitBtn = document.getElementById("submit-btn");
+                        if(submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.style.opacity = "1";
+                            submitBtn.style.cursor = "pointer";
+                        }
+                    };
+                    optionsContainer.appendChild(btn);
+                });
+                dynamicAreaEl.appendChild(optionsContainer);
+                
+                // Add Submit Button for MCQ
+                const submitDiv = document.createElement('div');
+                submitDiv.innerHTML = `<button class="submit-btn" id="submit-btn" onclick="checkMCQ()" disabled style="opacity:0.5; cursor:not-allowed; margin-top:10px;">Kiểm tra đáp án</button>`;
+                dynamicAreaEl.appendChild(submitDiv);
+
+            } else {
+                badgeAreaEl.innerHTML = `<span class="badge badge-fill">IDIOMS (FILL IN THE BLANK)</span>`;
+                instructionEl.innerText = "Hãy điền MỘT từ vào chỗ trống để tạo thành Idiom hoàn chỉnh:";
+                
+                const formattedQ = item.phrase.replace("________", `<span style="color: var(--text-gray); border-bottom: 3px solid var(--text-gray); padding: 0 30px;"></span>`);
+                questionEl.innerHTML = `${formattedQ} <br><span class="hint-box">💡 Nghĩa: ${item.vi}</span>`;
+
+                dynamicAreaEl.innerHTML = `
+                    <div class="input-area">
+                        <input type="text" id="blank-input" placeholder="Nhập 1 từ tiếng Anh..." autocomplete="off">
+                        <button class="submit-btn" id="submit-btn" onclick="checkFill()">Kiểm tra đáp án</button>
+                    </div>
+                `;
+                setTimeout(() => {
+                    const inp = document.getElementById("blank-input");
+                    if(inp) inp.focus();
+                }, 100);
+            }
+        }
+
+        function checkMCQ() {
+            if (!selectedOptionText) return;
+
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.cursor = "default";
+            });
+            document.getElementById("submit-btn").style.display = "none";
+
+            let isCorrect = selectedOptionText === item.ans;
+            let headerHTML = "";
+            let phraseToSpeak = item.read_phrase || item.ans;
+
+            if (isCorrect) {
+                selectedOptionBtn.classList.remove("selected-option");
+                selectedOptionBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.className = "explanation-box correct-bg";
+                headerHTML = `
+                    <div class='exp-header correct-text'>
+                        <span>✓ Chính xác tuyệt đối!</span>
+                        <button class='audio-btn' onclick="speakWord('${phraseToSpeak.replace(/'/g, "\\'")}')" title='Nghe phát âm'>🔊</button>
+                    </div>`;
+            } else {
+                selectedOptionBtn.classList.remove("selected-option");
+                selectedOptionBtn.classList.add("wrong-mcq");
+                buttons.forEach(btn => {
+                    if(btn.innerText === item.ans) {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✓";
+                    }
+                });
+                playSound(false);
+                explanationEl.className = "explanation-box wrong-bg";
+                headerHTML = `
+                    <div class='exp-header wrong-text'>
+                        <span>✗ Rất tiếc! Đáp án đúng là: <b>${item.ans}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${phraseToSpeak.replace(/'/g, "\\'")}')" title='Nghe phát âm'>🔊</button>
+                    </div>`;
+            }
+
+            speakWord(phraseToSpeak);
+
+            const expHTML = `
+                ${headerHTML}
+                <div class='exp-content'>
+                    <span class='word-title'>${phraseToSpeak}</span> <span class='ipa'>${item.ipa}</span><br><br>
+                    <span style="font-size: 1.1em;">Nghĩa: <b>${item.vi}</b></span>
+                    <div class="exp-right">
+                        <b>Tại sao lại đúng?</b><br>${item.ex_right}
+                    </div>
+                    <div class="exp-wrong">
+                        <b>Tại sao các từ kia sai?</b><br>${item.ex_wrong}
+                    </div>
+                </div>
+            `;
+            
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            setTimeout(() => { nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function checkFill() {
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const inputEl = document.getElementById("blank-input");
+            const submitBtn = document.getElementById("submit-btn");
+
+            const userAns = inputEl.value.trim().toLowerCase();
+            const correctAns = item.ans.toLowerCase();
+
+            if (userAns === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let isCorrect = userAns === correctAns;
+            let headerHTML = "";
+
+            if (isCorrect) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.className = "explanation-box correct-bg";
+                questionEl.innerHTML = item.phrase.replace("________", `<span style="color: var(--success); border-bottom: 3px solid var(--success); padding: 0 10px;">${item.ans}</span>`);
+                headerHTML = `
+                    <div class='exp-header correct-text'>
+                        <span>✓ Giỏi quá! Em thuộc bài rồi!</span>
+                        <button class='audio-btn' onclick="speakWord('${item.full.replace(/'/g, "\\'")}')" title='Nghe đọc Idiom'>🔊</button>
+                    </div>`;
+            } else {
+                playSound(false);
+                explanationEl.className = "explanation-box wrong-bg";
+                questionEl.innerHTML = item.phrase.replace("________", `<span style="color: var(--error); border-bottom: 3px solid var(--error); text-decoration: line-through; padding: 0 10px;">${userAns}</span> <span style="color: var(--success); border-bottom: 3px solid var(--success); padding: 0 10px;">${item.ans}</span>`);
+                headerHTML = `
+                    <div class='exp-header wrong-text'>
+                        <span>✗ Sai rồi! Từ còn thiếu là: <b>${item.ans}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${item.full.replace(/'/g, "\\'")}')" title='Nghe đọc Idiom'>🔊</button>
+                    </div>`;
+            }
+
+            speakWord(item.full);
+
+            const expHTML = `
+                ${headerHTML}
+                <div class='exp-content'>
+                    <span class='word-title'>${item.full}</span> <span class='ipa'>${item.ipa}</span><br><br>
+                    <span style="font-size: 1.1em;">Nghĩa Idiom: <b>${item.vi}</b></span>
+                    <div class="example-box" style="border-left-color: var(--secondary); background-color: #fef3c7;">
+                        <b>Tình huống sử dụng:</b> ${item.ex_usage}
+                    </div>
+                    <div class="example-box" style="border-left-color: var(--success); background-color: var(--success-bg);">
+                        <b>Câu ví dụ Tiếng Anh:</b><br>"${item.ex_eng}"
+                    </div>
+                </div>
+            `;
+            
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            setTimeout(() => { nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
