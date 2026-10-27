@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idiom & Collocation Challenge 🎯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #2563eb; /* Blue */
+            --secondary: #d97706; /* Amber/Yellow for highlight */
+            --bg-main: #f0fdf4; /* Very light green background */
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --success: #059669;
+            --error: #dc2626;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: radial-gradient(circle at 10% 20%, #dcfce7 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, #bfdbfe 0%, transparent 20%);
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.15);
+            padding: 40px;
+            border-top: 8px solid var(--primary);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2em;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .question-box {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 35px 20px;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            font-family: var(--font-heading);
+            font-size: 1.8em;
+            color: var(--primary);
+            font-weight: 700;
+            background-color: #f8fafc;
+            line-height: 1.5;
+        }
+        
+        .vietnamese-meaning {
+            font-family: var(--font-body);
+            font-size: 0.7em;
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .hint-text {
+            font-family: var(--font-body);
+            font-size: 0.55em;
+            color: #64748b;
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            background: #e2e8f0;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            letter-spacing: 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="text"] {
+            width: 50%;
+            padding: 15px;
+            font-size: 1.3em;
+            font-family: var(--font-body);
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+            background-color: #1d4ed8;
+        }
+        
+        .btn-next { background-color: var(--success); box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3); }
+        .btn-next:hover:not(:disabled) { background-color: #047857; box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4); }
+
+        .explanation-box {
+            display: none;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 16px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.correct { border-color: var(--success); }
+        .explanation-box.wrong { border-color: var(--error); }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 1.3em;
+            font-weight: 800;
+        }
+
+        .audio-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .audio-btn:hover { transform: scale(1.1); background-color: #b45309; }
+
+        .exp-content { font-size: 1.1em; line-height: 1.6; }
+        .exp-word { color: var(--primary); font-size: 1.4em; font-family: var(--font-heading); font-weight: 700; display: block; margin-bottom: 10px; }
+        
+        .example-box {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        #result-screen { display: none; text-align: center; }
+        #result-screen h2 { font-family: var(--font-heading); color: var(--primary); font-size: 2.8em; margin-bottom: 10px; }
+        .final-score { font-size: 4.5em; font-weight: 900; color: var(--secondary); margin: 20px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-q">1</span>/36</span>
+            <span>🏆 ĐIỂM: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction">Điền MỘT từ vào chỗ trống để tạo thành Idiom/Cụm từ hoàn chỉnh:</div>
+        
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div class="input-group">
+            <input type="text" id="answer-input" placeholder="Nhập từ..." autocomplete="off">
+            <button class="btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-next" id="next-btn" style="display: none;" onclick="nextQuestion()">Tiếp Tục ➔</button>
+        </div>
+    </div>
+
+    <div class="container" id="result-screen">
+        <h2>Xin Chúc Mừng! 🎉</h2>
+        <p style="font-size: 1.2em; color: var(--text-muted);">Bạn đã hoàn thành xuất sắc bài tập.</p>
+        <div class="final-score"><span id="final-score">0</span>/360</div>
+        <button class="btn" onclick="location.reload()">Chơi Lại 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            { ans: "Indict", full: "Indict somebody for something", phrase: "________ somebody for something", vi: "truy tố ai về tội gì", hint: "i", def: "formally charge someone with a crime.", ex: "He was indicted for manslaughter." },
+            { ans: "indignant", full: "Be indignant at/about something", phrase: "Be ________ at/about something", vi: "cảm thấy phẫn nộ, bất bình", hint: "i", def: "feel angry about something unjust.", ex: "The taxpayers were indignant at the illegal use of public funds." },
+            { ans: "adversity", full: "Meet with adversity", phrase: "Meet with ________", vi: "đương đầu với nghịch cảnh", hint: "a", def: "encounter difficulties.", ex: "Despite all the adversities they met with, they succeeded." },
+            { ans: "dawns", full: "It dawns on somebody that...", phrase: "It ________ on somebody that...", vi: "chợt nhận ra rằng", hint: "d", def: "someone gradually or suddenly realized something.", ex: "It dawned on him that his life wouldn't improve." },
+            { ans: "cause", full: "Work for a good cause", phrase: "Work for a good ________", vi: "làm việc vì một mục đích tốt đẹp", hint: "c", def: "work to support something worthwhile or morally good.", ex: "Not all scientists are working for a good cause." },
+            { ans: "calamities", full: "Report calamities", phrase: "Report ________", vi: "đưa tin về thảm họa", hint: "c", def: "report on disasters like earthquakes, floods, etc.", ex: "The news program reported on the recent calamities." },
+            { ans: "Avert", full: "Avert a threat/disaster/crisis", phrase: "________ a threat/disaster/crisis", vi: "ngăn chặn một mối đe dọa/thảm họa", hint: "a", def: "prevent a threat, disaster or crisis from becoming reality.", ex: "They managed to avert a general strike." },
+            { ans: "Meager", full: "Meager wages", phrase: "________ wages", vi: "mức lương quá thấp, ít ỏi", hint: "m", def: "very low wages.", ex: "It's hard to live on such meager wages." },
+            { ans: "Impair", full: "Impair your eyesight", phrase: "________ your eyesight", vi: "làm suy giảm thị lực", hint: "i", def: "damage or weaken your ability to see.", ex: "Reading in dim light can impair your eyesight." },
+            { ans: "token", full: "A token of gratitude", phrase: "A ________ of gratitude", vi: "biểu hiện của lòng biết ơn", hint: "t", def: "something given or done to show that you are thankful.", ex: "The gift was a token of his gratitude." },
+            { ans: "abates", full: "A storm abates", phrase: "A storm ________", vi: "cơn bão dịu đi", hint: "a", def: "a storm becomes less severe.", ex: "They were able to set sail when the storm abated." },
+            { ans: "Scope", full: "Scope for something", phrase: "________ for something", vi: "cơ hội, không gian cho việc gì (thường là sáng tạo)", hint: "s", def: "the opportunity or possibility to do something.", ex: "This job offers scope for creative thinking." },
+            { ans: "Observe", full: "Observe the law", phrase: "________ the law", vi: "tuân thủ pháp luật", hint: "o", def: "obey the law (formal).", ex: "Law-abiding people observe the law." },
+            { ans: "open", full: "Keep an open house", phrase: "Keep an ________ house", vi: "thường xuyên tổ chức tiệc/đón khách tại nhà", hint: "o", def: "regularly welcome people into your home, often informally.", ex: "Roy keeps an open house on Saturdays." },
+            { ans: "hands", full: "Wash one's hands of something", phrase: "Wash one's ________ of something", vi: "rũ bỏ trách nhiệm, không dính líu nữa", hint: "h", def: "refuse to be involved in something any longer.", ex: "Terry washed his hands of the matter long ago." },
+            { ans: "thick", full: "Have a thick skin", phrase: "Have a ________ skin", vi: "mặt dày, không bận tâm đến lời chỉ trích", hint: "t", def: "be able to accept criticism without becoming upset.", ex: "You need to have a thick skin to be in politics." },
+            { ans: "Wage", full: "Wage war on/against something", phrase: "________ war on/against something", vi: "tiến hành chiến dịch chống lại cái gì", hint: "w", def: "actively fight against something.", ex: "The government waged war on dangerous driving." },
+            { ans: "ailing", full: "An ailing economy", phrase: "An ________ economy", vi: "nền kinh tế suy yếu", hint: "a", def: "an economy that is performing poorly or experiencing problems.", ex: "The interest rate cut raised fears about China's ailing economy." },
+            { ans: "handful", full: "Be a handful", phrase: "Be a ________", vi: "khó bảo, khó quản lý (thường dùng cho trẻ em)", hint: "h", def: "be difficult to control or manage.", ex: "His younger brother is a bit of a handful." },
+            { ans: "quantity", full: "An unknown quantity", phrase: "An unknown ________", vi: "một nhân tố khó đoán, chưa rõ năng lực", hint: "q", def: "a person or thing whose abilities or likely behaviour are not yet known.", ex: "The new candidate is a pretty unknown quantity." },
+            { ans: "whirlwind", full: "A whirlwind romance", phrase: "A ________ romance", vi: "một mối tình tiến triển cực nhanh", hint: "w", def: "a romantic relationship that develops very quickly and intensely.", ex: "They got married after a whirlwind romance." },
+            { ans: "talk", full: "Be the talk of the town", phrase: "Be the ________ of the town", vi: "trở thành chủ đề bàn tán khắp nơi", hint: "t", def: "be something that everyone in a town or community is discussing.", ex: "The new immigration laws are the talk of the town." },
+            { ans: "outsider", full: "A rank outsider", phrase: "A rank ________", vi: "người/đội không có cơ hội chiến thắng (bị đánh giá thấp)", hint: "o", def: "someone with very little chance of winning a competition.", ex: "Leicester City was a rank outsider before winning the league." },
+            { ans: "token", full: "By the same token", phrase: "By the same ________", vi: "tương tự như vậy, vì cùng lẽ đó", hint: "t", def: "for the same reason or in a similar way.", ex: "I don't think it will be harder, but by the same token, it won't be easier." },
+            { ans: "limit", full: "Push somebody to the limit", phrase: "Push somebody to the ________", vi: "đẩy ai đó đến giới hạn chịu đựng", hint: "l", def: "make someone work as hard as they possibly can.", ex: "The coach always pushed us to the limit." },
+            { ans: "glance", full: "At a glance", phrase: "At a ________", vi: "chỉ cần nhìn thoáng qua (là biết)", hint: "g", def: "after looking quickly at something.", ex: "I could tell at a glance that they had argued." },
+            { ans: "Prompt", full: "Prompt someone to do something", phrase: "________ someone to do something", vi: "thúc đẩy, thôi thúc ai làm gì", hint: "p", def: "cause someone to take a course of action.", ex: "The letter prompted him to call a meeting." },
+            { ans: "Reflect", full: "Reflect badly on someone/something", phrase: "________ badly on someone/something", vi: "làm ảnh hưởng xấu, để lại ấn tượng xấu", hint: "r", def: "cause people to think negatively about someone/something.", ex: "His behavior reflects badly on the school." },
+            { ans: "consolation", full: "Be of no consolation", phrase: "Be of no ________", vi: "không hề là niềm an ủi", hint: "c", def: "does not make you feel any better.", ex: "It's of no consolation to know that others failed too." },
+            { ans: "word", full: "Give someone one's word", phrase: "Give someone one's ________", vi: "hứa hẹn, lấy danh dự đảm bảo", hint: "w", def: "promise someone sincerely.", ex: "I give you my word that I will help." },
+            { ans: "Model", full: "Model oneself on someone", phrase: "________ oneself on someone", vi: "rập khuôn, bắt chước ai đó", hint: "m", def: "try to be like someone you admire.", ex: "She modelled herself on her favorite teacher." },
+            { ans: "Single", full: "Single someone/something out", phrase: "________ someone/something out", vi: "chọn ra, tách riêng ra (để khen/chê)", hint: "s", def: "choose one person/thing from a group for special attention.", ex: "He was singled out for praise." },
+            { ans: "stage", full: "Reach the stage where/when...", phrase: "Reach the ________ where/when...", vi: "đến giai đoạn, đến mức mà...", hint: "s", def: "arrive at a particular point in a process.", ex: "We've reached the stage where we need to make a decision." },
+            { ans: "liable", full: "Be liable to do something", phrase: "Be ________ to do something", vi: "rất có khả năng, dễ bị (gặp chuyện gì)", hint: "l", def: "very likely to do something (often negative).", ex: "He is liable to lose his temper if you push him." },
+            { ans: "fit", full: "Have a fit", phrase: "Have a ________", vi: "lên cơn giận dữ, nổi trận lôi đình", hint: "f", def: "become very angry.", ex: "My mom will have a fit when she sees this mess." },
+            { ans: "Count", full: "Count against someone", phrase: "________ against someone", vi: "là một bất lợi cho ai", hint: "c", def: "be considered as a disadvantage.", ex: "His lack of experience will count against him." }
+        ];
+
+        let questions = [...quizData].sort(() => Math.random() - 0.5);
+        let currIdx = 0, score = 0;
+        
+        const el = id => document.getElementById(id);
+        let audioCtx;
+
+        function initAudio() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSnd(isCorr) {
+            initAudio(); // Đảm bảo âm thanh đã kích hoạt
+            
+            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            
+            if(isCorr) {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); 
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+            }
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // BỘ LỌC ĐỌC ÂM THANH (Chuyển sb -> somebody, sth -> something)
+        function cleanForTTS(txt) {
+            return txt.replace(/sb/gi, 'somebody')
+                      .replace(/sth/gi, 'something')
+                      .replace(/[\(\)\/]/g, ' ')
+                      .replace(/\s+/g, ' ').trim();
+        }
+
+        function speak(txt) {
+            if('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                let u = new SpeechSynthesisUtterance(cleanForTTS(txt));
+                u.lang = 'en-US'; u.rate = 0.9;
+                speechSynthesis.speak(u);
+            }
+        }
+
+        function loadQ() {
+            el('next-btn').style.display = 'none';
+            el('explanation').style.display = 'none';
+            
+            let q = questions[currIdx];
+            el('current-q').innerText = currIdx + 1;
+            
+            let hQ = q.phrase.replace('________', `<span style="color:#94a3b8;border-bottom:2px dashed #94a3b8;padding:0 25px;">?</span>`);
+            el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>
+                                        ${hQ}
+                                        <span class="hint-text">Gợi ý: Bắt đầu bằng chữ '${q.hint.toUpperCase()}'</span>`;
+            
+            el('answer-input').value = "";
+            el('answer-input').disabled = false;
+            el('submit-btn').style.display = 'block';
+            setTimeout(() => el('answer-input').focus(), 100);
+        }
+
+        function checkAnswer() {
+            let q = questions[currIdx];
+            let input = el('answer-input').value.trim().toLowerCase();
+            if(input === "") return;
+
+            el('answer-input').disabled = true;
+            el('submit-btn').style.display = 'none';
+
+            let isCorr = input === q.ans.toLowerCase();
+            
+            if(isCorr) {
+                score += 10; el('score').innerText = score;
+                playSnd(true);
+                el('explanation').className = "explanation-box correct";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>` + 
+                    q.phrase.replace('________', `<span style="color:var(--success); border-bottom:2px solid var(--success); padding:0 10px;">${q.ans}</span>`);
+            } else {
+                playSnd(false);
+                el('explanation').className = "explanation-box wrong";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>` + 
+                    q.phrase.replace('________', `<span style="text-decoration:line-through; color:var(--error);">${input}</span> <span style="color:var(--success); border-bottom:2px solid var(--success); padding:0 10px;">${q.ans}</span>`);
+            }
+
+            speak(q.full);
+
+            // Dùng &apos; để thay cho dấu nháy đơn, tránh bị lỗi code JS
+            let safeString = q.full.replace(/'/g, "&apos;");
+
+            el('explanation').innerHTML = `
+                <div class="exp-header">
+                    <span style="color:var(--${isCorr?'success':'error'})">${isCorr?'🎉 Chính xác!':'❌ Sai rồi!'}</span>
+                    <button class="audio-btn" onclick="speak('${safeString}')">🔊</button>
+                </div>
+                <div class="exp-content">
+                    <span class="exp-word">${q.full}</span>
+                    <div><b>Giải nghĩa:</b> ${q.def}</div>
+                    <div class="example-box"><b>Ví dụ:</b> "${q.ex}"</div>
+                </div>
+            `;
+            
+            el('explanation').style.display = 'block';
+            el('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currIdx++;
+            if(currIdx < questions.length) loadQ();
+            else {
+                el('quiz-screen').style.display = 'none';
+                el('result-screen').style.display = 'block';
+                el('final-score').innerText = score;
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'Enter') {
+                if(el('next-btn').style.display === 'block') nextQuestion();
+                else if(el('submit-btn').style.display === 'block' && !el('answer-input').disabled) checkAnswer();
+            }
+        });
+
+        // Bắt đầu game và kích hoạt Audio 
+        window.onload = () => { 
+            document.body.addEventListener('click', initAudio, {once:true}); 
+            loadQ(); 
+        };
+    </script>
+</body>
+</html>
