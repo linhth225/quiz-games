@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary & Idiom Mastery 🎯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #4338ca; /* Indigo */
+            --secondary: #d97706; /* Amber for highlights */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --success: #059669;
+            --error: #dc2626;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: radial-gradient(circle at 10% 20%, #e0e7ff 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, #c7d2fe 0%, transparent 20%);
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px -5px rgba(67, 56, 202, 0.15);
+            padding: 40px;
+            border-top: 8px solid var(--primary);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2em;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .question-box {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 35px 20px;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            font-family: var(--font-heading);
+            font-size: 1.8em;
+            color: var(--primary);
+            font-weight: 700;
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        .vietnamese-meaning {
+            font-family: var(--font-body);
+            font-size: 0.65em;
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .hint-text {
+            font-family: var(--font-body);
+            font-size: 0.55em;
+            color: #64748b;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: 600;
+            background: #e2e8f0;
+            padding: 5px 15px;
+            border-radius: 20px;
+            letter-spacing: 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 15px;
+            font-size: 1.3em;
+            font-family: var(--font-body);
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(67, 56, 202, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(67, 56, 202, 0.4);
+            background-color: #3730a3;
+        }
+        
+        .btn-next { background-color: var(--success); box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3); }
+        .btn-next:hover:not(:disabled) { background-color: #047857; box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4); }
+
+        .explanation-box {
+            display: none;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 16px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.correct { border-color: var(--success); }
+        .explanation-box.wrong { border-color: var(--error); }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 1.3em;
+            font-weight: 800;
+        }
+
+        .audio-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .audio-btn:hover { transform: scale(1.1); background-color: #b45309; }
+
+        .exp-content { font-size: 1.1em; line-height: 1.6; }
+        .exp-word { color: var(--primary); font-size: 1.4em; font-family: var(--font-heading); font-weight: 700; display: block; margin-bottom: 10px; }
+        .exp-ipa { font-family: monospace; color: var(--text-muted); font-size: 0.9em; background: #f1f5f9; padding: 2px 8px; border-radius: 5px; margin-left: 10px; }
+        
+        .example-box {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        #result-screen { display: none; text-align: center; }
+        #result-screen h2 { font-family: var(--font-heading); color: var(--primary); font-size: 2.8em; margin-bottom: 10px; }
+        .final-score { font-size: 4.5em; font-weight: 900; color: var(--secondary); margin: 20px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-q">1</span>/43</span>
+            <span>🏆 ĐIỂM: <span id="score">0</span></span>
+        </div>
+        
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div class="input-group">
+            <input type="text" id="answer-input" placeholder="Gõ từ cần điền..." autocomplete="off">
+            <button class="btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-next" id="next-btn" style="display: none;" onclick="nextQuestion()">Tiếp Tục ➔</button>
+        </div>
+    </div>
+
+    <div class="container" id="result-screen">
+        <h2>Xin Chúc Mừng! 🎉</h2>
+        <p style="font-size: 1.2em; color: var(--text-muted);">Bạn đã hoàn thành bài luyện tập Từ vựng và Thành ngữ.</p>
+        <div class="final-score"><span id="final-score">0</span>/430</div>
+        <button class="btn" onclick="location.reload()">Chơi Lại 🔄</button>
+    </div>
+
+    <script>
+        // Dữ liệu 43 câu lấy CHÍNH XÁC từ 4 hình ảnh mới nhất
+        const quizData = [
+            // Từ vựng đơn (Hình 38 & 39)
+            { phrase: "________", ans: "navigate", full: "navigate", vi: "định hướng; dẫn đường", hint: "n", ipa: "/ˈnævɪɡeɪt/", def: "steer, pilot", ex: "Knew how to navigate just by observing the stars, the wind and the sea." },
+            { phrase: "________", ans: "cherish", full: "cherish", vi: "trân quý, nâng niu", hint: "c", ipa: "/ˈtʃerɪʃ/", def: "treasure, value", ex: "We love and cherish cars because they are undeniably convenient." },
+            { phrase: "________", ans: "congestion", full: "congestion", vi: "tắc nghẽn (giao thông)", hint: "c", ipa: "/kənˈdʒestʃən/", def: "traffic jam(s), gridlock", ex: "Increase in pollution and congestion that they cause." },
+            { phrase: "________", ans: "motive", full: "motive", vi: "động cơ, lý do", hint: "m", ipa: "/ˈməʊtɪv/", def: "reason, incentive", ex: "Apart from the obvious profit motive." },
+            { phrase: "within easy ________", ans: "reach", full: "within easy reach", vi: "trong tầm với, dễ tiếp cận", hint: "r", ipa: "/wɪˌðɪn ˈiːzi riːtʃ/", def: "accessible, attainable", ex: "The so-called 'People's Car' is now within easy reach of determined buyers." },
+            { phrase: "________", ans: "prosperous", full: "prosperous", vi: "thịnh vượng", hint: "p", ipa: "/ˈprɒspərəs/", def: "thriving, affluent", ex: "Dreams for a prosperous future." },
+            { phrase: "________", ans: "extensive", full: "extensive", vi: "rộng rãi, quy mô lớn", hint: "e", ipa: "/ɪkˈstensɪv/", def: "wide-ranging, broad", ex: "Combine these facts with extensive advertising." },
+            { phrase: "________", ans: "inevitable", full: "inevitable", vi: "không tránh khỏi", hint: "i", ipa: "/ɪnˈevɪtəbl/", def: "unavoidable, inescapable", ex: "Sit alongside each other in the inevitable traffic jams." },
+            { phrase: "have ________ to", ans: "access", full: "have access to", vi: "có quyền/khả năng tiếp cận", hint: "a", ipa: "/hæv ˈækses tuː/", def: "be able to use, obtain", ex: "Should not have access to the same modern conveniences." },
+            { phrase: "take into ________", ans: "account", full: "take into account", vi: "tính đến, cân nhắc", hint: "a", ipa: "/ˌteɪk ɪntuː əˈkaʊnt/", def: "consider, factor in", ex: "Does not take into account the existing car companies." },
+            { phrase: "________ arguments", ans: "compelling", full: "compelling arguments", vi: "lập luận thuyết phục", hint: "c", ipa: "/kəmˈpelɪŋ ˈɑːɡjumənts/", def: "persuasive reasons, strong case", ex: "There are compelling arguments in favour of controlling." },
+            { phrase: "________ for concern", ans: "cause", full: "cause for concern", vi: "điều đáng lo ngại", hint: "c", ipa: "/kɔːz fə kənˈsɜːn/", def: "worry, alarm", ex: "Traffic congestion, already a major cause for concern." },
+            { phrase: "________", ans: "descendant", full: "descendant", vi: "hậu duệ, con cháu", hint: "d", ipa: "/dɪˈsendənt/", def: "offspring, progeny", ex: "Will our descendants look back at this development?" },
+            { phrase: "________", ans: "migration", full: "migration", vi: "sự di cư", hint: "m", ipa: "/maɪˈɡreɪʃn/", def: "movement, relocation", ex: "The migration of people from rural to urban areas." },
+            { phrase: "________", ans: "impoverished", full: "impoverished", vi: "nghèo khó", hint: "i", ipa: "/ɪmˈpɒvərɪʃt/", def: "poor, destitute", ex: "Impoverished peasants traditionally dependent on subsistence agriculture." },
+            { phrase: "________", ans: "subsistence", full: "subsistence", vi: "tự cung tự cấp; mức sinh tồn", hint: "s", ipa: "/səbˈsɪstəns/", def: "livelihood, survival", ex: "Subsistence agriculture." },
+            { phrase: "________ to", ans: "alternative", full: "alternative to", vi: "lựa chọn thay thế cho", hint: "a", ipa: "/ɔːlˈtɜːnətɪv tuː/", def: "substitute for, option for", ex: "A far more promising alternative to the toil of farm life." },
+            { phrase: "________", ans: "lure", full: "lure", vi: "sức hấp dẫn; lôi cuốn", hint: "l", ipa: "/lʊə(r)/", def: "attraction, appeal", ex: "And that lure has continued." },
+            { phrase: "________", ans: "exceed", full: "exceed", vi: "vượt quá", hint: "e", ipa: "/ɪkˈsiːd/", def: "surpass, outstrip", ex: "The world's urban population exceeded its rural population." },
+            { phrase: "________", ans: "contemporary", full: "contemporary", vi: "đương đại, hiện nay", hint: "c", ipa: "/kənˈtemprəri/", def: "modern, present-day", ex: "Contemporary instances of urbanisation." },
+            { phrase: "________", ans: "accommodate", full: "accommodate", vi: "đáp ứng; chứa, tiếp nhận", hint: "a", ipa: "/əˈkɒmədeɪt/", def: "house, cater for", ex: "Lack of resources in rural areas to accommodate an ever-expanding population." },
+            { phrase: "________", ans: "shift", full: "shift", vi: "sự chuyển dịch", hint: "s", ipa: "/ʃɪft/", def: "change, transition", ex: "This shift in demographics." },
+            { phrase: "________", ans: "relocate", full: "relocate", vi: "tái định cư; chuyển chỗ", hint: "r", ipa: "/ˌriːləʊˈkeɪt/", def: "move, resettle", ex: "Will find themselves relocated without improving their economic situations." },
+            { phrase: "________", ans: "prevalence", full: "prevalence", vi: "mức độ phổ biến", hint: "p", ipa: "/ˈprevələns/", def: "commonness, widespreadness", ex: "Explains the prevalence of urban slums." },
+            { phrase: "________", ans: "plague", full: "plague (v)", vi: "hoành hành; gây rắc rối liên tục", hint: "p", ipa: "/pleɪɡ/", def: "afflict, torment", ex: "Crime that plagues many major cities." },
+            { phrase: "________", ans: "correlation", full: "correlation", vi: "mối tương quan", hint: "c", ipa: "/ˌkɒrəˈleɪʃn/", def: "relationship, association", ex: "A direct correlation between urbanisation and crimes such as robbery." },
+            { phrase: "________", ans: "dire", full: "dire", vi: "nghiêm trọng, thê thảm", hint: "d", ipa: "/ˈdaɪə(r)/", def: "severe, grim", ex: "Particularly dire in times of social unrest." },
+            { phrase: "________", ans: "volatile", full: "volatile", vi: "biến động, bất ổn", hint: "v", ipa: "/ˈvɒlətaɪl/", def: "unstable, turbulent", ex: "During the politically volatile years of the late 1960s." },
+            { phrase: "________", ans: "rampant", full: "rampant", vi: "tràn lan, mất kiểm soát", hint: "r", ipa: "/ˈræmpənt/", def: "widespread, uncontrolled", ex: "The rampant crime in American cities." },
+            { phrase: "________", ans: "propensity", full: "propensity", vi: "khuynh hướng, xu hướng", hint: "p", ipa: "/prəˈpensəti/", def: "tendency, inclination", ex: "The growing propensity to substitute whole foods with packaged and processed foods." },
+            { phrase: "cost ________", ans: "effective", full: "cost effective", vi: "hiệu quả về chi phí", hint: "e", ipa: "/ˌkɒst ɪˈfektɪv/", def: "economical, efficient", ex: "Far more cost effective for retailers to streamline their supply chains." },
+            { phrase: "________", ans: "initiative", full: "initiative", vi: "sáng kiến", hint: "i", ipa: "/ɪˈnɪʃətɪv/", def: "program, project", ex: "Some large-scale urban farming initiatives are already underway." },
+            { phrase: "to be ________", ans: "underway", full: "to be underway", vi: "đang được tiến hành", hint: "u", ipa: "/ˌʌndəˈweɪ/", def: "in progress, ongoing", ex: "Are already underway and thus far have shown promising results." },
+
+            // Idioms (Hình 40 & 41)
+            { phrase: "On ________ street", ans: "easy", full: "On easy street", vi: "Có cuộc sống sung túc, không phải lo lắng về tiền bạc", hint: "e", ipa: "", def: "To live comfortably without financial worries", ex: "Be sitting pretty; live in the lap of luxury; be rolling in money." },
+            { phrase: "Be thrown in at the ________ end", ans: "deep", full: "Be thrown in at the deep end", vi: "Bị đặt vào tình huống khó khăn ngay từ đầu mà không được chuẩn bị", hint: "d", ipa: "", def: "To be given a difficult task without preparation or help", ex: "Learn the hard way; be left to sink or swim." },
+            { phrase: "A close ________", ans: "shave", full: "A close shave", vi: "Một phen hú vía; thoát hiểm trong gang tấc", hint: "s", ipa: "", def: "An occasion when someone narrowly avoids danger or a serious problem", ex: "A narrow escape; a near miss; a close call." },
+            { phrase: "________ beat", ans: "Dead", full: "Dead beat", vi: "Mệt rã rời; kiệt sức", hint: "d", ipa: "", def: "Extremely tired and having no energy left", ex: "Worn out; run-down; fit to drop." },
+            { phrase: "Fall ________", ans: "flat", full: "Fall flat", vi: "Thất bại; không đạt được hiệu quả như mong đợi", hint: "f", ipa: "", def: "To fail to have the intended effect or to receive the expected response", ex: "Fall on deaf ears; go down like a lead balloon; miss the mark." },
+            { phrase: "Give someone/something short ________", ans: "shrift", full: "Give someone/something short shrift", vi: "Đối xử qua loa; không dành đủ thời gian hoặc sự quan tâm", hint: "s", ipa: "", def: "To give someone or something very little attention or consideration", ex: "Brush someone aside; give someone the cold shoulder; pay little heed to." },
+            { phrase: "Hot ________", ans: "air", full: "Hot air", vi: "Lời nói suông; khoa trương nhưng thiếu thực chất", hint: "a", ipa: "", def: "Talk that sounds impressive but has little truth, value or practical substance", ex: "Empty promises; all talk and no action; a lot of sound and fury." },
+            { phrase: "Be in a ________ corner", ans: "tight", full: "Be in a tight corner", vi: "Lâm vào tình thế khó khăn, tiến thoái lưỡng nan", hint: "t", ipa: "", def: "To be in a difficult situation with few good options", ex: "Be in a tight spot; be between a rock and a hard place; be in a bind." },
+            { phrase: "Be in full ________", ans: "swing", full: "Be in full swing", vi: "Đang diễn ra sôi nổi; đang ở giai đoạn náo nhiệt nhất", hint: "s", ipa: "", def: "To be at the busiest, most active or most lively stage", ex: "Be in full flow; be in full force; be in the thick of things." },
+            { phrase: "Play one's ________ card", ans: "trump", full: "Play one's trump card", vi: "Tung ra quân bài chủ chốt; sử dụng lợi thế mạnh nhất vào thời điểm quyết định", hint: "t", ipa: "", def: "To use one's strongest advantage or best resource at a crucial moment", ex: "Play one's ace; have an ace up one's sleeve; pull out all the stops." }
+        ];
+
+        let questions = [...quizData].sort(() => Math.random() - 0.5);
+        let currIdx = 0, score = 0;
+        
+        const el = id => document.getElementById(id);
+        let audioCtx;
+
+        function initAudio() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSnd(isCorr) {
+            initAudio();
+            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            
+            if(isCorr) {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); 
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+            }
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // BỘ LỌC ĐỌC ÂM THANH
+        function cleanForTTS(txt) {
+            return txt.replace(/\bsomeone\/something\b/gi, 'someone or something')
+                      .replace(/\bsb\b/gi, 'somebody')
+                      .replace(/\bsth\b/gi, 'something')
+                      .replace(/[\(\)\/]/g, ' ')
+                      .replace(/\s+/g, ' ').trim();
+        }
+
+        function speak(txt) {
+            if('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                let u = new SpeechSynthesisUtterance(cleanForTTS(txt));
+                u.lang = 'en-US'; u.rate = 0.9;
+                speechSynthesis.speak(u);
+            }
+        }
+
+        function loadQ() {
+            el('next-btn').style.display = 'none';
+            el('explanation').style.display = 'none';
+            
+            let q = questions[currIdx];
+            el('current-q').innerText = currIdx + 1;
+            
+            let hQ = q.phrase.replace('________', `<span style="color:#94a3b8;border-bottom:3px dashed #94a3b8;padding:0 35px;">?</span>`);
+            el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>
+                                        ${hQ}
+                                        <br><span class="hint-text">Gợi ý: Bắt đầu bằng chữ '${q.hint.toUpperCase()}'</span>`;
+            
+            el('answer-input').value = "";
+            el('answer-input').disabled = false;
+            el('submit-btn').style.display = 'block';
+            setTimeout(() => el('answer-input').focus(), 100);
+        }
+
+        function checkAnswer() {
+            let q = questions[currIdx];
+            let input = el('answer-input').value.trim().toLowerCase();
+            if(input === "") return;
+
+            el('answer-input').disabled = true;
+            el('submit-btn').style.display = 'none';
+
+            let isCorr = input === q.ans.toLowerCase();
+            
+            if(isCorr) {
+                score += 10; el('score').innerText = score;
+                playSnd(true);
+                el('explanation').className = "explanation-box correct";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>` + 
+                    q.phrase.replace('________', `<span style="color:var(--success); border-bottom:3px solid var(--success); padding:0 15px;">${q.ans}</span>`);
+            } else {
+                playSnd(false);
+                el('explanation').className = "explanation-box wrong";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>` + 
+                    q.phrase.replace('________', `<span style="text-decoration:line-through; color:var(--error);">${input}</span> <span style="color:var(--success); border-bottom:3px solid var(--success); padding:0 15px;">${q.ans}</span>`);
+            }
+
+            speak(q.full);
+
+            let safeString = q.full.replace(/'/g, "&apos;");
+
+            el('explanation').innerHTML = `
+                <div class="exp-header">
+                    <span style="color:var(--${isCorr?'success':'error'})">${isCorr?'🎉 Chính xác!':'❌ Sai rồi!'}</span>
+                    <button class="audio-btn" onclick="speak('${safeString}')">🔊</button>
+                </div>
+                <div class="exp-content">
+                    <span class="exp-word">${q.full} ${q.ipa ? `<span class="exp-ipa">${q.ipa}</span>` : ''}</span>
+                    <div><b>Giải nghĩa:</b> ${q.def}</div>
+                    <div class="example-box"><b>Ví dụ:</b> "${q.ex}"</div>
+                </div>
+            `;
+            
+            el('explanation').style.display = 'block';
+            el('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currIdx++;
+            if(currIdx < questions.length) loadQ();
+            else {
+                el('quiz-screen').style.display = 'none';
+                el('result-screen').style.display = 'block';
+                el('final-score').innerText = score;
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'Enter') {
+                if(el('next-btn').style.display === 'block') nextQuestion();
+                else if(el('submit-btn').style.display === 'block' && !el('answer-input').disabled) checkAnswer();
+            }
+        });
+
+        window.onload = () => { 
+            document.body.addEventListener('click', initAudio, {once:true}); 
+            loadQ(); 
+        };
+    </script>
+</body>
+</html>
