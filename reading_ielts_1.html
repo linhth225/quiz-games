@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Challenge 🎯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #4338ca; /* Indigo */
+            --secondary: #d97706; /* Amber for highlights */
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --success: #059669;
+            --error: #dc2626;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: radial-gradient(circle at 10% 20%, #e0e7ff 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, #c7d2fe 0%, transparent 20%);
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px -5px rgba(67, 56, 202, 0.15);
+            padding: 40px;
+            border-top: 8px solid var(--primary);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2em;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .question-box {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 35px 20px;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            font-family: var(--font-heading);
+            font-size: 1.8em;
+            color: var(--primary);
+            font-weight: 700;
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        .vietnamese-meaning {
+            font-family: var(--font-body);
+            font-size: 0.65em;
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .hint-text {
+            font-family: var(--font-body);
+            font-size: 0.55em;
+            color: #64748b;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: 600;
+            background: #e2e8f0;
+            padding: 5px 15px;
+            border-radius: 20px;
+            letter-spacing: 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 15px;
+            font-size: 1.3em;
+            font-family: var(--font-body);
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(67, 56, 202, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(67, 56, 202, 0.4);
+            background-color: #3730a3;
+        }
+        
+        .btn-next { background-color: var(--success); box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3); }
+        .btn-next:hover:not(:disabled) { background-color: #047857; box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4); }
+
+        .explanation-box {
+            display: none;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 16px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.correct { border-color: var(--success); }
+        .explanation-box.wrong { border-color: var(--error); }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 1.3em;
+            font-weight: 800;
+        }
+
+        .audio-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .audio-btn:hover { transform: scale(1.1); background-color: #b45309; }
+
+        .exp-content { font-size: 1.1em; line-height: 1.6; }
+        .exp-word { color: var(--primary); font-size: 1.4em; font-family: var(--font-heading); font-weight: 700; display: block; margin-bottom: 10px; }
+        
+        .example-box {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        #result-screen { display: none; text-align: center; }
+        #result-screen h2 { font-family: var(--font-heading); color: var(--primary); font-size: 2.8em; margin-bottom: 10px; }
+        .final-score { font-size: 4.5em; font-weight: 900; color: var(--secondary); margin: 20px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-q">1</span>/19</span>
+            <span>🏆 ĐIỂM: <span id="score">0</span></span>
+        </div>
+        
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div class="input-group">
+            <input type="text" id="answer-input" placeholder="Gõ từ cần điền..." autocomplete="off">
+            <button class="btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-next" id="next-btn" style="display: none;" onclick="nextQuestion()">Tiếp Tục ➔</button>
+        </div>
+    </div>
+
+    <div class="container" id="result-screen">
+        <h2>Xin Chúc Mừng! 🎉</h2>
+        <p style="font-size: 1.2em; color: var(--text-muted);">Bạn đã hoàn thành xuất sắc bài tập.</p>
+        <div class="final-score"><span id="final-score">0</span>/190</div>
+        <button class="btn" onclick="location.reload()">Chơi Lại 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            { phrase: "________ water", ans: "grey", full: "grey water", vi: "Nước thải sinh hoạt tương đối ít ô nhiễm, không bao gồm nước thải từ bồn cầu", hint: "g", def: "greywater; lightly contaminated wastewater", ex: "Grey water can be recycled for toilet flushing and garden irrigation." },
+            { phrase: "________ water", ans: "potable", full: "potable water", vi: "Nước uống được; nước đạt tiêu chuẩn dùng để uống", hint: "p", def: "drinking water; safe-to-drink water", ex: "Using recycled water for cleaning helps conserve potable water." },
+            { phrase: "________ with", ans: "contaminated", full: "contaminated with", vi: "Bị nhiễm, bị ô nhiễm bởi", hint: "c", def: "polluted with; tainted with", ex: "Black water is contaminated with human waste and requires extensive treatment." },
+            { phrase: "________ treatment", ans: "extensive", full: "extensive treatment", vi: "Quá trình xử lý chuyên sâu, toàn diện", hint: "e", def: "intensive processing; comprehensive treatment", ex: "Wastewater containing dangerous pathogens may require extensive treatment before reuse." },
+            { phrase: "________ water", ans: "sterilise", full: "sterilise water", vi: "Khử trùng nước", hint: "s", def: "disinfect water; decontaminate water", ex: "UV treatment helps sterilise water before it is reused for non-drinking purposes." },
+            { phrase: "take something more ________", ans: "seriously", full: "take something more seriously", vi: "Coi trọng điều gì hơn; nghiêm túc xem xét điều gì", hint: "s", def: "give greater consideration to; attach more importance to", ex: "Governments and households need to take water conservation more seriously." },
+            { phrase: "________ into", ans: "evolve", full: "evolve into", vi: "Phát triển thành; tiến hóa thành", hint: "e", def: "develop into; transform into", ex: "Over centuries, informal meditative practices evolved into structured traditions." },
+            { phrase: "________ popularity", ans: "gain", full: "gain popularity", vi: "Trở nên phổ biến", hint: "g", def: "become widespread; grow in popularity", ex: "Meditation began to gain popularity in Western societies during the twentieth century." },
+            { phrase: "an ________ supporter", ans: "ardent", full: "an ardent supporter", vi: "Người ủng hộ nhiệt thành", hint: "a", def: "an enthusiastic advocate; a staunch supporter", ex: "An ardent supporter of meditation may regard it as an essential part of a healthy lifestyle." },
+            { phrase: "be ________ to a threat", ans: "exposed", full: "be exposed to a threat", vi: "Phải đối mặt với một mối đe dọa", hint: "e", def: "face a threat; be subjected to danger", ex: "When people are exposed to a sudden threat, their bodies may activate an automatic stress response." },
+            { phrase: "the fight-or-________ response", ans: "flight", full: "the fight-or-flight response", vi: "Phản ứng chiến đấu hoặc bỏ chạy trước nguy hiểm", hint: "f", def: "acute stress response", ex: "The fight-or-flight response can be useful in emergencies but may become problematic when repeatedly triggered by everyday stressors." },
+            { phrase: "be ________ someone\'s control", ans: "beyond", full: "be beyond someone\'s control", vi: "Nằm ngoài tầm kiểm soát của ai", hint: "b", def: "be outside someone\'s control; be uncontrollable", ex: "Meditation may help people accept situations that are beyond their control." },
+            { phrase: "________ ability", ans: "coping", full: "coping ability", vi: "Khả năng ứng phó với khó khăn", hint: "c", def: "coping capacity; resilience", ex: "Regular mindfulness practice may improve students\' coping ability when they face academic pressure." },
+            { phrase: "be ________ with", ans: "associated", full: "be associated with", vi: "Có mối liên hệ với", hint: "a", def: "be linked to; correlate with", ex: "In the study, meditation was associated with lower blood pressure among some participants." },
+            { phrase: "keep ________ of", ans: "track", full: "keep track of", vi: "Theo dõi; ghi lại", hint: "t", def: "monitor; record; track", ex: "Participants were asked to keep track of how frequently they practised meditation." },
+            { phrase: "________ the findings", ans: "endorse", full: "endorse the findings", vi: "Công nhận hoặc xác nhận các kết quả nghiên cứu", hint: "e", def: "validate the findings; support the conclusions", ex: "Larger studies are needed before researchers can confidently endorse the findings." },
+            { phrase: "a ________ of", ans: "myriad", full: "a myriad of", vi: "Vô số; rất nhiều", hint: "m", def: "a multitude of; a vast number of", ex: "Modern cities face a myriad of problems associated with rapid population growth." },
+            { phrase: "________ population growth", ans: "unprecedented", full: "unprecedented population growth", vi: "Sự gia tăng dân số chưa từng có tiền lệ", hint: "u", def: "unparalleled demographic growth", ex: "Unprecedented population growth has placed enormous pressure on housing and public services." },
+            { phrase: "________ living conditions", ans: "cramped", full: "cramped living conditions", vi: "Điều kiện sống chật chội", hint: "c", def: "overcrowded accommodation; confined living conditions", ex: "Cramped living conditions can undermine privacy and increase tension among household members." },
+            { phrase: "________ rate", ans: "mortality", full: "mortality rate", vi: "Tỷ lệ tử vong", hint: "m", def: "death rate", ex: "The mortality rate increased when the animals were exposed to severely cramped living conditions." }
+        ];
+
+        // Lấy 19 câu ngẫu nhiên từ ngân hàng 20 câu để khớp với hiển thị
+        let questions = [...quizData].sort(() => Math.random() - 0.5).slice(0, 19);
+        let currIdx = 0, score = 0;
+        
+        const el = id => document.getElementById(id);
+        let audioCtx;
+
+        function initAudio() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSnd(isCorr) {
+            initAudio(); 
+            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            
+            if(isCorr) {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); 
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+            }
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // BỘ LỌC ĐỌC ÂM THANH
+        function cleanForTTS(txt) {
+            return txt.replace(/ someone /gi, 'someone')
+                      .replace(/ somebody /gi, 'somebody')
+                      .replace(/ something /gi, 'something')
+                      .replace(/ sb /gi, 'somebody')
+                      .replace(/ sth /gi, 'something')
+                      .replace(/[\(\)\/]/g, ' ')
+                      .replace(/\s+/g, ' ').trim();
+        }
+
+        function speak(txt) {
+            if('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                let u = new SpeechSynthesisUtterance(cleanForTTS(txt));
+                u.lang = 'en-US'; u.rate = 0.9;
+                speechSynthesis.speak(u);
+            }
+        }
+
+        function loadQ() {
+            el('next-btn').style.display = 'none';
+            el('explanation').style.display = 'none';
+            
+            let q = questions[currIdx];
+            el('current-q').innerText = currIdx + 1;
+            
+            let hQ = q.phrase.replace('________', `<span style="color:#94a3b8;border-bottom:3px dashed #94a3b8;padding:0 35px;">?</span>`);
+            el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>
+                                        ${hQ}
+                                        <br><span class="hint-text">Gợi ý: Bắt đầu bằng chữ '${q.hint}'</span>`;
+            
+            el('answer-input').value = "";
+            el('answer-input').disabled = false;
+            el('submit-btn').style.display = 'block';
+            setTimeout(() => el('answer-input').focus(), 100);
+        }
+
+        function checkAnswer() {
+            let q = questions[currIdx];
+            let input = el('answer-input').value.trim().toLowerCase();
+            if(input === "") return;
+
+            el('answer-input').disabled = true;
+            el('submit-btn').style.display = 'none';
+
+            let isCorr = input === q.ans.toLowerCase();
+            
+            if(isCorr) {
+                score += 10; el('score').innerText = score;
+                playSnd(true);
+                el('explanation').className = "explanation-box correct";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>` + 
+                    q.phrase.replace('________', `<span style="color:var(--success); border-bottom:3px solid var(--success); padding:0 15px;">${q.ans}</span>`);
+            } else {
+                playSnd(false);
+                el('explanation').className = "explanation-box wrong";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Ý NGHĨA: ${q.vi}</span>` + 
+                    q.phrase.replace('________', `<span style="text-decoration:line-through; color:var(--error);">${input}</span> <span style="color:var(--success); border-bottom:3px solid var(--success); padding:0 15px;">${q.ans}</span>`);
+            }
+
+            speak(q.full);
+
+            let safeString = q.full.replace(/'/g, "&apos;");
+
+            el('explanation').innerHTML = `
+                <div class="exp-header">
+                    <span style="color:var(--${isCorr?'success':'error'})">${isCorr?'🎉 Chính xác!':'❌ Sai rồi!'}</span>
+                    <button class="audio-btn" onclick="speak('${safeString}')">🔊</button>
+                </div>
+                <div class="exp-content">
+                    <span class="exp-word">${q.full}</span>
+                    <div><b>Giải nghĩa:</b> ${q.def}</div>
+                    <div class="example-box"><b>Ví dụ:</b> "${q.ex}"</div>
+                </div>
+            `;
+            
+            el('explanation').style.display = 'block';
+            el('next-btn').style.display = 'block';
+            setTimeout(() => { el('next-btn').scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function nextQuestion() {
+            currIdx++;
+            if(currIdx < questions.length) loadQ();
+            else {
+                el('quiz-screen').style.display = 'none';
+                el('result-screen').style.display = 'block';
+                el('final-score').innerText = score;
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'Enter') {
+                if(el('next-btn').style.display === 'block') nextQuestion();
+                else if(el('submit-btn').style.display === 'block' && !el('answer-input').disabled) checkAnswer();
+            }
+        });
+
+        // Bắt đầu game
+        window.onload = () => { 
+            document.body.addEventListener('click', initAudio, {once:true}); 
+            loadQ(); 
+        };
+    </script>
+</body>
+</html>
