@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision - Vocab 2 - Level 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --background: #f7f9fc;
+            --card-bg: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --success: #38a169;
+            --error: #e53e3e;
+            --highlight: #fbd38d;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .game-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            padding: 40px;
+            width: 90%;
+            max-width: 750px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .progress {
+            font-size: 1.1em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 30px;
+            display: inline-block;
+            background: #edf2f7;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .meaning-vi {
+            font-size: 1.5em;
+            color: var(--error);
+            font-weight: 700;
+            margin-bottom: 25px;
+            min-height: 40px;
+        }
+
+        .phrase-container {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+        input[type="text"] {
+            font-size: 1em;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 5px 15px;
+            outline: none;
+            background: #fff;
+            color: var(--primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--highlight);
+            box-shadow: 0 0 0 3px rgba(251, 211, 141, 0.3);
+            transform: scale(1.05);
+        }
+        
+        input[type="text"]::placeholder {
+            color: #cbd5e0;
+            font-weight: 400;
+        }
+
+        .hint-text {
+            font-size: 1em;
+            color: var(--secondary);
+            font-style: italic;
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.2em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 4px 15px rgba(22, 96, 136, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 96, 136, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .explanation-area {
+            margin-top: 30px;
+            text-align: left;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px;
+            display: none;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        .explanation-area.show {
+            display: block;
+        }
+
+        .status-msg {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-msg.correct { color: var(--success); }
+        .status-msg.incorrect { color: var(--error); }
+
+        .info-row {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .info-label {
+            font-weight: 700;
+            color: var(--secondary);
+            display: inline-block;
+            width: 100px;
+        }
+
+        .ipa-text {
+            font-family: 'Arial', sans-serif;
+            color: #4a5568;
+            background: #edf2f7;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+
+        .instruction {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-top: 25px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        .correct-input {
+            border-color: var(--success) !important;
+            background: #f0fff4 !important;
+            color: var(--success) !important;
+        }
+        
+        .wrong-input {
+            border-color: var(--error) !important;
+            background: #fff5f5 !important;
+            color: var(--error) !important;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .score-display {
+            font-size: 2em; 
+            color: var(--primary); 
+            font-weight: bold; 
+            margin-bottom: 30px;
+            background: #edf2f7;
+            padding: 15px 30px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Revision - Vocab 2 - Level 2</h1>
+        <div class="progress" id="progressText"></div>
+
+        <div class="meaning-vi" id="vietnameseMeaning"></div>
+        
+        <div class="phrase-container" id="phraseContainer"></div>
+        
+        <div class="hint-text" id="hintText"></div>
+        
+        <button class="btn" id="mainBtn">Kiểm tra</button>
+
+        <div class="explanation-area" id="explanationArea">
+            <div class="status-msg" id="statusMsg"></div>
+            <div class="info-row">
+                <span class="info-label">Meaning:</span> <span id="enMeaning"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Example:</span> <i><span id="exampleText"></span></i>
+            </div>
+            <div class="info-row" style="margin-top: 15px;">
+                <span class="info-label">Phonetics:</span> <span class="ipa-text" id="ipaText"></span>
+            </div>
+        </div>
+        
+        <div class="instruction" id="instructionText">Nhập từ còn thiếu và nhấn Enter.</div>
+    </div>
+
+    <script>
+        const idiomsData = [{"phrase": "have an influence on", "blank": "on", "vi": "có ảnh hưởng đến", "en": "to affect or change someone or something", "ex": "His work has had a huge influence on modern architecture.", "ipa": "/hæv ən ˈɪnfluəns ɒn/"}, {"phrase": "fashion victim", "blank": "victim", "vi": "người chạy theo mốt mù quáng", "en": "someone who always follows trends even if they look bad", "ex": "She’s a real fashion victim who buys everything she sees on Instagram.", "ipa": "/ˈfæʃən ˈvɪktɪm/"}, {"phrase": "learn by heart", "blank": "heart", "vi": "học thuộc lòng", "en": "to memorize completely", "ex": "I learned the poem by heart for the competition.", "ipa": "/lɜːn baɪ hɑːt/"}, {"phrase": "come as a shock", "blank": "shock", "vi": "gây sốc, làm choáng váng", "en": "to be very surprising or upsetting", "ex": "The news of his resignation came as a shock to everyone.", "ipa": "/kʌm æz ə ʃɒk/"}, {"phrase": "out of the question", "blank": "question", "vi": "không thể, không được phép", "en": "impossible", "ex": "It’s out of the question to go on holiday during exams.", "ipa": "/aʊt əv ðə ˈkwɛsʧən/"}, {"phrase": "get on with", "blank": "on", "vi": "hòa thuận với", "en": "to have a good relationship with", "ex": "I get on really well with my colleagues.", "ipa": "/gɛt ɒn wɪð/"}, {"phrase": "be stunned by", "blank": "stunned", "vi": "bị sốc, choáng váng", "en": "to be extremely surprised or shocked", "ex": "We were stunned by the sudden announcement.", "ipa": "/bi ˈstʌnd baɪ/"}, {"phrase": "take up", "blank": "up", "vi": "bắt đầu học hoặc làm gì", "en": "to start doing something new", "ex": "She took up painting after she retired.", "ipa": "/teɪk ʌp/"}, {"phrase": "meet the deadline", "blank": "meet", "vi": "kịp thời hạn", "en": "to finish something on time", "ex": "We managed to meet the deadline for the report.", "ipa": "/miːt ðə ˈdɛdlaɪn/"}, {"phrase": "close to one's heart", "blank": "heart", "vi": "quan trọng, gần gũi với ai", "en": "very important or meaningful to someone", "ex": "Animal welfare is an issue close to her heart.", "ipa": "/kləʊs tu wʌnz hɑːt/"}, {"phrase": "date back to", "blank": "back", "vi": "có từ, bắt nguồn từ", "en": "to have existed since", "ex": "This church dates back to the 12th century.", "ipa": "/deɪt bæk tu/"}, {"phrase": "set oneself a challenge", "blank": "set", "vi": "đặt ra thử thách cho bản thân", "en": "to decide to try something difficult", "ex": "He set himself the challenge of running a marathon.", "ipa": "/sɛt wʌnˈsɛlf ə ˈʧælɪnʤ/"}, {"phrase": "open to interpretation", "blank": "open", "vi": "có thể được hiểu theo nhiều cách", "en": "able to be understood in different ways", "ex": "The ending of the film is open to interpretation.", "ipa": "/ˈəʊpən tu ɪnˌtɜːprɪˈteɪʃən/"}, {"phrase": "one's contemporaries", "blank": "contemporaries", "vi": "những người cùng thời", "en": "people living at the same time", "ex": "Shakespeare and his contemporaries changed English drama.", "ipa": "/wʌnz kənˈtɛmpərəriz/"}, {"phrase": "offer insights into", "blank": "insights", "vi": "cung cấp hiểu sâu sắc về", "en": "to understand something deeply", "ex": "The book gives readers insight into ancient cultures.", "ipa": "/ˈɒfər ˈɪnsaɪts ˈɪntuː/"}, {"phrase": "be packed with", "blank": "packed", "vi": "chứa đầy, đầy ắp", "en": "to be full of something", "ex": "This smoothie is packed with vitamins.", "ipa": "/bi pækt wɪð/"}, {"phrase": "be absorbed in", "blank": "absorbed", "vi": "mải mê, say mê", "en": "to be deeply interested or involved in", "ex": "She was so absorbed in her work she didn’t hear the phone.", "ipa": "/bi əbˈzɔːbd ɪn/"}, {"phrase": "fair share", "blank": "share", "vi": "phần công bằng", "en": "a reasonable amount that one deserves", "ex": "Everyone should do their fair share of the chores.", "ipa": "/feə ʃeə/"}, {"phrase": "get the sack", "blank": "sack", "vi": "bị sa thải", "en": "to be fired or dismissed from a job", "ex": "He got the sack for always being late.", "ipa": "/gɛt ðə sæk/"}, {"phrase": "come up against", "blank": "against", "vi": "đối mặt với", "en": "to face or encounter difficulties", "ex": "We came up against serious financial problems.", "ipa": "/kʌm ʌp əˈgɛnst/"}, {"phrase": "pull off", "blank": "off", "vi": "thành công (vượt khó khăn)", "en": "to succeed in doing something difficult", "ex": "They pulled off an incredible victory.", "ipa": "/pʊl ɒf/"}, {"phrase": "fall through", "blank": "through", "vi": "thất bại, không thành", "en": "to fail to happen", "ex": "Our plan to buy the house fell through.", "ipa": "/fɔːl θruː/"}, {"phrase": "have too much on one's plate", "blank": "plate", "vi": "có quá nhiều việc phải làm", "en": "to be very busy", "ex": "I can’t take more work — I’ve got too much on my plate.", "ipa": "/hæv tuː mʌʧ ɒn wʌnz pleɪt/"}, {"phrase": "be under fire", "blank": "fire", "vi": "bị chỉ trích", "en": "to be criticized", "ex": "The minister came under fire for his comments.", "ipa": "/bi ˈʌndə ˈfaɪə/"}, {"phrase": "be taken aback", "blank": "aback", "vi": "bị bất ngờ", "en": "to be very surprised", "ex": "I was taken aback by his rude response.", "ipa": "/bi ˈteɪkən əˈbæk/"}, {"phrase": "stir up", "blank": "stir", "vi": "khuấy động, gây ra", "en": "to cause strong emotions or trouble", "ex": "The speech stirred up anger among the audience.", "ipa": "/stɜːr ʌp/"}, {"phrase": "to one's face", "blank": "face", "vi": "nói thẳng vào mặt ai", "en": "directly to someone", "ex": "He insulted me to my face!", "ipa": "/tu wʌnz feɪs/"}, {"phrase": "set out to do sth", "blank": "set", "vi": "bắt đầu làm gì có mục tiêu", "en": "to begin doing something with a purpose", "ex": "They set out to build a global brand.", "ipa": "/sɛt aʊt tu duː ˈsʌmθɪŋ/"}, {"phrase": "a little bird told me", "blank": "bird", "vi": "có người bí mật nói với tôi", "en": "used to say you got information secretly", "ex": "A little bird told me it’s your birthday.", "ipa": "/ə ˈlɪtl bɜːd təʊld miː/"}, {"phrase": "in its infancy", "blank": "infancy", "vi": "còn non trẻ", "en": "in an early stage", "ex": "Online education was still in its infancy in the 2000s.", "ipa": "/ɪn ɪts ˈɪnfənsi/"}, {"phrase": "all the rage", "blank": "rage", "vi": "rất thịnh hành", "en": "very popular", "ex": "Cropped tops are all the rage this summer.", "ipa": "/ɔːl ðə reɪʤ/"}, {"phrase": "provoke anger", "blank": "provoke", "vi": "gây ra sự tức giận", "en": "to cause a reaction or emotion", "ex": "His comments provoked anger among the fans.", "ipa": "/prəˈvəʊk ˈæŋgə/"}, {"phrase": "at all hours", "blank": "hours", "vi": "mọi lúc", "en": "at any time, day or night", "ex": "He calls me at all hours of the night.", "ipa": "/æt ɔːl ˈaʊəz/"}, {"phrase": "pour scorn on", "blank": "scorn", "vi": "chỉ trích, chê bai", "en": "to criticize or mock strongly", "ex": "The critics poured scorn on the new play.", "ipa": "/pɔː skɔːn ɒn/"}, {"phrase": "the apple of one's eye", "blank": "apple", "vi": "người được yêu quý nhất", "en": "someone loved very much", "ex": "His daughter is the apple of his eye.", "ipa": "/ði ˈæpl ɒv wʌnz aɪ/"}, {"phrase": "lay one's trust in", "blank": "lay", "vi": "đặt niềm tin vào", "en": "to put confidence in", "ex": "Lay your trust in me and I won’t disappoint you.", "ipa": "/leɪ wʌnz trʌst ɪn/"}, {"phrase": "out of breath", "blank": "breath", "vi": "hết hơi", "en": "breathing heavily after exercise", "ex": "She was out of breath after running upstairs.", "ipa": "/aʊt ɒv brɛθ/"}, {"phrase": "not my cup of tea", "blank": "tea", "vi": "không phải gu của tôi", "en": "not something one likes or enjoys", "ex": "Horror movies are not my cup of tea.", "ipa": "/nɒt maɪ kʌp ɒv tiː/"}, {"phrase": "make a difference", "blank": "make", "vi": "tạo ra sự khác biệt", "en": "to have an effect", "ex": "Every donation makes a difference.", "ipa": "/meɪk ə ˈdɪfrəns/"}, {"phrase": "in view of", "blank": "view", "vi": "vì, xét đến", "en": "because of", "ex": "In view of the weather, the match was postponed.", "ipa": "/ɪn vjuː ɒv/"}, {"phrase": "set an example", "blank": "set", "vi": "nêu gương", "en": "to behave in a way that others should copy", "ex": "Teachers should set a good example for their students.", "ipa": "/sɛt ən ɪgˈzɑːmpl/"}, {"phrase": "make progress", "blank": "make", "vi": "tiến bộ", "en": "to improve or advance", "ex": "She’s making great progress in math.", "ipa": "/meɪk ˈprəʊgrəs/"}, {"phrase": "down-to-earth", "blank": "earth", "vi": "thực tế, giản dị", "en": "practical, realistic", "ex": "He’s a down-to-earth guy who doesn’t like showing off.", "ipa": "/ˌdaʊn.tuˈɜːθ/"}, {"phrase": "cut your coat according to your cloth", "blank": "cloth", "vi": "liệu cơm gắp mắm; chi tiêu phù hợp", "en": "To spend only what you can afford.", "ex": "Since we lost one of our incomes, we'll just have to cut our coat according to our cloth.", "ipa": "/kʌt jɔː kəʊt əˈkɔːdɪŋ tu jɔː klɒθ/"}, {"phrase": "fill someone's shoes", "blank": "fill", "vi": "đảm nhận vị trí, trách nhiệm của người khác", "en": "To take over someone's job or position and do it successfully.", "ex": "It will be hard to fill her shoes when she retires.", "ipa": "/fɪl ˈsʌmwʌnz ʃuːz/"}, {"phrase": "get your knickers in a twist", "blank": "twist", "vi": "lo lắng, bực bội hoặc làm ầm lên vì chuyện không đáng", "en": "To become unnecessarily upset or worried.", "ex": "Don't get your knickers in a twist over such a small mistake.", "ipa": "/gɛt jɔː ˈnɪkəz ɪn ə twɪst/"}, {"phrase": "keep something under your hat", "blank": "hat", "vi": "giữ bí mật", "en": "To keep something secret.", "ex": "I'm telling you this in confidence, so please keep it under your hat.", "ipa": "/kiːp ˈsʌmθɪŋ ˈʌndə jɔː hæt/"}, {"phrase": "laugh up your sleeve", "blank": "sleeve", "vi": "cười thầm, cười kín đáo", "en": "To laugh secretly at someone or something.", "ex": "He looked very serious, but I knew he was laughing up his sleeve.", "ipa": "/lɑːf ʌp jɔː sliːv/"}, {"phrase": "pick something out of a hat", "blank": "pick", "vi": "chọn ngẫu nhiên", "en": "To choose something randomly, without careful thought.", "ex": "We couldn't decide where to eat, so we picked a restaurant out of a hat.", "ipa": "/pɪk ˈsʌmθɪŋ aʊt ɒv ə hæt/"}, {"phrase": "put a sock in it", "blank": "sock", "vi": "im đi!; trật tự đi!", "en": "To stop talking or making noise.", "ex": "I'm trying to read here, so put a sock in it!", "ipa": "/pʊt ə sɒk ɪn ɪt/"}, {"phrase": "put your shirt on something", "blank": "shirt", "vi": "tin chắc vào điều gì", "en": "To be extremely confident that something will happen.", "ex": "I'd put my shirt on him winning the championship today.", "ipa": "/pʊt jɔː ʃɜːt ɒn ˈsʌmθɪŋ/"}, {"phrase": "strong suit", "blank": "suit", "vi": "sở trường, thế mạnh của ai đó", "en": "Something you are particularly good at.", "ex": "Patience is not really my strong suit.", "ipa": "/strɒŋ sjuːt/"}, {"phrase": "tighten your belt", "blank": "belt", "vi": "thắt lưng buộc bụng; cắt giảm chi tiêu", "en": "To spend less money because you have financial difficulties.", "ex": "With inflation rising, families are having to tighten their belts.", "ipa": "/ˈtaɪtn jɔː bɛlt/"}];
+        
+        let currentIndex = 0;
+        let isAnswered = false;
+        let score = 0;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playSound(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else {
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        function speakPhrase(phrase) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanPhrase = phrase
+                    .replace(/\bsth\b/gi, 'something')
+                    .replace(/\bsb\b/gi, 'somebody')
+                    .replace(/\bone's\b/gi, "someone's");
+                    
+                let utterance = new SpeechSynthesisUtterance(cleanPhrase);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            const currentData = idiomsData[currentIndex];
+            const blankWord = currentData.blank;
+            const firstLetter = blankWord.charAt(0).toLowerCase();
+            
+            document.getElementById('progressText').innerText = `Câu ${currentIndex + 1} / ${idiomsData.length}`;
+            document.getElementById('vietnameseMeaning').innerText = currentData.vi;
+            
+            const phraseContainer = document.getElementById('phraseContainer');
+            phraseContainer.innerHTML = '';
+            
+            const regex = new RegExp(`\\b${blankWord}\\b`, 'i');
+            const parts = currentData.phrase.split(regex);
+            
+            if (parts.length > 1) {
+                if(parts[0].trim() !== '') {
+                    phraseContainer.appendChild(document.createTextNode(parts[0] + ' '));
+                }
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'wordInput';
+                input.autocomplete = 'off';
+                const chars = blankWord.length;
+                input.style.width = Math.max(90, chars * 16 + 30) + 'px';
+                phraseContainer.appendChild(input);
+                
+                if(parts[1].trim() !== '') {
+                    phraseContainer.appendChild(document.createTextNode(' ' + parts[1]));
+                }
+            } else {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'wordInput';
+                phraseContainer.appendChild(input);
+            }
+
+            document.getElementById('hintText').innerText = `(Gợi ý: Từ cần điền bắt đầu bằng chữ '${firstLetter}')`;
+            
+            document.getElementById('explanationArea').classList.remove('show');
+            document.getElementById('mainBtn').innerText = 'Kiểm tra';
+            document.getElementById('instructionText').innerText = 'Nhập từ còn thiếu và nhấn Enter.';
+            
+            setTimeout(() => {
+                const inputEl = document.getElementById('wordInput');
+                if(inputEl) inputEl.focus();
+            }, 100);
+        }
+
+        function checkAnswer() {
+            if (isAnswered) {
+                nextQuestion();
+                return;
+            }
+
+            const inputEl = document.getElementById('wordInput');
+            if (!inputEl) return;
+            
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const currentData = idiomsData[currentIndex];
+            const correctAnswer = currentData.blank.toLowerCase();
+            
+            const explanationArea = document.getElementById('explanationArea');
+            const statusMsg = document.getElementById('statusMsg');
+            
+            isAnswered = true; 
+            inputEl.readOnly = true;
+            inputEl.value = currentData.blank; 
+            
+            if (userAnswer === correctAnswer) {
+                score++;
+                playSound('correct');
+                inputEl.classList.add('correct-input');
+                
+                statusMsg.innerHTML = "✨ Chính xác!";
+                statusMsg.className = 'status-msg correct';
+            } else {
+                playSound('wrong');
+                inputEl.classList.add('wrong-input');
+                inputEl.classList.add('shake');
+                setTimeout(() => {
+                    inputEl.classList.remove('shake');
+                }, 500);
+                
+                statusMsg.innerHTML = `❌ Sai rồi! Đáp án đúng là: <b>${currentData.blank}</b>`;
+                statusMsg.className = 'status-msg incorrect';
+            }
+            
+            document.getElementById('enMeaning').innerText = currentData.en;
+            document.getElementById('exampleText').innerText = currentData.ex;
+            document.getElementById('ipaText').innerText = currentData.ipa;
+            
+            explanationArea.classList.add('show');
+            
+            document.getElementById('mainBtn').innerText = 'Tiếp tục';
+            document.getElementById('instructionText').innerText = 'Nhấn Enter để chuyển sang câu tiếp theo.';
+            
+            speakPhrase(currentData.phrase);
+        }
+
+        function nextQuestion() {
+            if (currentIndex < idiomsData.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                document.querySelector('.game-container').innerHTML = `
+                    <h1 style="font-size: 3em; margin-bottom: 20px;">🎉</h1>
+                    <h1>Chúc mừng!</h1>
+                    <p style="font-size: 1.2em; color: var(--text-light); margin-bottom: 20px;">
+                        Bạn đã hoàn thành xuất sắc bài tập Revision - Vocab 2 - Level 2.
+                    </p>
+                    <div class="score-display">
+                        Điểm số: ${score} / ${idiomsData.length}
+                    </div>
+                    <br>
+                    <button class="btn" onclick="location.reload()">Luyện tập lại</button>
+                `;
+            }
+        }
+
+        document.getElementById('mainBtn').addEventListener('click', checkAnswer);
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
