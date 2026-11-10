@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision - Vocab 8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --background: #f7f9fc;
+            --card-bg: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --success: #38a169;
+            --error: #e53e3e;
+            --highlight: #fbd38d;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .game-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            padding: 40px;
+            width: 90%;
+            max-width: 750px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .progress {
+            font-size: 1.1em;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 30px;
+            display: inline-block;
+            background: #edf2f7;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .meaning-vi {
+            font-size: 1.5em;
+            color: var(--error);
+            font-weight: 700;
+            margin-bottom: 25px;
+            min-height: 40px;
+        }
+
+        .phrase-container {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+        input[type="text"] {
+            font-size: 1em;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 5px 15px;
+            outline: none;
+            background: #fff;
+            color: var(--primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--highlight);
+            box-shadow: 0 0 0 3px rgba(251, 211, 141, 0.3);
+            transform: scale(1.05);
+        }
+        
+        input[type="text"].wrong-input {
+            text-decoration: line-through;
+            color: #e53e3e;
+            opacity: 0.8;
+        }
+
+        .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 700;
+        }
+
+        .tag-hint {
+            background-color: #FEFCBF;
+            color: #D69E2E;
+            border: 1px solid #F6E05E;
+        }
+        
+        .tag-word-count {
+            background-color: #F0FFF4;
+            color: #2F855A;
+            border: 1px solid #9AE6B4;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.2em;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 4px 15px rgba(22, 96, 136, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(22, 96, 136, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .explanation-area {
+            margin-top: 30px;
+            text-align: left;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px;
+            display: none;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        .explanation-area.show {
+            display: block;
+        }
+
+        .status-msg {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-msg.correct { color: var(--success); }
+        .status-msg.incorrect { color: var(--error); }
+
+        .info-row {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .info-label {
+            font-weight: 700;
+            color: var(--secondary);
+            display: inline-block;
+            width: 80px;
+        }
+
+        .instruction {
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin-top: 25px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        .correct-input {
+            border-color: var(--success) !important;
+            background: #f0fff4 !important;
+            color: var(--success) !important;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .score-display {
+            font-size: 2.5em; 
+            color: var(--primary); 
+            font-weight: bold; 
+            margin-bottom: 30px;
+            background: #edf2f7;
+            padding: 15px 30px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        /* Confetti Canvas */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+    <div class="game-container">
+        <h1 id="gameTitleDisplay">Revision - Vocab 8</h1>
+        
+        <div class="progress" id="progressText"></div>
+
+        <div class="meaning-vi" id="vietnameseMeaning"></div>
+        
+        <div class="phrase-container" id="phraseContainer"></div>
+        
+        <div class="meta-tags">
+            <div class="tag tag-hint" id="firstLetterHint"></div>
+            <div class="tag tag-word-count" id="wordCountHint"></div>
+        </div>
+        
+        <button class="btn" id="mainBtn">Kiểm tra</button>
+
+        <div class="explanation-area" id="explanationArea">
+            <div class="status-msg" id="statusMsg"></div>
+            <div class="info-row">
+                <span class="info-label">Ví dụ:</span> <i><span id="exampleText"></span></i>
+            </div>
+        </div>
+        
+        <div class="instruction" id="instructionText">Nhập từ còn thiếu và nhấn Enter.</div>
+    </div>
+
+    <script>
+        // --- 1. DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY ---
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSdmEEI9zo98XWK0HwNbfy9pyFgCzegkiY19cXjDj4BH3lN4GtyyihsXOmZk9Z88Kx/exec';
+        
+        // --- 2. TÊN BÀI HỌC NÀY LÀ GÌ? ---
+        const TEN_BAI_HOC = "Vocab 8"; 
+
+        const idiomsData = [{"phrase": "a springboard to success", "blank": "springboard", "vi": "bàn đạp, bước đệm dẫn đến thành công", "ex": "A victory in local elections could provide an opportunity for further political success."}, {"phrase": "have the edge over somebody", "blank": "edge", "vi": "có lợi thế hơn ai", "ex": "Emma had a competitive advantage over the other candidates."}, {"phrase": "be in top form", "blank": "form", "vi": "đang ở phong độ cao nhất", "ex": "He is in top form for the upcoming tournament."}, {"phrase": "a hard-and-fast rule", "blank": "hard-and-fast", "vi": "một quy tắc nghiêm ngặt, rõ ràng và không có ngoại lệ", "ex": "There is no hard-and-fast rule about how much you should tip."}, {"phrase": "have one's nose in a book", "blank": "nose", "vi": "chăm chú đọc sách, thường xuyên đọc sách", "ex": "She always has her nose in a book."}, {"phrase": "on the spur of the moment", "blank": "spur", "vi": "bất chợt, không có sự chuẩn bị hay suy nghĩ từ trước", "ex": "We decided to go to the beach on the spur of the moment."}, {"phrase": "aggravate a sore", "blank": "aggravate", "vi": "làm vết đau/vết loét trở nên nghiêm trọng hoặc khó chịu hơn", "ex": "Scratching will only aggravate a sore."}, {"phrase": "defect to a party", "blank": "defect", "vi": "đào ngũ, chuyển sang phe hoặc đảng đối lập", "ex": "Several members decided to defect to the opposing party."}, {"phrase": "have a grievance", "blank": "grievance", "vi": "có điều bất bình, khiếu nại hoặc phàn nàn", "ex": "He decided to discuss a grievance with management."}, {"phrase": "impair vision and hearing", "blank": "impair", "vi": "làm suy giảm thị lực và thính lực", "ex": "Loud noises can permanently impair your hearing."}, {"phrase": "incite somebody to do something", "blank": "incite", "vi": "kích động, xúi giục ai làm điều gì", "ex": "They were accused of trying to incite the crowd to attack the police."}, {"phrase": "adjourn a trial", "blank": "adjourn", "vi": "hoãn phiên toà sang một thời điểm khác", "ex": "The judge decided to adjourn the trial until next week."}, {"phrase": "incur somebody's displeasure", "blank": "incur", "vi": "khiến ai đó không hài lòng, phải chịu sự tức giận", "ex": "He was careful not to incur his boss's displeasure."}, {"phrase": "be devoid of something", "blank": "devoid", "vi": "hoàn toàn không có thứ gì", "ex": "His speech was completely devoid of humour."}, {"phrase": "clash with something", "blank": "clash", "vi": "trùng lịch, xung đột hoặc không tương thích", "ex": "The date clashed with my holiday."}, {"phrase": "bite somebody's head off", "blank": "head", "vi": "nói với ai một cách tức giận, gay gắt hoặc cáu kỉnh", "ex": "I only asked a question, there's no need to bite my head off."}, {"phrase": "call the shots", "blank": "shots", "vi": "là người đưa ra quyết định, nắm quyền kiểm soát", "ex": "In this company, the director calls all the shots."}, {"phrase": "stay the course", "blank": "course", "vi": "kiên trì theo đuổi một công việc hoặc kế hoạch đến cùng", "ex": "Despite the difficulties, she decided to stay the course."}, {"phrase": "keep a low profile", "blank": "profile", "vi": "tránh thu hút sự chú ý, giữ kín hoạt động", "ex": "He's been keeping a low profile since the scandal."}, {"phrase": "make a stand", "blank": "stand", "vi": "kiên quyết lên tiếng, thể hiện lập trường", "ex": "It's time for us to make a stand against unfair practices."}, {"phrase": "incompatible as partners", "blank": "incompatible", "vi": "không phù hợp, không thể phối hợp tốt với nhau", "ex": "They realized they were simply incompatible as partners."}, {"phrase": "have no recall of something", "blank": "recall", "vi": "không nhớ điều gì", "ex": "I have no recall of what happened last night."}, {"phrase": "there are no flies on somebody", "blank": "flies", "vi": "ai đó rất tinh ý, không dễ bị lừa", "ex": "You won't fool him easily, there are no flies on him."}, {"phrase": "fly in the face of something", "blank": "face", "vi": "đi ngược lại, thách thức điều gì", "ex": "His actions fly in the face of convention."}, {"phrase": "of late", "blank": "late", "vi": "gần đây (recently, lately)", "ex": "She has been working very hard of late."}, {"phrase": "have an aversion to something", "blank": "aversion", "vi": "có/phát triển ác cảm với điều gì", "ex": "I have a strong aversion to spiders."}, {"phrase": "there have been no sightings of something", "blank": "sightings", "vi": "không có ghi nhận/báo cáo về việc nhìn thấy điều gì", "ex": "There have been no recent sightings of the missing cat."}, {"phrase": "what be in store for somebody", "blank": "store", "vi": "điều gì đang chờ đợi ai trong tương lai", "ex": "We don't know what lies in store for us."}, {"phrase": "make amends for something", "blank": "amends", "vi": "sửa chữa, bù đắp lỗi lầm", "ex": "He tried to make amends for his past mistakes."}, {"phrase": "stumble upon something", "blank": "stumble", "vi": "tình cờ phát hiện hoặc tìm thấy điều gì", "ex": "I stumbled upon an interesting article while browsing the web."}];
+        
+        let currentIndex = 0;
+        let isAnswered = false;
+        let score = 0;
+        
+        document.getElementById('gameTitleDisplay').innerText = `Revision - ${TEN_BAI_HOC}`;
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        // Confetti Logic
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+
+        function fireConfetti() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            const colors = ['#6B46C1', '#4299E1', '#F6AD55', '#ED64A6', '#48BB78'];
+            for(let i = 0; i < 100; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 100,
+                    r: Math.random() * 6 + 4,
+                    dx: Math.random() * 10 - 5,
+                    dy: Math.random() * -10 - 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    tilt: Math.random() * 10
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            requestAnimationFrame(animateConfetti);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.dy += 0.3; 
+                p.x += p.dx;
+                p.y += p.dy;
+                p.tilt += 0.1;
+                
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+                ctx.stroke();
+
+                if(p.y > canvas.height) particles.splice(index, 1);
+            });
+        }
+
+        function playSound(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else {
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        function speakPhrase(phrase) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanPhrase = phrase
+                    .replace(/\bsth\b/gi, 'something')
+                    .replace(/\bsb\b/gi, 'somebody')
+                    .replace(/\bone's\b/gi, "someone's");
+                    
+                let utterance = new SpeechSynthesisUtterance(cleanPhrase);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            const currentData = idiomsData[currentIndex];
+            const blankWord = currentData.blank;
+            const firstLetter = blankWord.charAt(0).toLowerCase();
+            const wordCount = blankWord.trim().split(/[- ]+/).length;
+            
+            document.getElementById('progressText').innerText = `Câu ${currentIndex + 1} / ${idiomsData.length}`;
+            document.getElementById('vietnameseMeaning').innerText = currentData.vi;
+            
+            const phraseContainer = document.getElementById('phraseContainer');
+            phraseContainer.innerHTML = '';
+            
+            const regex = new RegExp(`\\b${blankWord}\\b`, 'i');
+            const parts = currentData.phrase.split(regex);
+            
+            if (parts.length > 1) {
+                if(parts[0].trim() !== '') {
+                    phraseContainer.appendChild(document.createTextNode(parts[0] + ' '));
+                }
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'wordInput';
+                input.autocomplete = 'off';
+                const chars = blankWord.length;
+                input.style.width = Math.max(90, chars * 16 + 30) + 'px';
+                phraseContainer.appendChild(input);
+                
+                if(parts[1].trim() !== '') {
+                    phraseContainer.appendChild(document.createTextNode(' ' + parts[1]));
+                }
+            } else {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'wordInput';
+                phraseContainer.appendChild(input);
+            }
+
+            document.getElementById('firstLetterHint').innerHTML = `💡 Bắt đầu bằng chữ <b>'${firstLetter}'</b>`;
+            document.getElementById('wordCountHint').innerHTML = `📝 Số từ cần điền: <b>${wordCount} từ</b>`;
+            
+            document.getElementById('explanationArea').classList.remove('show');
+            document.getElementById('mainBtn').innerText = 'Kiểm tra';
+            document.getElementById('instructionText').innerText = 'Nhập từ còn thiếu và nhấn Enter.';
+            
+            setTimeout(() => {
+                const inputEl = document.getElementById('wordInput');
+                if(inputEl) inputEl.focus();
+            }, 100);
+        }
+
+        function checkAnswer() {
+            if (isAnswered) {
+                nextQuestion();
+                return;
+            }
+
+            const inputEl = document.getElementById('wordInput');
+            if (!inputEl) return;
+            
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const currentData = idiomsData[currentIndex];
+            const correctAnswer = currentData.blank.toLowerCase();
+            
+            const explanationArea = document.getElementById('explanationArea');
+            const statusMsg = document.getElementById('statusMsg');
+            
+            isAnswered = true; 
+            inputEl.readOnly = true;
+            
+            if (userAnswer === correctAnswer) {
+                score++;
+                playSound('correct');
+                fireConfetti();
+                
+                inputEl.value = currentData.blank; 
+                inputEl.classList.add('correct-input');
+                
+                statusMsg.innerHTML = "✨ Tuyệt vời! Chính xác!";
+                statusMsg.className = 'status-msg correct';
+            } else {
+                playSound('wrong');
+                inputEl.classList.add('wrong-input');
+                inputEl.classList.add('shake');
+                setTimeout(() => {
+                    inputEl.classList.remove('shake');
+                }, 500);
+                
+                statusMsg.innerHTML = `❌ Sai rồi! Đáp án là: <b style="margin-left: 8px;">${currentData.blank}</b>`;
+                statusMsg.className = 'status-msg incorrect';
+            }
+            
+            document.getElementById('exampleText').innerText = currentData.ex;
+            
+            explanationArea.classList.add('show');
+            
+            document.getElementById('mainBtn').innerText = 'Tiếp tục';
+            document.getElementById('instructionText').innerText = 'Nhấn Enter để chuyển sang câu tiếp theo.';
+            
+            speakPhrase(currentData.phrase);
+        }
+
+        function nextQuestion() {
+            if (currentIndex < idiomsData.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                document.querySelector('.game-container').innerHTML = `
+                    <h1 style="font-size: 3.5em; margin-bottom: 20px;">🎉</h1>
+                    <h1>Chúc mừng!</h1>
+                    <p style="font-size: 1.2em; color: var(--text-light); margin-bottom: 30px;">
+                        Bạn đã hoàn thành xuất sắc bài ${TEN_BAI_HOC}.
+                    </p>
+                    <div class="score-display" style="margin-bottom: 20px;">
+                        Điểm số: ${score} / ${idiomsData.length}
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 16px; border: 2px dashed #cbd5e0; margin-bottom: 25px;">
+                        <p style="margin-top:0; font-size:1.1em; font-weight:bold; color:#4a5568; margin-bottom:15px;">Gửi điểm cho cô giáo</p>
+                        <input type="text" id="studentName" placeholder="Nhập Họ và Tên của em..." style="font-size: 1.1em; padding: 12px; border-radius: 10px; border: 2px solid #a0aec0; text-align: center; width: 80%; max-width: 300px; margin-bottom: 15px;">
+                        <br>
+                        <button class="btn" id="submitScoreBtn" onclick="submitScore()">Gửi kết quả 🚀</button>
+                    </div>
+                    <button class="btn" style="background: #A0AEC0; font-size: 1em; padding: 10px 20px;" onclick="location.reload()">Chơi lại</button>
+                `;
+                fireConfetti();
+                
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2);
+                osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.5);
+            }
+        }
+
+        function submitScore() {
+            const nameInput = document.getElementById('studentName');
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert("Em vui lòng nhập tên trước khi gửi điểm nhé!");
+                nameInput.focus();
+                return;
+            }
+            
+            const btn = document.getElementById('submitScoreBtn');
+            btn.innerText = "Đang gửi...";
+            btn.disabled = true;
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    score: score,
+                    total: idiomsData.length,
+                    gameName: TEN_BAI_HOC
+                })
+            })
+            .then(() => {
+                btn.innerText = "Đã gửi thành công! ✅";
+                btn.style.background = "#38a169";
+                nameInput.readOnly = true;
+            })
+            .catch(error => {
+                alert("Có lỗi mạng xảy ra, không thể gửi điểm. Em thử lại nhé!");
+                btn.innerText = "Thử lại 🚀";
+                btn.disabled = false;
+            });
+        }
+
+        document.getElementById('mainBtn').addEventListener('click', checkAnswer);
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
