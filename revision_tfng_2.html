@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision TFNG 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight-input {
+            background-color: #fef08a; /* Tailwind yellow-200 */
+            border: 2px solid transparent;
+            border-bottom: 4px solid #facc15; /* Tailwind yellow-400 */
+            transition: all 0.2s ease;
+            width: auto;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .highlight-input:focus {
+            outline: none;
+            border-bottom-color: #ca8a04;
+            background-color: #fde047;
+        }
+        
+        .highlight-input.error {
+            background-color: #fee2e2; /* red-100 */
+            border-bottom-color: #ef4444; /* red-500 */
+            color: #dc2626; /* red-600 */
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        /* Modal animations */
+        .modal-enter {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+        
+        .modal-card-enter {
+            animation: modalPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modalPopIn {
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Main Game Container -->
+    <div id="game-card" class="glass-card rounded-3xl p-10 md:p-14 max-w-6xl w-full mx-4 text-center transition-all duration-300">
+        
+        <!-- Header -->
+        <div class="mb-12 flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-slate-400 uppercase tracking-widest">Revision TFNG 2</h2>
+            <div class="bg-blue-100 text-blue-700 font-bold px-4 py-2 rounded-full text-lg shadow-sm" id="progress-text">
+                1 / 31
+            </div>
+        </div>
+
+        <!-- Question Area -->
+        <div id="question-area">
+            <!-- Part of Speech -->
+            <p id="pos-text" class="text-xl md:text-2xl text-slate-500 font-semibold mb-2 uppercase tracking-wide"></p>
+            
+            <!-- Meaning -->
+            <p id="meaning-text" class="text-4xl md:text-5xl font-bold text-slate-700 mb-6 leading-relaxed min-h-[120px] flex items-center justify-center">
+                <!-- Meaning injected here -->
+            </p>
+            
+            <!-- Hint -->
+            <p id="hint-text" class="text-2xl text-blue-500 font-medium mb-12 bg-blue-50 inline-block px-6 py-2 rounded-full shadow-inner">
+                <!-- Hint injected here -->
+            </p>
+
+            <!-- Fill in the blank -->
+            <div class="flex flex-wrap items-center justify-center gap-4 text-4xl md:text-5xl font-semibold text-slate-800 mb-10 leading-tight">
+                <span id="prefix-text"></span>
+                <input 
+                    type="text" 
+                    id="answer-input" 
+                    class="highlight-input rounded-xl px-4 py-2 font-bold"
+                    spellcheck="false" 
+                    autocomplete="off" 
+                    autocorrect="off" 
+                    autocapitalize="off"
+                    placeholder="?"
+                >
+                <span id="suffix-text"></span>
+            </div>
+            
+            <button onclick="checkAnswer()" class="mt-8 bg-slate-800 hover:bg-slate-700 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                Kiểm tra (Enter)
+            </button>
+        </div>
+
+        <!-- End Screen (Hidden) -->
+        <div id="end-screen" class="hidden py-16">
+            <h1 class="text-6xl md:text-7xl font-bold text-emerald-500 mb-8">Tuyệt vời! 🎉</h1>
+            <p class="text-3xl text-slate-600 mb-12">Bạn đã hoàn thành toàn bộ 31 cụm từ ôn tập.</p>
+            <button onclick="restartGame()" class="bg-blue-600 hover:bg-blue-700 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                Chơi lại từ đầu
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="result-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div id="modal-card" class="bg-white rounded-[2rem] p-10 max-w-4xl w-full mx-4 text-center shadow-2xl border-4 border-transparent">
+            
+            <h2 id="modal-title" class="text-5xl md:text-6xl font-extrabold mb-4"></h2>
+            
+            <p id="modal-correction" class="text-2xl text-slate-600 font-medium mb-8 pb-6 border-b-2 border-slate-100 hidden">
+                Đáp án đúng là: <span id="correct-target" class="font-bold text-emerald-600 text-3xl ml-2 bg-emerald-50 px-4 py-1 rounded-lg"></span>
+            </p>
+
+            <div class="mb-8">
+                <!-- POS in modal -->
+                <p id="modal-pos" class="text-xl text-slate-500 font-semibold mb-2 uppercase tracking-wide"></p>
+                
+                <div class="flex items-center justify-center gap-4 mb-3">
+                    <p id="modal-phrase" class="text-4xl md:text-5xl font-bold text-blue-700"></p>
+                    <button onclick="replayAudio()" class="p-3 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full transition-colors focus:outline-none" title="Nghe lại">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                    </button>
+                </div>
+                <p id="modal-ipa" class="text-2xl text-slate-500 font-mono bg-slate-100 inline-block px-4 py-1 rounded-lg shadow-sm"></p>
+            </div>
+
+            <div class="bg-amber-50 rounded-2xl p-6 mb-10 text-left border border-amber-100">
+                <p class="text-xl font-bold text-amber-800 mb-2 uppercase tracking-wide">Ví dụ (Example):</p>
+                <p id="modal-example" class="text-2xl text-slate-700 italic leading-relaxed"></p>
+            </div>
+
+            <button onclick="nextQuestion()" id="btn-next" class="w-full md:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-2xl font-bold py-4 px-16 rounded-full shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-300">
+                Tiếp tục (Enter)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const originalData = [
+            { pos: "(Trạng từ)", meaning: "một cách vô thức", target: "subconsciously", hint: "s", display: "___", ipa: "/ˌsʌbˈkɒnʃəsli/", example: "We subconsciously observe that others do not have the same habit.", audioText: "subconsciously" },
+            { pos: "(Trạng từ)", meaning: "cố ý", target: "intentionally", hint: "i", display: "___", ipa: "/ɪnˈtɛnʃənəli/", example: "When we intentionally pick up new habits...", audioText: "intentionally" },
+            { pos: "(Cụm động từ)", meaning: "liên kết, gắn với", target: "associate", hint: "a", display: "___ with", ipa: "/əˈsəʊʃɪeɪt wɪð/", example: "They gave them words to associate with pictures.", audioText: "associate with" },
+            { pos: "(Tính từ)", meaning: "vô thức", target: "unconscious", hint: "u", display: "___", ipa: "/ʌnˈkɒnʃəs/", example: "They remain stronger in unconscious forms of memory.", audioText: "unconscious" },
+            { pos: "(Danh từ)", meaning: "sự tiêu thụ", target: "consumption", hint: "c", display: "___", ipa: "/kənˈsʌmpʃən/", example: "Fast food traditionally contains a lot of salt or sugar to encourage consumption.", audioText: "consumption" },
+            { pos: "(Tính từ)", meaning: "nhạt nhẽo", target: "bland", hint: "b", display: "___", ipa: "/blænd/", example: "If their product tastes bland, no amount of health benefit will help.", audioText: "bland" },
+            { pos: "(Tính từ)", meaning: "mặn (ngon, đậm vị)", target: "savoury", altAnswers: ["savory"], hint: "s", display: "___", ipa: "/ˈseɪvəri/", example: "There are receptors for sweet, salty, sour, bitter and savoury flavours.", audioText: "savoury" },
+            { pos: "(Động từ)", meaning: "bắt chước", target: "mimic", hint: "m", display: "___", ipa: "/ˈmɪmɪk/", example: "The technology to mimic natural flavours has existed for a long time.", audioText: "mimic" },
+            { pos: "(Động từ)", meaning: "tăng cường", target: "enhance", hint: "e", display: "___", ipa: "/ɪnˈhɑːns/", example: "Taste enhancers make us more sensitive to sweet or salty tastes.", audioText: "enhance" },
+            { pos: "(Danh từ / Tính từ)", meaning: "tiềm năng", target: "potential", hint: "p", display: "___", ipa: "/pəˈtɛnʃəl/", example: "This technology has the potential to improve our health.", audioText: "potential" },
+            { pos: "(Tính từ)", meaning: "đắng", target: "bitter", hint: "b", display: "___", ipa: "/ˈbɪtə/", example: "Blocking bitter taste receptors may make healthy foods more pleasant.", audioText: "bitter" },
+            { pos: "(Danh từ)", meaning: "chướng ngại vật", target: "obstacle", hint: "o", display: "___", ipa: "/ˈɒbstəkl/", example: "Parkour is based on military obstacle course training.", audioText: "obstacle" },
+            { pos: "(Danh từ)", meaning: "khiêm tốn", target: "humility", hint: "h", display: "___", ipa: "/hjuːˈmɪlɪti/", example: "They valued humility, so they were not allowed to show off.", audioText: "humility" },
+            { pos: "(Tính từ)", meaning: "mang tính cạnh tranh", target: "competitive", hint: "c", display: "___", ipa: "/kəmˈpɛtɪtɪv/", example: "Parkour can never be a competitive sport.", audioText: "competitive" },
+            { pos: "(Cụm động từ)", meaning: "thích nghi", target: "adapt", hint: "a", display: "___ to", ipa: "/əˈdæpt tuː/", example: "The idea behind parkour is to adapt to any environment.", audioText: "adapt to" },
+            { pos: "(Tính từ)", meaning: "sáng tạo", target: "creative", hint: "c", display: "___", ipa: "/kriˈeɪtɪv/", example: "Be creative about how you get through obstacles.", audioText: "creative" },
+            { pos: "(Cụm động từ)", meaning: "mâu thuẫn với", target: "conflict", hint: "c", display: "___ with", ipa: "/ˈkɒnflɪkt wɪð/", example: "Having classes conflicts with the values of parkour.", audioText: "conflict with" },
+            { pos: "(Danh từ)", meaning: "kỷ luật", target: "discipline", hint: "d", display: "___", ipa: "/ˈdɪsɪplɪn/", example: "It conflicts with the values of the discipline.", audioText: "discipline" },
+            { pos: "(Động từ)", meaning: "củng cố", target: "reinforce", hint: "r", display: "___", ipa: "/ˌriːɪnˈfɔːs/", example: "The more a response is used, the more it is reinforced.", audioText: "reinforce" },
+            { pos: "(Thành ngữ)", meaning: "Đang trong giai đoạn sa sút, khó khăn", target: "ebb", hint: "e", display: "At a low ___", ipa: "/ət ə ləʊ ɛb/", example: "Be at rock bottom; be in dire straits; be down on one's luck", audioText: "At a low ebb" },
+            { pos: "(Thành ngữ)", meaning: "Bất kể điều gì xảy ra; dù nắng hay mưa", target: "shine", hint: "s", display: "Come rain or ___", ipa: "/kʌm reɪn ɔː ʃaɪn/", example: "Come what may; come hell or high water", audioText: "Come rain or shine" },
+            { pos: "(Thành ngữ)", meaning: "Đắt vô cùng; đắt như vàng", target: "earth", hint: "e", display: "Cost the ___", ipa: "/kɒst ði ɜːθ/", example: "Cost an arm and a leg; pay through the nose", audioText: "Cost the earth" },
+            { pos: "(Thành ngữ)", meaning: "Không hợp lý; không thuyết phục", target: "water", hint: "w", display: "Not hold ___", ipa: "/nɒt həʊld ˈwɔːtə/", example: "Not add up; fall apart under scrutiny", audioText: "Not hold water" },
+            { pos: "(Thành ngữ)", meaning: "Làm cho một việc có vẻ khó khăn hơn thực tế", target: "weather", hint: "w", display: "Make heavy ___ of sth", ipa: "/meɪk ˈhɛvi ˈwɛðər ɒv ˈsʌmθɪŋ/", example: "Make a mountain out of a molehill", audioText: "Make heavy weather of something" },
+            { pos: "(Thành ngữ)", meaning: "Tạm hoãn hoặc đình chỉ một kế hoạch", target: "ice", hint: "i", display: "Put sth on ___", ipa: "/pʊt ˈsʌmθɪŋ ɒn aɪs/", example: "Put something on hold; put something on the back burner", audioText: "Put something on ice" },
+            { pos: "(Thành ngữ)", meaning: "Hành động liều lĩnh; tiến sát ranh giới cho phép", target: "wind", hint: "w", display: "Sail close to the ___", ipa: "/seɪl kləʊs tuː ðə wɪnd/", example: "Push the envelope; walk a fine line; play with fire", audioText: "Sail close to the wind" },
+            { pos: "(Thành ngữ)", meaning: "Phản bội; bán đứng người đã tin tưởng mình", target: "sell", hint: "s", display: "___ sb down the river", ipa: "/sɛl ˈsʌmbədi daʊn ðə ˈrɪvə/", example: "Stab someone in the back; throw someone under the bus", audioText: "Sell somebody down the river" },
+            { pos: "(Thành ngữ)", meaning: "Cướp sự chú ý hoặc làm lu mờ thành tích của người khác", target: "thunder", hint: "t", display: "Steal sb's ___", ipa: "/stiːl ˈsʌmbədiz ˈθʌndə/", example: "Upstage someone; take the spotlight away from someone", audioText: "Steal somebody's thunder" },
+            { pos: "(Thành ngữ)", meaning: "Đi ngược dòng; làm trái với xu hướng số đông", target: "tide", hint: "t", display: "Swim against the ___", ipa: "/swɪm əˈɡɛnst ðə taɪd/", example: "Go against the grain; go against the flow; buck the trend", audioText: "Swim against the tide" },
+            { pos: "(Thành ngữ)", meaning: "Nhanh chóng gây tiếng vang lớn", target: "storm", hint: "s", display: "Take sth by ___", ipa: "/teɪk ˈsʌmθɪŋ baɪ stɔːm/", example: "Make a big splash; burst onto the scene", audioText: "Take something by storm" },
+            { pos: "(Thành ngữ)", meaning: "Vui sướng lâng lâng; hạnh phúc tột độ", target: "air", hint: "a", display: "Walk on ___", ipa: "/wɔːk ɒn eə/", example: "Be over the moon; be on cloud nine", audioText: "Walk on air" }
+        ];
+
+        // --- Game State ---
+        let questions = [];
+        let currentIndex = 0;
+        let phase = 'answering'; // 'answering' | 'reviewing' | 'ended'
+        
+        // --- DOM Elements ---
+        const meaningText = document.getElementById('meaning-text');
+        const hintText = document.getElementById('hint-text');
+        const prefixText = document.getElementById('prefix-text');
+        const suffixText = document.getElementById('suffix-text');
+        const answerInput = document.getElementById('answer-input');
+        const progressText = document.getElementById('progress-text');
+        const questionArea = document.getElementById('question-area');
+        const endScreen = document.getElementById('end-screen');
+        const posText = document.getElementById('pos-text');
+        
+        // Modal Elements
+        const modal = document.getElementById('result-modal');
+        const modalCard = document.getElementById('modal-card');
+        const modalTitle = document.getElementById('modal-title');
+        const modalCorrection = document.getElementById('modal-correction');
+        const correctTargetSpan = document.getElementById('correct-target');
+        const modalPhrase = document.getElementById('modal-phrase');
+        const modalPos = document.getElementById('modal-pos');
+        const modalIpa = document.getElementById('modal-ipa');
+        const modalExample = document.getElementById('modal-example');
+        const btnNext = document.getElementById('btn-next');
+
+        // --- Audio Context Setup (Web Audio API) ---
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTone(type) {
+            initAudio();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            if (type === 'correct') {
+                // Pleasant ding
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, now); // C5
+                oscillator.frequency.exponentialRampToValueAtTime(880, now + 0.1); // A5
+                
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.5, now + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.6);
+            } else if (type === 'wrong') {
+                // Low buzz
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, now);
+                oscillator.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+                
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.4);
+            }
+        }
+
+        function speakPhrase(text) {
+            window.speechSynthesis.cancel();
+            
+            // Xử lý các từ viết tắt sb/sth thành từ hoàn chỉnh khi đọc
+            let spokenText = text.replace(/\bsb\b/gi, 'somebody').replace(/\bsth\b/gi, 'something');
+            
+            const utterance = new SpeechSynthesisUtterance(spokenText);
+            utterance.lang = 'en-GB'; 
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function replayAudio() {
+            const q = questions[currentIndex];
+            if(q) speakPhrase(q.audioText || q.target);
+        }
+
+        // --- Core Logic ---
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex > 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function parseQuestion(q) {
+            // Tách prefix và suffix dựa trên chuỗi "___"
+            if (q.display && q.display.includes("___")) {
+                const parts = q.display.split("___");
+                q.prefix = parts[0];
+                q.suffix = parts[1] || "";
+            } else {
+                q.prefix = "";
+                q.suffix = "";
+            }
+            return q;
+        }
+
+        function adjustInputWidth(targetLength) {
+            const charWidth = 26; 
+            const padding = 40;
+            answerInput.style.width = `${Math.max(120, (targetLength * charWidth) + padding)}px`;
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= questions.length) {
+                showEndScreen();
+                return;
+            }
+
+            phase = 'answering';
+            let q = questions[currentIndex];
+            
+            // Luôn parse lại cho chắc chắn
+            if (q.prefix === undefined) q = parseQuestion(q);
+            
+            posText.textContent = q.pos;
+            meaningText.innerHTML = q.meaning;
+            hintText.innerHTML = `Gợi ý: Bắt đầu bằng chữ '<b>${q.hint}</b>'`;
+            
+            prefixText.innerHTML = q.prefix ? q.prefix.replace(/ /g, '&nbsp;') : '';
+            suffixText.innerHTML = q.suffix ? q.suffix.replace(/ /g, '&nbsp;') : '';
+            
+            answerInput.value = '';
+            answerInput.disabled = false;
+            answerInput.classList.remove('error', 'shake');
+            
+            progressText.textContent = `${currentIndex + 1} / ${questions.length}`;
+            
+            adjustInputWidth(q.target.length);
+            
+            setTimeout(() => answerInput.focus(), 50);
+        }
+
+        function checkAnswer() {
+            if (phase !== 'answering') return;
+            
+            const q = questions[currentIndex];
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = q.target.trim().toLowerCase();
+            
+            if (userAnswer === '') {
+                answerInput.classList.remove('shake');
+                void answerInput.offsetWidth; // trigger reflow
+                answerInput.classList.add('shake');
+                return;
+            }
+            
+            phase = 'reviewing';
+            answerInput.disabled = true; // Lock input
+
+            // Kiểm tra đáp án chính xác hoặc các đáp án thay thế (nếu có)
+            let isCorrect = (userAnswer === correctAnswer);
+            if (!isCorrect && q.altAnswers) {
+                isCorrect = q.altAnswers.some(alt => alt.toLowerCase() === userAnswer);
+            }
+            
+            showModal(isCorrect, q);
+        }
+
+        function showModal(isCorrect, q) {
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-enter');
+            modalCard.classList.add('modal-card-enter');
+            
+            // Populate Modal Data
+            modalPhrase.textContent = q.display.replace("___", q.target);
+            modalPos.textContent = q.pos;
+            modalIpa.textContent = q.ipa;
+            modalExample.innerHTML = q.example;
+            
+            if (isCorrect) {
+                playTone('correct');
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#10b981', '#3b82f6', '#f59e0b']
+                });
+                
+                modalCard.classList.remove('border-rose-400');
+                modalCard.classList.add('border-emerald-400');
+                modalTitle.className = "text-5xl md:text-6xl font-extrabold mb-4 text-emerald-500";
+                modalTitle.textContent = "Chính xác! 🎉";
+                modalCorrection.classList.add('hidden');
+                
+            } else {
+                playTone('wrong');
+                answerInput.classList.add('error');
+                
+                modalCard.classList.remove('border-emerald-400');
+                modalCard.classList.add('border-rose-400');
+                modalTitle.className = "text-5xl md:text-6xl font-extrabold mb-4 text-rose-500";
+                modalTitle.textContent = "Chưa chính xác! ❌";
+                
+                correctTargetSpan.textContent = q.target;
+                if (q.altAnswers && q.altAnswers.length > 0) {
+                    correctTargetSpan.textContent += ` (hoặc: ${q.altAnswers.join(', ')})`;
+                }
+                modalCorrection.classList.remove('hidden');
+            }
+
+            // Speak word automatically
+            setTimeout(() => speakPhrase(q.audioText || q.target), 300);
+
+            // Focus on next button so Enter works seamlessly
+            setTimeout(() => btnNext.focus(), 100);
+        }
+
+        function nextQuestion() {
+            if (phase !== 'reviewing') return;
+            
+            // Hide modal
+            modal.classList.add('hidden');
+            modal.classList.remove('modal-enter');
+            modalCard.classList.remove('modal-card-enter');
+            
+            // Go to next
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function showEndScreen() {
+            phase = 'ended';
+            questionArea.style.display = 'none';
+            endScreen.style.display = 'block';
+            
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+              return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+              const timeLeft = animationEnd - Date.now();
+              if (timeLeft <= 0) return clearInterval(interval);
+              const particleCount = 50 * (timeLeft / duration);
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+              confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function restartGame() {
+            questions = shuffle([...originalData]);
+            currentIndex = 0;
+            questionArea.style.display = 'block';
+            endScreen.style.display = 'none';
+            loadQuestion();
+        }
+
+        // --- Event Listeners ---
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (phase === 'answering') {
+                    checkAnswer();
+                } else if (phase === 'reviewing') {
+                    // btnNext handles this if focused, but just in case:
+                    if (document.activeElement !== btnNext) {
+                        nextQuestion();
+                    }
+                } else if (phase === 'ended') {
+                    restartGame();
+                }
+            }
+        });
+
+        // Initialize Game
+        window.onload = () => {
+            questions = shuffle([...originalData]);
+            loadQuestion();
+        };
+
+    </script>
+</body>
+</html>
