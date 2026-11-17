@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision IELTS Reading 2 — Academic Vocabulary Mastery</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts: Playfair Display, Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        editorial: {
+                            bg: '#FAF8F5',
+                            card: '#FFFFFF',
+                            navy: '#1E293B',
+                            navyLight: '#334155',
+                            amber: '#D97706',
+                            amberBg: '#FEF3C7',
+                            emerald: '#059669',
+                            emeraldBg: '#D1FAE5',
+                            border: '#E7E5E4',
+                            muted: '#64748B'
+                        }
+                    },
+                    animation: {
+                        'shake': 'shake 0.45s cubic-bezier(.36,.07,.19,.97) both',
+                        'fade-in': 'fadeIn 0.35s ease-out forwards',
+                        'pop': 'pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
+                    },
+                    keyframes: {
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-2px, 0, 0)' },
+                            '20%, 80%': { transform: 'translate3d(4px, 0, 0)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-6px, 0, 0)' },
+                            '40%, 60%': { transform: 'translate3d(6px, 0, 0)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(8px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pop: {
+                            '0%': { transform: 'scale(0.95)', opacity: '0.8' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF8F5;
+            background-image: radial-gradient(#E5E0D8 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #1E293B;
+        }
+        .academic-card {
+            background: #FFFFFF;
+            border: 1px solid #E7E5E4;
+            box-shadow: 0 12px 32px -4px rgba(30, 41, 59, 0.06), 0 4px 12px -2px rgba(30, 41, 59, 0.03);
+        }
+        .blank-input {
+            border-bottom: 2.5px solid #1E293B;
+            background-color: #F8FAFC;
+            transition: all 0.2s ease;
+        }
+        .blank-input:focus {
+            outline: none;
+            border-bottom-color: #D97706;
+            background-color: #FFFBEB;
+            box-shadow: 0 4px 12px -2px rgba(217, 119, 6, 0.15);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F5F4;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-amber-200 selection:text-slate-900">
+
+    <!-- Top Navigation Bar -->
+    <header class="w-full border-b border-stone-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+            <!-- Brand Title -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('practice')">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-feather-pointed text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-xl sm:text-2xl text-slate-900 tracking-tight leading-none">
+                        Revision IELTS Reading 2
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium mt-1">Academic Vocabulary & Collocation Mastery</p>
+                </div>
+            </div>
+
+            <!-- Controls & Tabs -->
+            <div class="flex items-center gap-2">
+                <!-- Sound Toggle -->
+                <button id="btn-sound" onclick="toggleSound()" title="Bật/Tắt âm thanh hiệu ứng"
+                    class="w-9 h-9 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-slate-700 flex items-center justify-center transition">
+                    <i id="icon-sound" class="fa-solid fa-volume-high text-sm"></i>
+                </button>
+
+                <!-- Reshuffle Button -->
+                <button onclick="confirmRestart()" title="Xáo trộn lại thứ tự từ mới"
+                    class="px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-slate-700 text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-shuffle text-amber-600"></i>
+                    <span class="hidden sm:inline">Đảo từ</span>
+                </button>
+
+                <!-- Tab Switcher -->
+                <div class="bg-stone-100 p-1 rounded-xl flex items-center border border-stone-200/60">
+                    <button id="tab-practice" onclick="switchTab('practice')"
+                        class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-white text-slate-900 shadow-sm transition">
+                        Luyện tập
+                    </button>
+                    <button id="tab-glossary" onclick="switchTab('glossary')"
+                        class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
+                        <span>Sổ tay</span>
+                        <span class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.5 rounded-full">29</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow max-w-3xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col justify-center">
+
+        <!-- VIEW 1: PRACTICE GAME -->
+        <section id="view-practice" class="w-full space-y-5">
+
+            <!-- Progress & Metrics Bar -->
+            <div class="academic-card rounded-2xl p-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200/80 text-amber-600 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-award"></i>
+                        </span>
+                        <div>
+                            <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Điểm số</p>
+                            <p id="stat-score" class="text-sm font-bold text-slate-800">0</p>
+                        </div>
+                    </div>
+
+                    <div class="h-7 w-px bg-stone-200"></div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200/80 text-emerald-600 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-fire-flame-curved"></i>
+                        </span>
+                        <div>
+                            <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Chuỗi đúng</p>
+                            <p id="stat-streak" class="text-sm font-bold text-slate-800">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full sm:w-64">
+                    <div class="flex justify-between items-center text-xs font-semibold mb-1.5">
+                        <span class="text-slate-500">Tiến độ lượt học</span>
+                        <span id="stat-progress" class="font-mono text-slate-900 font-bold">1 / 29</span>
+                    </div>
+                    <div class="w-full h-2 bg-stone-100 rounded-full overflow-hidden border border-stone-200/60">
+                        <div id="progress-fill" class="h-full bg-slate-900 rounded-full transition-all duration-500" style="width: 3.45%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTION STAGE CARD -->
+            <div id="card-question" class="academic-card rounded-3xl p-6 sm:p-10 relative overflow-hidden animate-fade-in">
+                <!-- Decorative Top Accent -->
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-slate-800 via-amber-500 to-slate-800"></div>
+
+                <!-- Metadata Badges: Part of Speech & Word Count -->
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200/80">
+                            <i class="fa-solid fa-tag text-amber-600 text-[11px]"></i>
+                            <span>Từ loại:</span>
+                            <span id="q-pos" class="font-mono text-amber-700">adj.</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200/80">
+                            <i class="fa-solid fa-layer-group text-amber-600 text-[11px]"></i>
+                            <span>Độ dài:</span>
+                            <span id="q-word-count">1 từ</span>
+                        </span>
+                    </div>
+
+                    <button type="button" onclick="toggleHint()" id="btn-hint"
+                        class="text-xs font-semibold text-slate-500 hover:text-amber-700 bg-stone-50 hover:bg-amber-50 px-3 py-1.5 rounded-full border border-stone-200 transition flex items-center gap-1.5">
+                        <i class="fa-regular fa-lightbulb text-amber-500"></i>
+                        <span>Gợi ý chữ cái</span>
+                    </button>
+                </div>
+
+                <!-- Meaning & English Synonyms -->
+                <div class="text-center max-w-xl mx-auto space-y-3 my-4">
+                    <p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Nghĩa tiếng Việt</p>
+                    <h2 id="q-meaning" class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 leading-snug">
+                        Khắc nghiệt, không thuận lợi cho sự sống
+                    </h2>
+                    
+                    <div class="pt-1">
+                        <span class="inline-block bg-stone-100/90 border border-stone-200/80 text-slate-600 text-xs sm:text-sm px-3.5 py-1.5 rounded-xl">
+                            <span class="font-semibold text-slate-400 mr-1">Synonyms:</span>
+                            <span id="q-synonyms" class="italic font-medium text-slate-700">hostile, unwelcome</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Letter Hint Box (Hidden by default) -->
+                <div id="hint-banner" class="hidden max-w-md mx-auto mt-4 bg-amber-50/90 border border-amber-200 text-amber-900 px-4 py-2 rounded-xl text-center text-xs sm:text-sm font-medium">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- Interactive Fill-in-the-blank Area -->
+                <div class="my-8 sm:my-10 flex flex-col items-center">
+                    <div id="fill-container" class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 text-xl sm:text-2xl font-semibold text-slate-800">
+                        <!-- Dynamically rendered input & phrase context -->
+                    </div>
+                    <p id="q-instruction" class="text-xs text-slate-400 mt-4 text-center">
+                        Nhập từ còn thiếu vào ô trống và nhấn <kbd class="px-1.5 py-0.5 text-[11px] font-mono bg-stone-100 border border-stone-300 rounded text-slate-600">Enter</kbd>
+                    </p>
+                </div>
+
+                <!-- Inline Error Message -->
+                <div id="error-alert" class="hidden max-w-md mx-auto mb-5 bg-rose-50 border border-rose-200 text-rose-700 px-4 py-2.5 rounded-xl text-center text-xs sm:text-sm font-semibold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="error-text">Chưa chính xác, hãy thử kiểm tra lại chính tả nhé!</span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                    <button type="button" onclick="checkAnswer()"
+                        class="w-full sm:flex-1 py-3.5 px-6 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Kiểm tra đáp án</span>
+                    </button>
+                    <button type="button" onclick="revealAnswer()"
+                        class="w-full sm:w-auto py-3.5 px-4 bg-stone-100 hover:bg-stone-200/80 text-slate-600 font-semibold rounded-xl transition text-xs sm:text-sm">
+                        Xem đáp án
+                    </button>
+                </div>
+            </div>
+
+            <!-- ANSWER REVEALED CARD (Shown after correct answer or reveal) -->
+            <div id="card-answer" class="hidden academic-card rounded-3xl p-6 sm:p-10 border-2 border-emerald-500/30 relative overflow-hidden animate-pop">
+                <div id="answer-top-bar" class="absolute top-0 left-0 right-0 h-1.5 bg-emerald-500"></div>
+
+                <!-- Status Pill -->
+                <div class="flex items-center justify-between mb-6">
+                    <span id="res-badge" class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Chính xác tuyệt đối!</span>
+                    </span>
+                    <span id="res-pos-tag" class="text-xs font-mono font-semibold text-slate-400">adj.</span>
+                </div>
+
+                <!-- Target Word / Idiom + IPA + Audio Button -->
+                <div class="text-center my-4">
+                    <div class="inline-flex flex-wrap items-center justify-center gap-3">
+                        <h2 id="res-full-term" class="font-serif text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+                            <!-- Highlighted target word rendered here -->
+                        </h2>
+                        <button type="button" onclick="speakTargetTerm()" title="Nghe phát âm từ/cụm từ"
+                            class="w-11 h-11 rounded-full bg-amber-500 hover:bg-amber-600 active:scale-95 text-white shadow-md flex items-center justify-center transition group">
+                            <i class="fa-solid fa-volume-high text-base group-hover:scale-110 transition-transform"></i>
+                        </button>
+                    </div>
+
+                    <!-- IPA & Alternative Spelling Note -->
+                    <div class="mt-2.5 flex flex-wrap items-center justify-center gap-2">
+                        <span id="res-ipa" class="font-mono text-sm sm:text-base text-slate-600 bg-stone-100 px-3.5 py-1 rounded-lg border border-stone-200/80">
+                            /ˌɪnhɒˈspɪtəbl/
+                        </span>
+                        <span id="res-alt-note" class="hidden text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                            UK: harbour / US: harbor
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Meaning & Context Example Box -->
+                <div class="mt-6 bg-stone-50/90 rounded-2xl p-5 border border-stone-200/80 space-y-4">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-slate-400 mb-1">Nghĩa & Đồng nghĩa</p>
+                        <p id="res-meaning" class="text-base font-bold text-slate-800">Khắc nghiệt, không thuận lợi cho sự sống</p>
+                        <p id="res-synonyms" class="text-xs text-slate-500 italic mt-0.5">Synonyms: hostile, unwelcome</p>
+                    </div>
+
+                    <div class="border-t border-stone-200/80 pt-3.5">
+                        <p class="text-[11px] uppercase tracking-wider font-bold text-amber-700 mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-book-open text-[10px]"></i>
+                            <span>Ngữ cảnh IELTS Reading</span>
+                        </p>
+                        <p id="res-example" class="text-sm sm:text-base text-slate-700 leading-relaxed">
+                            "Deep beneath the ocean floor, microbes inhabit an <strong class="text-slate-900 bg-amber-100/80 px-1 rounded">inhospitable</strong> environment with limited nutrients."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Next Question CTA -->
+                <div class="mt-7 flex flex-col items-center">
+                    <button type="button" id="btn-next" onclick="nextQuestion()"
+                        class="w-full sm:w-2/3 py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm sm:text-base">
+                        <span>Từ tiếp theo</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <p class="text-[11px] text-slate-400 mt-2.5">
+                        Nhấn phím <kbd class="px-1.5 py-0.5 font-mono bg-stone-100 border border-stone-300 rounded text-slate-600">Enter</kbd> để sang câu tiếp theo
+                    </p>
+                </div>
+            </div>
+
+            <!-- SUMMARY COMPLETION VIEW -->
+            <div id="card-summary" class="hidden academic-card rounded-3xl p-8 sm:p-10 text-center animate-fade-in">
+                <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-5 text-3xl shadow-sm">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900">Hoàn thành lượt ôn tập!</h2>
+                <p class="text-sm text-slate-500 mt-2 max-w-md mx-auto">
+                    Bạn đã hoàn thành toàn bộ 29 từ vựng và cụm từ học thuật trong bộ đề <strong>Revision IELTS Reading 2</strong>.
+                </p>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-3 gap-3 max-w-md mx-auto my-7">
+                    <div class="bg-stone-50 border border-stone-200/80 rounded-2xl p-3.5">
+                        <p class="text-xs text-slate-400 font-semibold">Tổng điểm</p>
+                        <p id="sum-score" class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">290</p>
+                    </div>
+                    <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-3.5">
+                        <p class="text-xs text-emerald-700 font-semibold">Đúng ngay</p>
+                        <p id="sum-correct" class="text-xl sm:text-2xl font-bold text-emerald-700 mt-1">29/29</p>
+                    </div>
+                    <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5">
+                        <p class="text-xs text-amber-700 font-semibold">Chuỗi cao nhất</p>
+                        <p id="sum-streak" class="text-xl sm:text-2xl font-bold text-amber-700 mt-1">12</p>
+                    </div>
+                </div>
+
+                <!-- Missed Words Review Section (if any) -->
+                <div id="missed-container" class="hidden text-left max-w-lg mx-auto mb-7 bg-rose-50/60 border border-rose-200/80 rounded-2xl p-4">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-rose-800 mb-2.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Các từ cần lưu ý thêm (<span id="missed-count">0</span>):</span>
+                    </h3>
+                    <div id="missed-list" class="flex flex-wrap gap-2">
+                        <!-- Pills added via JS -->
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                    <button type="button" onclick="startNewSession()"
+                        class="w-full sm:flex-1 py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-shuffle"></i>
+                        <span>Bắt đầu lượt mới (Random)</span>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- VIEW 2: VOCABULARY GLOSSARY (SỔ TAY 29 TỪ) -->
+        <section id="view-glossary" class="hidden w-full animate-fade-in">
+            <div class="academic-card rounded-3xl p-6 sm:p-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-stone-200">
+                    <div>
+                        <h2 class="font-serif text-2xl font-bold text-slate-900">Danh mục từ vựng & Idioms</h2>
+                        <p class="text-xs text-slate-500 mt-1">Toàn bộ 29 mục từ cột 1 — Nhấn biểu tượng loa để nghe phát âm chuẩn</p>
+                    </div>
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text" id="glossary-search" oninput="renderGlossary()" placeholder="Tìm từ, nghĩa, từ loại..."
+                            class="w-full pl-9 pr-4 py-2 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-amber-500 focus:bg-white transition">
+                    </div>
+                </div>
+
+                <div id="glossary-grid" class="mt-5 grid grid-cols-1 gap-3.5 max-h-[65vh] overflow-y-auto pr-1">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-4 text-center text-xs text-slate-400 border-t border-stone-200/60 bg-white/50">
+        <p>Revision IELTS Reading 2 • Interactive Academic Flashcard & Cloze Practice</p>
+    </footer>
+
+    <!-- Application Logic -->
+    <script>
+        /**
+         * Complete 29 Vocabulary & Idiom items extracted accurately from the 5 reference tables.
+         * For multi-word phrases, `prefix` + [blank: `answers[0]`] + `suffix` reconstructs the full expression.
+         */
+        const VOCABULARY_DB = [
+            {
+                id: 1,
+                displayTerm: "inhospitable",
+                speakText: "inhospitable",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["inhospitable"],
+                ipa: "/ˌɪnhɒˈspɪtəbl/",
+                synonyms: "hostile, unwelcome",
+                meaning: "Khắc nghiệt, không thuận lợi cho sự sống",
+                example: "Deep beneath the ocean floor, microbes inhabit an inhospitable environment with limited nutrients."
+            },
+            {
+                id: 2,
+                displayTerm: "sustain",
+                speakText: "sustain",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["sustain"],
+                ipa: "/səˈsteɪn/",
+                synonyms: "support, maintain",
+                meaning: "Duy trì, nuôi dưỡng, cung cấp điều kiện để tồn tại",
+                example: "Scientists are investigating how organisms can sustain themselves with almost no available food."
+            },
+            {
+                id: 3,
+                displayTerm: "longevity",
+                speakText: "longevity",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["longevity"],
+                ipa: "/lɒnˈdʒevəti/",
+                synonyms: "long lifespan, durability",
+                meaning: "Tuổi thọ dài, sự trường tồn",
+                example: "The extraordinary longevity of these microbes challenges conventional assumptions about the lifespan of living organisms."
+            },
+            {
+                id: 4,
+                displayTerm: "proliferate",
+                speakText: "proliferate",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["proliferate"],
+                ipa: "/prəˈlɪfəreɪt/",
+                synonyms: "multiply, reproduce rapidly",
+                meaning: "Tăng sinh nhanh chóng, sinh sôi mạnh",
+                example: "Microbial populations can proliferate rapidly when favourable conditions return."
+            },
+            {
+                id: 5,
+                displayTerm: "dormant",
+                speakText: "dormant",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["dormant"],
+                ipa: "/ˈdɔːmənt/",
+                synonyms: "inactive, latent",
+                meaning: "Ngủ đông, ở trạng thái bất hoạt",
+                example: "Some microorganisms remain dormant for extended periods when nutrients are scarce."
+            },
+            {
+                id: 6,
+                displayTerm: "metabolism",
+                speakText: "metabolism",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["metabolism"],
+                ipa: "/məˈtæbəlɪzəm/",
+                synonyms: "metabolic activity, biochemical processes",
+                meaning: "Quá trình trao đổi chất",
+                example: "Their metabolism may slow down dramatically to conserve energy in nutrient-poor conditions."
+            },
+            {
+                id: 7,
+                displayTerm: "descendant",
+                speakText: "descendant",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["descendant"],
+                ipa: "/dɪˈsendənt/",
+                synonyms: "offspring, successor",
+                meaning: "Hậu duệ, thế hệ con cháu",
+                example: "The microbes found in the sediment may be descendants of ancient organisms that lived millions of years ago."
+            },
+            {
+                id: 8,
+                displayTerm: "sparse",
+                speakText: "sparse",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["sparse"],
+                ipa: "/spɑːs/",
+                synonyms: "scarce, limited, scant",
+                meaning: "Thưa thớt, ít ỏi, khan hiếm",
+                example: "Life is extremely sparse in regions where nutrients and energy sources are almost nonexistent."
+            },
+            {
+                id: 9,
+                displayTerm: "deprivation",
+                speakText: "deprivation",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["deprivation"],
+                ipa: "/ˌdeprɪˈveɪʃn/",
+                synonyms: "lack, absence, deficiency",
+                meaning: "Sự thiếu thốn, tình trạng bị tước đi",
+                example: "Prolonged nutrient deprivation can significantly reduce the metabolic activity of microorganisms."
+            },
+            {
+                id: 10,
+                displayTerm: "replicate",
+                speakText: "replicate",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["replicate"],
+                ipa: "/ˈreplɪkeɪt/",
+                synonyms: "reproduce, repeat, duplicate",
+                meaning: "Tái tạo, lặp lại, kiểm chứng lại kết quả nghiên cứu",
+                example: "The findings are difficult to replicate because seabed conditions vary considerably between locations."
+            },
+            {
+                id: 11,
+                displayTerm: "harbour / harbor",
+                speakText: "harbour",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["harbour", "harbor"],
+                altNote: "Chấp nhận cả hai cách viết: harbour (UK) & harbor (US)",
+                ipa: "/ˈhɑːbə(r)/",
+                synonyms: "contain, shelter, host",
+                meaning: "Chứa đựng, là nơi trú ngụ của",
+                example: "Scientists believe that the subsurface of Mars could harbour microorganisms."
+            },
+            {
+                id: 12,
+                displayTerm: "unprecedented",
+                speakText: "unprecedented",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["unprecedented"],
+                ipa: "/ʌnˈpresɪdentɪd/",
+                synonyms: "unparalleled, never-before-seen",
+                meaning: "Chưa từng có tiền lệ",
+                example: "The discovery of microbes that have survived for 100 million years represents an unprecedented finding in microbiology."
+            },
+            {
+                id: 13,
+                displayTerm: "persist",
+                speakText: "persist",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["persist"],
+                ipa: "/pəˈsɪst/",
+                synonyms: "endure, continue, remain",
+                meaning: "Tiếp tục tồn tại, kéo dài",
+                example: "Life may persist beneath the Earth's surface even when environmental conditions appear completely unsuitable."
+            },
+            {
+                id: 14,
+                displayTerm: "corporal punishment",
+                speakText: "corporal punishment",
+                pos: "n.",
+                wordCount: 2,
+                prefix: "",
+                suffix: "punishment",
+                answers: ["corporal"],
+                ipa: "/ˌkɔːpərəl ˈpʌnɪʃmənt/",
+                synonyms: "physical punishment, physical discipline",
+                meaning: "Hình phạt thân thể, trừng phạt bằng thể xác",
+                example: "Corporal punishment has long been a contentious issue in discussions about parenting and child development."
+            },
+            {
+                id: 15,
+                displayTerm: "contentious",
+                speakText: "contentious",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["contentious"],
+                ipa: "/kənˈtenʃəs/",
+                synonyms: "controversial, disputable",
+                meaning: "Gây tranh cãi, gây bất đồng",
+                example: "Whether parents should use physical punishment remains a contentious social issue."
+            },
+            {
+                id: 16,
+                displayTerm: "inflict",
+                speakText: "inflict",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["inflict"],
+                ipa: "/ɪnˈflɪkt/",
+                synonyms: "impose, administer, cause",
+                meaning: "Gây ra, áp đặt (hình phạt, đau đớn)",
+                example: "Physical punishment involves deliberately inflicting pain or discomfort on a child."
+            },
+            {
+                id: 17,
+                displayTerm: "compliance",
+                speakText: "compliance",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["compliance"],
+                ipa: "/kəmˈplaɪəns/",
+                synonyms: "obedience, conformity, submission",
+                meaning: "Sự tuân thủ, chấp hành",
+                example: "Physical punishment may produce immediate compliance without necessarily changing a child's attitudes."
+            },
+            {
+                id: 18,
+                displayTerm: "offset",
+                speakText: "offset",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["offset"],
+                ipa: "/ˌɒfˈset/",
+                synonyms: "counterbalance, compensate for",
+                meaning: "Bù đắp, làm giảm hoặc triệt tiêu tác động",
+                example: "The short-term benefits of punishment may be offset by its long-term psychological consequences."
+            },
+            {
+                id: 19,
+                displayTerm: "misconduct",
+                speakText: "misconduct",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["misconduct"],
+                ipa: "/ˌmɪsˈkɒndʌkt/",
+                synonyms: "wrongdoing, inappropriate behaviour",
+                meaning: "Hành vi sai trái, hành vi không đúng mực",
+                example: "Children should be encouraged to take responsibility for their misconduct."
+            },
+            {
+                id: 20,
+                displayTerm: "impulsive",
+                speakText: "impulsive",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["impulsive"],
+                ipa: "/ɪmˈpʌlsɪv/",
+                synonyms: "spontaneous, rash, unconsidered",
+                meaning: "Bốc đồng, thiếu suy nghĩ",
+                example: "Young children often engage in impulsive behaviour because their ability to regulate emotions is still developing."
+            },
+            {
+                id: 21,
+                displayTerm: "sparingly",
+                speakText: "sparingly",
+                pos: "adv.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["sparingly"],
+                ipa: "/ˈspeərɪŋli/",
+                synonyms: "occasionally, infrequently, moderately",
+                meaning: "Một cách hạn chế, không thường xuyên",
+                example: "Some supporters argue that punishment should be used sparingly and only in limited circumstances."
+            },
+            {
+                id: 22,
+                displayTerm: "endorsement",
+                speakText: "endorsement",
+                pos: "n.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["endorsement"],
+                ipa: "/ɪnˈdɔːsmənt/",
+                synonyms: "approval, acceptance, support",
+                meaning: "Sự tán thành, ủng hộ, xác nhận",
+                example: "Children may interpret physical punishment as an endorsement of aggression."
+            },
+            {
+                id: 23,
+                displayTerm: "stopgap measure",
+                speakText: "stopgap measure",
+                pos: "n.",
+                wordCount: 2,
+                prefix: "",
+                suffix: "measure",
+                answers: ["stopgap"],
+                ipa: "/ˈstɒpgæp ˌmeʒə(r)/",
+                synonyms: "temporary solution, short-term fix",
+                meaning: "Biện pháp tạm thời, giải pháp tình thế",
+                example: "Physical punishment may function as a stopgap measure rather than a lasting solution to behavioural problems."
+            },
+            {
+                id: 24,
+                displayTerm: "deplete",
+                speakText: "deplete",
+                pos: "v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["deplete"],
+                ipa: "/dɪˈpliːt/",
+                synonyms: "exhaust, use up, diminish",
+                meaning: "Làm cạn kiệt, khai thác đến mức suy giảm",
+                example: "Excessive extraction could gradually deplete the world's remaining oil reserves."
+            },
+            {
+                id: 25,
+                displayTerm: "yield",
+                speakText: "yield",
+                pos: "n./v.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["yield"],
+                ipa: "/jiːld/",
+                synonyms: "output, produce, generate",
+                meaning: "Sản lượng; tạo ra, mang lại",
+                example: "New extraction techniques may increase the amount of oil that ageing reservoirs yield."
+            },
+            {
+                id: 26,
+                displayTerm: "exhaustive",
+                speakText: "exhaustive",
+                pos: "adj.",
+                wordCount: 1,
+                prefix: "",
+                suffix: "",
+                answers: ["exhaustive"],
+                ipa: "/ɪɡˈzɔːstɪv/",
+                synonyms: "comprehensive, thorough, extensive",
+                meaning: "Toàn diện, kỹ lưỡng, đầy đủ",
+                example: "The geological survey conducted an exhaustive assessment of the world's remaining oil reserves."
+            },
+            {
+                id: 27,
+                displayTerm: "be awash in",
+                speakText: "be awash in",
+                pos: "idiom",
+                wordCount: 3,
+                prefix: "be",
+                suffix: "in",
+                answers: ["awash"],
+                ipa: "/bi əˈwɒʃ ɪn/",
+                synonyms: "be flooded with, have an abundance of",
+                meaning: "Tràn ngập, có rất nhiều",
+                example: "Some industry executives believe the world will remain awash in oil for decades."
+            },
+            {
+                id: 28,
+                displayTerm: "dismissive of",
+                speakText: "dismissive of",
+                pos: "adj. phr.",
+                wordCount: 2,
+                prefix: "",
+                suffix: "of",
+                answers: ["dismissive"],
+                ipa: "/dɪsˈmɪsɪv əv/",
+                synonyms: "sceptical of, scornful of, contemptuous of",
+                meaning: "Có thái độ xem nhẹ, bác bỏ",
+                example: "Some industry experts are dismissive of claims that renewable energy can rapidly replace fossil fuels."
+            },
+            {
+                id: 29,
+                displayTerm: "allocate resources",
+                speakText: "allocate resources",
+                pos: "collocation",
+                wordCount: 2,
+                prefix: "",
+                suffix: "resources",
+                answers: ["allocate"],
+                ipa: "/ˈæləkeɪt rɪˈzɔːsɪz/",
+                synonyms: "distribute funds, assign resources",
+                meaning: "Phân bổ nguồn lực",
+                example: "Governments must allocate resources wisely between fossil fuel exploration and renewable energy development."
+            }
+        ];
+
+        // Application State
+        let deck = [];
+        let currentIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let maxStreak = 0;
+        let firstTryCorrectCount = 0;
+        let hadMistakeOnCurrent = false;
+        let missedItems = [];
+        let isAnswerShown = false;
+        let soundEnabled = true;
+        let audioCtx = null;
+        let transitionLock = false; // Prevents double-triggering Enter
+
+        // Fisher-Yates True Random Shuffle
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Web Audio API Sound Synthesizer
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playEffectSound(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    // Pleasant harp-like major triad chime
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.065);
+                        gain.gain.setValueAtTime(0.001, now + idx * 0.065);
+                        gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.065 + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.065 + 0.45);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.065);
+                        osc.stop(now + idx * 0.065 + 0.48);
+                    });
+                } else if (type === 'wrong') {
+                    // Gentle low soft double-thud
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(190, now);
+                    osc.frequency.exponentialRampToValueAtTime(135, now + 0.22);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.26);
+                } else if (type === 'complete') {
+                    // Celebratory fanfare
+                    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        gain.gain.setValueAtTime(0.18, now + idx * 0.09);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.6);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.09);
+                        osc.stop(now + idx * 0.09 + 0.65);
+                    });
+                }
+            } catch (err) {
+                console.warn('Web Audio skipped:', err);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('icon-sound');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-sm text-slate-700';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-sm text-rose-500';
+            }
+        }
+
+        /**
+         * Text-to-Speech Pronunciation
+         * Speaks ONLY the target word or idiom/collocation (never the example sentence).
+         * Replaces standalone "sth" -> "something" and "sb" -> "somebody".
+         */
+        function speakPhrase(rawText) {
+            if (!('speechSynthesis' in window)) return;
+
+            window.speechSynthesis.cancel();
+
+            // Expand shorthand abbreviations if present
+            let cleanSpeech = rawText
+                .replace(/\bsth\b/gi, 'something')
+                .replace(/\bsb\b/gi, 'somebody')
+                .replace(/\//g, ' ')
+                .trim();
+
+            const utterance = new SpeechSynthesisUtterance(cleanSpeech);
+            utterance.lang = 'en-GB'; // IELTS standard British English voice fallback to en-US
+            utterance.rate = 0.92;
+            utterance.pitch = 1.0;
+
+            // Prefer high quality English voice if available
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v => v.lang.includes('en-GB') && v.name.includes('Google'))
+                || voices.find(v => v.lang.includes('en-GB'))
+                || voices.find(v => v.lang.includes('en-US'));
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakTargetTerm() {
+            const item = deck[currentIndex];
+            if (item) {
+                speakPhrase(item.speakText);
+            }
+        }
+
+        // Start / Restart Game Session
+        function startNewSession() {
+            deck = shuffleArray(VOCABULARY_DB);
+            currentIndex = 0;
+            score = 0;
+            streak = 0;
+            maxStreak = 0;
+            firstTryCorrectCount = 0;
+            missedItems = [];
+            isAnswerShown = false;
+
+            updateStatsUI();
+            document.getElementById('card-summary').classList.add('hidden');
+            renderCurrentQuestion();
+        }
+
+        function confirmRestart() {
+            startNewSession();
+        }
+
+        function updateStatsUI() {
+            document.getElementById('stat-score').textContent = score;
+            document.getElementById('stat-streak').textContent = streak;
+            const displayNum = Math.min(currentIndex + 1, deck.length);
+            document.getElementById('stat-progress').textContent = `${displayNum} / ${deck.length}`;
+            const percent = ((currentIndex) / deck.length) * 100;
+            document.getElementById('progress-fill').style.width = `${Math.max(3.5, percent)}%`;
+        }
+
+        // Render Current Fill-in-the-blank Question
+        function renderCurrentQuestion() {
+            isAnswerShown = false;
+            hadMistakeOnCurrent = false;
+
+            const item = deck[currentIndex];
+            updateStatsUI();
+
+            // Toggle Cards
+            document.getElementById('card-question').classList.remove('hidden');
+            document.getElementById('card-answer').classList.add('hidden');
+            document.getElementById('error-alert').classList.add('hidden');
+            document.getElementById('hint-banner').classList.add('hidden');
+
+            // Populate Metadata
+            document.getElementById('q-pos').textContent = item.pos;
+            document.getElementById('q-word-count').textContent = `${item.wordCount} từ`;
+            document.getElementById('q-meaning').textContent = item.meaning;
+            document.getElementById('q-synonyms').textContent = item.synonyms;
+
+            // Build Fill-in-the-blank Input Area
+            const fillContainer = document.getElementById('fill-container');
+            fillContainer.innerHTML = '';
+
+            if (item.prefix) {
+                const prefixSpan = document.createElement('span');
+                prefixSpan.className = 'font-serif text-2xl sm:text-3xl text-slate-800 px-1';
+                prefixSpan.textContent = item.prefix;
+                fillContainer.appendChild(prefixSpan);
+            }
+
+            // Input element for the missing word (or single target word)
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.id = 'user-answer-input';
+            input.autocomplete = 'off';
+            input.autocapitalize = 'off';
+            input.spellcheck = false;
+
+            const targetLen = item.answers[0].length;
+            const dynamicWidth = Math.max(150, targetLen * 17 + 36);
+            input.style.width = `${Math.min(dynamicWidth, 320)}px`;
+            input.className = 'blank-input px-4 py-2 text-center font-mono text-xl sm:text-2xl font-bold text-slate-900 rounded-t-lg';
+            input.placeholder = `${targetLen} chữ cái`;
+
+            fillContainer.appendChild(input);
+
+            if (item.suffix) {
+                const suffixSpan = document.createElement('span');
+                suffixSpan.className = 'font-serif text-2xl sm:text-3xl text-slate-800 px-1';
+                suffixSpan.textContent = item.suffix;
+                fillContainer.appendChild(suffixSpan);
+            }
+
+            // Update instruction text based on single word vs idiom/collocation
+            const instr = document.getElementById('q-instruction');
+            if (item.wordCount > 1) {
+                instr.innerHTML = `Điền <strong>1 từ còn thiếu</strong> để hoàn thiện cụm từ (${item.wordCount} từ) và nhấn <kbd class="px-1.5 py-0.5 text-[11px] font-mono bg-stone-100 border border-stone-300 rounded text-slate-600">Enter</kbd>`;
+            } else {
+                instr.innerHTML = `Nhập từ vựng tiếng Anh tương ứng và nhấn <kbd class="px-1.5 py-0.5 text-[11px] font-mono bg-stone-100 border border-stone-300 rounded text-slate-600">Enter</kbd>`;
+            }
+
+            // Auto-focus input smoothly
+            setTimeout(() => {
+                input.focus();
+            }, 60);
+        }
+
+        // Toggle Letter Hint
+        function toggleHint() {
+            const item = deck[currentIndex];
+            const hintBox = document.getElementById('hint-banner');
+            const primaryWord = item.answers[0];
+            const firstLetter = primaryWord[0].toUpperCase();
+            const lastLetter = primaryWord[primaryWord.length - 1].toLowerCase();
+            const masked = firstLetter + ' ' + '_ '.repeat(Math.max(0, primaryWord.length - 2)) + lastLetter;
+
+            hintBox.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-amber-600"></i> Gợi ý từ cần điền: <span class="font-mono font-bold tracking-wider ml-1">${masked}</span> (${primaryWord.length} ký tự)`;
+            hintBox.classList.toggle('hidden');
+
+            const input = document.getElementById('user-answer-input');
+            if (input) input.focus();
+        }
+
+        // Validate User Answer
+        function checkAnswer() {
+            if (isAnswerShown || transitionLock) return;
+
+            const input = document.getElementById('user-answer-input');
+            if (!input) return;
+
+            const userVal = input.value.trim().toLowerCase();
+            if (!userVal) {
+                input.focus();
+                triggerInputShake();
+                return;
+            }
+
+            const item = deck[currentIndex];
+            const isMatch = item.answers.some(ans => ans.toLowerCase() === userVal);
+
+            if (isMatch) {
+                // Correct!
+                playEffectSound('correct');
+
+                if (!hadMistakeOnCurrent) {
+                    score += 10;
+                    streak += 1;
+                    firstTryCorrectCount += 1;
+                    if (streak > maxStreak) maxStreak = streak;
+                } else {
+                    score += 5;
+                }
+
+                updateStatsUI();
+                triggerCelebrationConfetti();
+                showAnswerCard(true, userVal);
+            } else {
+                // Incorrect!
+                playEffectSound('wrong');
+                hadMistakeOnCurrent = true;
+                streak = 0;
+                updateStatsUI();
+
+                if (!missedItems.some(m => m.id === item.id)) {
+                    missedItems.push(item);
+                }
+
+                const errorAlert = document.getElementById('error-alert');
+                const errorText = document.getElementById('error-text');
+                errorText.textContent = `"${input.value.trim()}" chưa chính xác. Hãy kiểm tra lại chính tả hoặc bấm Gợi ý nhé!`;
+                errorAlert.classList.remove('hidden');
+
+                triggerInputShake();
+                input.select();
+            }
+        }
+
+        function revealAnswer() {
+            if (isAnswerShown || transitionLock) return;
+            const item = deck[currentIndex];
+            hadMistakeOnCurrent = true;
+            streak = 0;
+            updateStatsUI();
+
+            if (!missedItems.some(m => m.id === item.id)) {
+                missedItems.push(item);
+            }
+
+            showAnswerCard(false, item.answers[0]);
+        }
+
+        function triggerInputShake() {
+            const card = document.getElementById('card-question');
+            card.classList.remove('animate-shake');
+            void card.offsetWidth; // trigger reflow
+            card.classList.add('animate-shake');
+        }
+
+        function triggerCelebrationConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 55,
+                    spread: 65,
+                    origin: { y: 0.65 },
+                    colors: ['#059669', '#D97706', '#1E293B', '#34D399', '#FBBF24']
+                });
+            }
+        }
+
+        // Display Answer Card with IPA, Pronunciation Audio & Context Sentence
+        function showAnswerCard(wasGuessedCorrectly, matchedVariant) {
+            isAnswerShown = true;
+            transitionLock = true;
+            setTimeout(() => { transitionLock = false; }, 220);
+
+            const item = deck[currentIndex];
+
+            document.getElementById('card-question').classList.add('hidden');
+            const answerCard = document.getElementById('card-answer');
+            answerCard.classList.remove('hidden');
+
+            // Top badge styling
+            const badge = document.getElementById('res-badge');
+            const topBar = document.getElementById('answer-top-bar');
+            if (wasGuessedCorrectly) {
+                badge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
+                badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Chính xác! +${hadMistakeOnCurrent ? '5' : '10'} điểm</span>`;
+                topBar.className = 'absolute top-0 left-0 right-0 h-1.5 bg-emerald-500';
+                answerCard.classList.remove('border-amber-400/40');
+                answerCard.classList.add('border-emerald-500/30');
+            } else {
+                badge.className = 'inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200';
+                badge.innerHTML = `<i class="fa-solid fa-eye"></i> <span>Đáp án tham khảo</span>`;
+                topBar.className = 'absolute top-0 left-0 right-0 h-1.5 bg-amber-500';
+                answerCard.classList.remove('border-emerald-500/30');
+                answerCard.classList.add('border-amber-400/40');
+            }
+
+            document.getElementById('res-pos-tag').textContent = `${item.pos} • ${item.wordCount} từ`;
+
+            // Render Full Term highlighting the target blank word
+            const termEl = document.getElementById('res-full-term');
+            if (item.wordCount > 1) {
+                const parts = [];
+                if (item.prefix) parts.push(`<span>${item.prefix}</span>`);
+                parts.push(`<span class="bg-amber-200/80 text-slate-950 px-2 py-0.5 rounded-lg border-b-2 border-amber-500">${item.answers[0]}</span>`);
+                if (item.suffix) parts.push(`<span>${item.suffix}</span>`);
+                termEl.innerHTML = parts.join(' ');
+            } else {
+                termEl.innerHTML = `<span class="text-slate-900">${item.displayTerm}</span>`;
+            }
+
+            // IPA & Alternative Note (for harbour / harbor)
+            document.getElementById('res-ipa').textContent = item.ipa;
+            const altNoteEl = document.getElementById('res-alt-note');
+            if (item.altNote) {
+                altNoteEl.textContent = item.altNote;
+                altNoteEl.classList.remove('hidden');
+            } else {
+                altNoteEl.classList.add('hidden');
+            }
+
+            // Meaning & Synonyms
+            document.getElementById('res-meaning').textContent = item.meaning;
+            document.getElementById('res-synonyms').textContent = `Synonyms: ${item.synonyms}`;
+
+            // Highlight target word inside the reading example sentence
+            let highlightedExample = item.example;
+            const wordsToHighlight = [...item.answers, item.displayTerm.split('/')[0].trim()];
+            // Sort by length descending so longer phrase matches first
+            wordsToHighlight.sort((a, b) => b.length - a.length);
+
+            for (const target of wordsToHighlight) {
+                const escaped = target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const regex = new RegExp(`(${escaped}\\w*)`, 'gi');
+                if (regex.test(highlightedExample)) {
+                    highlightedExample = highlightedExample.replace(
+                        regex,
+                        '<strong class="font-bold text-slate-950 bg-amber-100 px-1.5 py-0.5 rounded">$1</strong>'
+                    );
+                    break;
+                }
+            }
+            document.getElementById('res-example').innerHTML = `"${highlightedExample}"`;
+
+            // Update Next Button Label on Last Item
+            const btnNext = document.getElementById('btn-next');
+            if (currentIndex === deck.length - 1) {
+                btnNext.innerHTML = `<span>Xem tổng kết lượt học</span> <i class="fa-solid fa-flag-checkered"></i>`;
+            } else {
+                btnNext.innerHTML = `<span>Từ tiếp theo</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+
+            // Automatically pronounce ONLY the target word / idiom
+            speakPhrase(item.speakText);
+        }
+
+        // Advance to Next Question or Summary
+        function nextQuestion() {
+            if (transitionLock) return;
+            transitionLock = true;
+            setTimeout(() => { transitionLock = false; }, 180);
+
+            if (currentIndex < deck.length - 1) {
+                currentIndex += 1;
+                renderCurrentQuestion();
+            } else {
+                showSummaryView();
+            }
+        }
+
+        function showSummaryView() {
+            isAnswerShown = false;
+            document.getElementById('progress-fill').style.width = '100%';
+            document.getElementById('card-question').classList.add('hidden');
+            document.getElementById('card-answer').classList.add('hidden');
+            document.getElementById('card-summary').classList.remove('hidden');
+
+            document.getElementById('sum-score').textContent = score;
+            document.getElementById('sum-correct').textContent = `${firstTryCorrectCount}/${deck.length}`;
+            document.getElementById('sum-streak').textContent = maxStreak;
+
+            const missedContainer = document.getElementById('missed-container');
+            const missedList = document.getElementById('missed-list');
+
+            if (missedItems.length > 0) {
+                missedContainer.classList.remove('hidden');
+                document.getElementById('missed-count').textContent = missedItems.length;
+                missedList.innerHTML = missedItems.map(item => `
+                    <button type="button" onclick="speakPhrase('${item.speakText.replace(/'/g, "\\'")}')"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-rose-200 text-xs font-semibold text-slate-800 hover:bg-rose-100/60 transition shadow-sm">
+                        <span>${item.displayTerm}</span>
+                        <i class="fa-solid fa-volume-high text-amber-600 text-[10px]"></i>
+                    </button>
+                `).join('');
+            } else {
+                missedContainer.classList.add('hidden');
+            }
+
+            playEffectSound('complete');
+            triggerCelebrationConfetti();
+        }
+
+        // Global Smart Enter Key Handler
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter') return;
+
+            // Ignore if Glossary tab is active or Summary screen is shown
+            const isPracticeVisible = !document.getElementById('view-practice').classList.contains('hidden');
+            const isSummaryVisible = !document.getElementById('card-summary').classList.contains('hidden');
+            if (!isPracticeVisible || isSummaryVisible) return;
+
+            e.preventDefault();
+            if (transitionLock) return;
+
+            if (isAnswerShown) {
+                nextQuestion();
+            } else {
+                checkAnswer();
+            }
+        });
+
+        // Switch Between Practice & Glossary Tabs
+        function switchTab(tab) {
+            const practiceView = document.getElementById('view-practice');
+            const glossaryView = document.getElementById('view-glossary');
+            const btnPractice = document.getElementById('tab-practice');
+            const btnGlossary = document.getElementById('tab-glossary');
+
+            if (tab === 'practice') {
+                practiceView.classList.remove('hidden');
+                glossaryView.classList.add('hidden');
+                btnPractice.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-white text-slate-900 shadow-sm transition';
+                btnGlossary.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5';
+                const input = document.getElementById('user-answer-input');
+                if (input && !isAnswerShown) input.focus();
+            } else {
+                practiceView.classList.add('hidden');
+                glossaryView.classList.remove('hidden');
+                btnGlossary.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold bg-white text-slate-900 shadow-sm transition flex items-center gap-1.5';
+                btnPractice.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 transition';
+                renderGlossary();
+            }
+        }
+
+        // Render Searchable 29-Item Glossary
+        function renderGlossary() {
+            const query = (document.getElementById('glossary-search').value || '').trim().toLowerCase();
+            const grid = document.getElementById('glossary-grid');
+
+            const filtered = VOCABULARY_DB.filter(item =>
+                item.displayTerm.toLowerCase().includes(query) ||
+                item.meaning.toLowerCase().includes(query) ||
+                item.synonyms.toLowerCase().includes(query) ||
+                item.pos.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="text-center py-10 text-sm text-slate-400">Không tìm thấy từ vựng phù hợp với "${query}".</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map((item, idx) => {
+                // Highlight target blank word in multi-word phrases
+                let formattedTitle = item.displayTerm;
+                if (item.wordCount > 1) {
+                    const target = item.answers[0];
+                    formattedTitle = item.displayTerm.replace(
+                        new RegExp(`(${target})`, 'i'),
+                        '<span class="bg-amber-100 text-slate-950 px-1.5 py-0.5 rounded border-b border-amber-400">$1</span>'
+                    );
+                }
+
+                return `
+                    <div class="p-4 rounded-2xl border border-stone-200/90 bg-stone-50/50 hover:bg-white hover:shadow-sm transition flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="space-y-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-xs font-mono text-slate-400">#${item.id}</span>
+                                <h3 class="font-serif font-bold text-lg text-slate-900">${formattedTitle}</h3>
+                                <span class="text-xs font-mono font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/70">${item.pos}</span>
+                                <span class="font-mono text-xs text-slate-500">${item.ipa}</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">${item.meaning}</p>
+                            <p class="text-xs text-slate-500 italic">Synonyms: ${item.synonyms}</p>
+                            <p class="text-xs text-slate-600 pt-1 leading-relaxed">"${item.example}"</p>
+                        </div>
+                        <button type="button" onclick="speakPhrase('${item.speakText.replace(/'/g, "\\'")}')" title="Nghe phát âm"
+                            class="self-start sm:self-center w-10 h-10 rounded-full bg-white hover:bg-amber-50 border border-stone-200 text-slate-700 hover:text-amber-600 flex items-center justify-center flex-shrink-0 shadow-sm transition">
+                            <i class="fa-solid fa-volume-high text-sm"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize on page load
+        window.onload = function () {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.getVoices();
+            }
+            startNewSession();
+        };
+    </script>
+</body>
+</html>
