@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision Vocab 3 - Level 2</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #5b6eae;
+            --primary-light: #8b9cd6;
+            --primary-dark: #374785;
+            --accent: #e09f3e;
+            --accent-hover: #c5862b;
+            --bg-gradient: linear-gradient(135deg, #f3f6fb 0%, #e8eff8 50%, #f5eef8 100%);
+            --card-bg: #ffffff;
+            --text-main: #222831;
+            --text-muted: #5c677d;
+            --correct: #2e7d32;
+            --correct-bg: #e8f5e9;
+            --incorrect: #c62828;
+            --incorrect-bg: #ffebee;
+            --blank-bg: #fff8e1;
+            --blank-border: #ffb300;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 880px;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 14px 40px rgba(55, 71, 133, 0.12);
+            padding: 40px 44px;
+            text-align: center;
+            border: 1px solid rgba(91, 110, 174, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid #f0f3f9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            background: #eef2ff;
+            color: var(--primary-dark);
+        }
+
+        .score-badge {
+            background: #e8f5e9;
+            color: var(--correct);
+            font-size: 1.15rem;
+        }
+
+        .progress-bar-wrap {
+            width: 100%;
+            height: 8px;
+            background: #edf1f7;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 26px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary-dark));
+            transition: width 0.35s ease;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            font-size: 2.4rem;
+            margin: 0 0 12px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.35rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin: 0 0 24px 0;
+        }
+
+        .start-desc {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 640px;
+            margin: 0 auto 28px auto;
+        }
+
+        .type-tag {
+            display: inline-block;
+            background: #f3e8ff;
+            color: #6b21a8;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 6px 16px;
+            border-radius: 999px;
+            margin-bottom: 14px;
+        }
+
+        .meaning-vi {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .meaning-en {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 22px;
+        }
+
+        .phrase-box {
+            background: #f8fafd;
+            border: 2px solid #dbe4f3;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin: 0 auto 18px auto;
+            font-size: 1.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.45;
+        }
+
+        .blank-slot {
+            display: inline-block;
+            min-width: 110px;
+            padding: 2px 14px;
+            margin: 0 4px;
+            background: var(--blank-bg);
+            border-bottom: 4px solid var(--blank-border);
+            border-radius: 8px;
+            color: #b45309;
+            font-weight: 800;
+        }
+
+        .hint-box {
+            display: inline-block;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #b45309;
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 22px;
+        }
+
+        .input-wrap {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"].answer-input {
+            font-size: 1.85rem;
+            font-weight: 600;
+            padding: 14px 20px;
+            width: 82%;
+            max-width: 520px;
+            border: 3px solid #cbd5e1;
+            border-radius: 14px;
+            text-align: center;
+            outline: none;
+            transition: all 0.25s ease;
+            background: #ffffff;
+            color: var(--text-main);
+        }
+
+        input[type="text"].answer-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(91, 110, 174, 0.16);
+        }
+
+        input.correct-input {
+            border-color: var(--correct) !important;
+            background-color: var(--correct-bg) !important;
+            color: var(--correct) !important;
+        }
+
+        input.incorrect-input {
+            border-color: var(--incorrect) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: var(--incorrect) !important;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 14px;
+            transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 16px rgba(91, 110, 174, 0.25);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-next {
+            background-color: var(--accent);
+            box-shadow: 0 6px 16px rgba(224, 159, 62, 0.28);
+        }
+
+        .btn-next:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Inline Feedback Section */
+        #feedback-section {
+            margin-top: 26px;
+            padding: 24px 28px;
+            border-radius: 18px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-text {
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .correct-ans-pill {
+            display: inline-block;
+            background: #e8f5e9;
+            color: var(--correct);
+            border: 1px solid #a5d6a7;
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feedback-word-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .feedback-word {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .feedback-word .hl {
+            background: #fef08a;
+            color: #854d0e;
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+
+        .speak-btn {
+            background: #eef2ff;
+            border: 2px solid #c7d2fe;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .speak-btn:hover {
+            transform: scale(1.1);
+            background: #dbeafe;
+        }
+
+        .feedback-ipa {
+            font-size: 1.35rem;
+            color: #c2410c;
+            font-family: 'Lucida Sans Unicode', 'Segoe UI', sans-serif;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .feedback-details {
+            text-align: left;
+            background: #ffffff;
+            padding: 16px 20px;
+            border-left: 5px solid var(--primary);
+            border-radius: 10px;
+            font-size: 1.15rem;
+            color: #334155;
+            line-height: 1.55;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .feedback-details div + div {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        /* End Screen */
+        .final-score-big {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--correct);
+            margin: 12px 0 24px 0;
+        }
+
+        .hidden { display: none !important; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.35s ease;
+        }
+
+        @media (max-width: 600px) {
+            .card { padding: 26px 20px; }
+            .meaning-vi { font-size: 1.6rem; }
+            .phrase-box { font-size: 1.45rem; padding: 16px; }
+            input[type="text"].answer-input { width: 100%; font-size: 1.45rem; }
+            .feedback-word { font-size: 1.65rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- Màn hình bắt đầu -->
+    <div id="start-screen" class="card">
+        <h1>Revision Vocab 3 - Level 2</h1>
+        <div class="subtitle">Ôn tập Từ vựng & Thành ngữ (36 câu hỏi)</div>
+        <p class="start-desc">
+            Đọc nghĩa tiếng Việt, từ loại và gợi ý để điền từ còn thiếu hoàn thiện cụm từ / thành ngữ.<br>
+            Thứ tự câu hỏi được <strong>xáo trộn ngẫu nhiên</strong> ở mỗi lượt chơi.<br>
+            Nhấn <strong>Enter</strong> để kiểm tra và nhấn <strong>Enter</strong> lần nữa để sang câu tiếp theo.
+        </p>
+        <button class="btn" onclick="startGame()">Bắt Đầu Ngay (Enter)</button>
+    </div>
+
+    <!-- Màn hình chơi game -->
+    <div id="game-screen" class="card hidden">
+        <div class="top-bar">
+            <span class="badge">Câu <span id="current-q-index">1</span> / <span id="total-q">36</span></span>
+            <span class="badge score-badge">Điểm: <span id="score-display">0</span></span>
+        </div>
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="type-tag" id="question-type"></div>
+        <div class="meaning-vi" id="question-meaning-vi"></div>
+        <div class="meaning-en" id="question-meaning-en"></div>
+
+        <div class="phrase-box" id="question-phrase"></div>
+        <div class="hint-box" id="question-hint"></div>
+
+        <div class="input-wrap">
+            <input type="text" id="answer-input" class="answer-input" autocomplete="off" spellcheck="false" placeholder="Nhập từ còn thiếu...">
+        </div>
+        <button class="btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra (Enter)</button>
+
+        <!-- Phần đáp án hiển thị trực tiếp (Inline) -->
+        <div id="feedback-section" class="hidden">
+            <div id="feedback-status" class="status-text"></div>
+            <div id="correct-answer-box" class="correct-ans-pill hidden"></div>
+
+            <div class="feedback-word-row">
+                <div class="feedback-word" id="feedback-word"></div>
+                <button class="speak-btn" id="replay-tts-btn" title="Nghe lại phát âm">🔊</button>
+            </div>
+            <div class="feedback-ipa" id="feedback-ipa"></div>
+
+            <div class="feedback-details">
+                <div id="feedback-example-wrap"><strong>Ví dụ:</strong> <span id="feedback-example-text"></span></div>
+                <div id="feedback-equiv-wrap" class="hidden"><strong>Tương đương:</strong> <span id="feedback-equiv-text"></span></div>
+            </div>
+
+            <button class="btn btn-next" id="next-btn" onclick="nextQuestion()">Tiếp tục (Enter)</button>
+        </div>
+    </div>
+
+    <!-- Màn hình kết thúc -->
+    <div id="end-screen" class="card hidden">
+        <h1>Hoàn Thành Xuất Sắc! 🎉</h1>
+        <p style="font-size: 1.3rem; color: var(--text-muted); margin-bottom: 6px;">Kết quả bài Revision Vocab 3 - Level 2</p>
+        <div class="final-score-big" id="final-score"></div>
+        <button class="btn btn-next" onclick="startGame()">Chơi Lại (Random mới)</button>
+    </div>
+</div>
+
+<script>
+    // Toàn bộ 36 từ vựng & thành ngữ từ 4 ảnh (50 câu - Note Vocab 3 - Level 2 + Idioms)
+    const vocabData = [
+        // --- PHẦN TỪ VỰNG / CỤM TỪ (Ảnh 1, 2, 3) ---
+        {
+            full: "keep an eye on (sth/sb)",
+            prompt: "keep an ___ on (sth/sb)",
+            answer: "eye",
+            tts: "keep an eye on something or somebody",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/kiːp ən aɪ ɒn/",
+            meaningVi: "để mắt đến, trông chừng",
+            meaningEn: "watch or take care of something/someone carefully",
+            example: "Can you keep an eye on my bag while I go to the restroom?"
+        },
+        {
+            full: "stand on one's own two feet",
+            prompt: "stand on one's own two ___",
+            answer: "feet",
+            tts: "stand on one's own two feet",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/stænd ɒn wʌnz əʊn tuː fiːt/",
+            meaningVi: "tự lập, tự lo cho bản thân",
+            meaningEn: "be independent, take care of yourself",
+            example: "It's time you stood on your own two feet."
+        },
+        {
+            full: "in luck",
+            prompt: "___ luck",
+            answer: "in",
+            tts: "in luck",
+            type: "Cụm giới từ (Phrase)",
+            ipa: "/ɪn lʌk/",
+            meaningVi: "gặp may",
+            meaningEn: "fortunate, having good luck",
+            example: "You're in luck – we still have two tickets left!"
+        },
+        {
+            full: "be resigned to (sth)",
+            prompt: "be ___ to (sth)",
+            answer: "resigned",
+            tts: "be resigned to something",
+            type: "Cụm tính từ (Adj. phrase)",
+            ipa: "/biː rɪˈzaɪnd tuː/",
+            meaningVi: "cam chịu, chấp nhận",
+            meaningEn: "accept something unpleasant",
+            example: "She's resigned to the fact that she failed the exam."
+        },
+        {
+            full: "take on (item/luggage)",
+            prompt: "___ on (item/luggage)",
+            answer: "take",
+            tts: "take on",
+            type: "Cụm động từ (Phrasal verb)",
+            ipa: "/teɪk ɒn/",
+            meaningVi: "mang theo; cho phép người, hàng hóa hoặc nhiên liệu lên phương tiện",
+            meaningEn: "bring something with you",
+            example: "You can only take on one bag."
+        },
+        {
+            full: "come down with (a disease)",
+            prompt: "come ___ with (a disease)",
+            answer: "down",
+            tts: "come down with",
+            type: "Cụm động từ (Phrasal verb)",
+            ipa: "/kʌm daʊn wɪð/",
+            meaningVi: "bị (bệnh gì đó)",
+            meaningEn: "become ill with something",
+            example: "I think I'm coming down with the flu."
+        },
+        {
+            full: "in agony",
+            prompt: "___ agony",
+            answer: "in",
+            tts: "in agony",
+            type: "Cụm giới từ (Phrase)",
+            ipa: "/ɪn ˈæɡ.ə.ni/",
+            meaningVi: "đau đớn tột độ",
+            meaningEn: "suffering extreme physical or mental pain",
+            example: "He was in agony after the accident."
+        },
+        {
+            full: "It's all Greek to me",
+            prompt: "It's all ___ to me",
+            answer: "Greek",
+            tts: "It's all Greek to me",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ɪts ɔːl ɡriːk tuː miː/",
+            meaningVi: "Tôi chẳng hiểu gì cả",
+            meaningEn: "I don't understand it",
+            example: "This math formula? It's all Greek to me."
+        },
+        {
+            full: "bottle up (feelings)",
+            prompt: "___ up (feelings)",
+            answer: "bottle",
+            tts: "bottle up",
+            type: "Cụm động từ (Phrasal verb)",
+            ipa: "/ˈbɒt.əl ʌp/",
+            meaningVi: "kìm nén cảm xúc",
+            meaningEn: "keep emotions inside without showing them",
+            example: "Don't bottle up your anger."
+        },
+        {
+            full: "out of one's mind (with sth/ joy, worry)",
+            prompt: "out of one's ___ (with sth/ joy, worry)",
+            answer: "mind",
+            tts: "out of one's mind",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/aʊt əv wʌnz maɪnd/",
+            meaningVi: "lo lắng/tức giận điên lên; mất kiểm soát vì cảm xúc mạnh",
+            meaningEn: "extremely worried/crazy",
+            example: "I was out of my mind with worry."
+        },
+        {
+            full: "on good terms (with sb)",
+            prompt: "on ___ (with sb)",
+            answer: "good terms",
+            tts: "on good terms with somebody",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ɒn ɡʊd tɜːmz/",
+            meaningVi: "có quan hệ tốt",
+            meaningEn: "having a friendly relationship",
+            example: "They're still on good terms after the breakup."
+        },
+        {
+            full: "ecstatic about (sth)",
+            prompt: "___ about (sth)",
+            answer: "ecstatic",
+            tts: "ecstatic about something",
+            type: "Cụm tính từ (Adj. phrase)",
+            ipa: "/ɪkˈstæt.ɪk əˈbaʊt/",
+            meaningVi: "rất vui mừng",
+            meaningEn: "extremely happy or excited",
+            example: "She was ecstatic about her exam results."
+        },
+        {
+            full: "inquisitive child",
+            prompt: "___ child",
+            answer: "inquisitive",
+            tts: "inquisitive child",
+            type: "Tính từ + Danh từ (Adj. + N)",
+            ipa: "/ɪnˈkwɪz.ə.tɪv tʃaɪld/",
+            meaningVi: "tò mò, ham học hỏi (đứa trẻ tò mò)",
+            meaningEn: "curious, eager to learn",
+            example: "He's an inquisitive student who asks a lot of questions."
+        },
+        {
+            full: "be stunned by (sth)",
+            prompt: "be ___ by (sth)",
+            answer: "stunned",
+            tts: "be stunned by something",
+            type: "Cụm tính từ (Adj. phrase)",
+            ipa: "/biː stʌnd baɪ/",
+            meaningVi: "bị choáng, ngạc nhiên",
+            meaningEn: "be very surprised or shocked",
+            example: "I was stunned by the view from the mountain."
+        },
+        {
+            full: "on one's best behavior",
+            prompt: "___ one's best behavior",
+            answer: "on",
+            tts: "on one's best behavior",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ɒn wʌnz best bɪˈheɪ.vjər/",
+            meaningVi: "cư xử thật tốt",
+            meaningEn: "behave very well",
+            example: "Please be on your best behaviour at dinner."
+        },
+        {
+            full: "count on (sb/sth)",
+            prompt: "count ___ (sb/sth)",
+            answer: "on",
+            tts: "count on somebody or something",
+            type: "Cụm động từ (Phrasal verb)",
+            ipa: "/kaʊnt ɒn/",
+            meaningVi: "tin cậy vào",
+            meaningEn: "rely or depend on",
+            example: "You can count on me to help."
+        },
+        {
+            full: "rectify a problem",
+            prompt: "___ a problem",
+            answer: "rectify",
+            tts: "rectify a problem",
+            type: "Động từ (Collocation)",
+            ipa: "/ˈrek.tɪ.faɪ ə ˈprɒb.ləm/",
+            meaningVi: "sửa chữa, khắc phục (những sai sót, lỗi kỹ thuật hoặc vấn đề)",
+            meaningEn: "correct or fix something",
+            example: "We need to rectify the system error."
+        },
+        {
+            full: "underlying problem",
+            prompt: "___ problem",
+            answer: "underlying",
+            tts: "underlying problem",
+            type: "Tính từ + Danh từ (Collocation)",
+            ipa: "/ˌʌn.dəˈlaɪ.ɪŋ ˈprɒb.ləm/",
+            meaningVi: "vấn đề tiềm ẩn",
+            meaningEn: "basic, hidden issue",
+            example: "The underlying problem is lack of communication."
+        },
+        {
+            full: "leave one's mark (on sth)",
+            prompt: "leave one's ___ (on sth)",
+            answer: "mark",
+            tts: "leave one's mark on something",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/liːv wʌnz mɑːk/",
+            meaningVi: "để lại dấu ấn",
+            meaningEn: "make a lasting impact",
+            example: "He left his mark on the art world."
+        },
+        {
+            full: "dispute (a statement/claim)",
+            prompt: "___ (a statement/claim)",
+            answer: "dispute",
+            tts: "dispute",
+            type: "Động từ (Verb)",
+            ipa: "/dɪˈspjuːt/",
+            meaningVi: "tranh cãi, phản đối",
+            meaningEn: "question or challenge something",
+            example: "His results were disputed by other scientists. / The union disputed the company's financial figures."
+        },
+        {
+            full: "pose a threat (to sth)",
+            prompt: "___ a threat (to sth)",
+            answer: "pose",
+            tts: "pose a threat to something",
+            type: "Cụm động từ (Collocation)",
+            ipa: "/pəʊz ə θret/",
+            meaningVi: "gây ra mối đe dọa",
+            meaningEn: "be a possible danger",
+            example: "Climate change poses a threat to wildlife."
+        },
+        {
+            full: "the issue in question",
+            prompt: "the issue in ___",
+            answer: "question",
+            tts: "the issue in question",
+            type: "Cụm danh từ (Phrase)",
+            ipa: "/ði ˈɪʃ.uː ɪn ˈkwes.tʃən/",
+            meaningVi: "vấn đề đang được bàn",
+            meaningEn: "the issue being discussed",
+            example: "The issue in question is child safety."
+        },
+        {
+            full: "close to the bone",
+            prompt: "close to the ___",
+            answer: "bone",
+            tts: "close to the bone",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/kləʊs tuː ðə bəʊn/",
+            meaningVi: "đụng chạm, xúc phạm",
+            meaningEn: "too personal or offensive",
+            example: "His jokes were a bit close to the bone."
+        },
+        {
+            full: "in vain",
+            prompt: "in ___",
+            answer: "vain",
+            tts: "in vain",
+            type: "Cụm giới từ (Phrase)",
+            ipa: "/ɪn veɪn/",
+            meaningVi: "vô ích",
+            meaningEn: "without success",
+            example: "All our efforts were in vain."
+        },
+        {
+            full: "make a profit",
+            prompt: "___ a profit",
+            answer: "make",
+            tts: "make a profit",
+            type: "Cụm động từ (Collocation)",
+            ipa: "/meɪk ə ˈprɒf.ɪt/",
+            meaningVi: "tạo ra lợi nhuận",
+            meaningEn: "earn money",
+            example: "The company hopes to make a profit this year."
+        },
+        {
+            full: "on first-name terms (with sb)",
+            prompt: "on first-name ___ (with sb)",
+            answer: "terms",
+            tts: "on first-name terms with somebody",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ɒn ˌfɜːst.neɪm ˈtɜːmz/",
+            meaningVi: "thân thiết, gọi nhau bằng tên",
+            meaningEn: "have a friendly, informal relationship",
+            example: "She's on first-name terms with the director."
+        },
+
+        // --- PHẦN IDIOMS (Ảnh 3 & 4) ---
+        {
+            full: "Bring home the bacon",
+            prompt: "Bring home the ___",
+            answer: "bacon",
+            tts: "Bring home the bacon",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/brɪŋ həʊm ðə ˈbeɪ.kən/",
+            meaningVi: "Kiếm tiền nuôi gia đình, làm trụ cột kinh tế",
+            meaningEn: "To earn money to support a family.",
+            example: "She works two jobs to bring home the bacon.",
+            equivalent: "Put food on the table; Make a living; Make ends meet"
+        },
+        {
+            full: "A second bite at the cherry",
+            prompt: "A second bite at the ___",
+            answer: "cherry",
+            tts: "A second bite at the cherry",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ə ˈsek.ənd baɪt æt ðə ˈtʃer.i/",
+            meaningVi: "Một cơ hội thứ hai để làm lại hoặc đạt được điều gì",
+            meaningEn: "Another opportunity or chance to do something.",
+            example: "After failing the driving test, he got a second bite at the cherry a month later.",
+            equivalent: "A second shot (at something); Another crack at the whip"
+        },
+        {
+            full: "In the soup",
+            prompt: "In the ___",
+            answer: "soup",
+            tts: "In the soup",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ɪn ðə suːp/",
+            meaningVi: "Gặp rắc rối lớn, rơi vào tình huống khó khăn",
+            meaningEn: "In serious trouble or a difficult situation.",
+            example: "If we miss this deadline, we'll really be in the soup.",
+            equivalent: "In hot water; In a jam / In a pickle; Up the creek (without a paddle)"
+        },
+        {
+            full: "Know one's onions",
+            prompt: "Know one's ___",
+            answer: "onions",
+            tts: "Know one's onions",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/nəʊ wʌnz ˈʌn.jənz/",
+            meaningVi: "Rất am hiểu, thành thạo hoặc có chuyên môn cao về một lĩnh vực",
+            meaningEn: "To be very knowledgeable or skilled about a particular subject.",
+            example: "Ask Sarah about tax law—she really knows her onions.",
+            equivalent: "Know one's stuff; Know the ropes; Know something inside out"
+        },
+        {
+            full: "Make a meal out of (something)",
+            prompt: "Make a ___ out of (something)",
+            answer: "meal",
+            tts: "Make a meal out of something",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/meɪk ə miːl aʊt əv ˈsʌm.θɪŋ/",
+            meaningVi: "Chuyện bé xé ra to, làm quá vấn đề hoặc mất quá nhiều công sức cho việc nhỏ",
+            meaningEn: "To spend too much time or energy on something simple, or to exaggerate a small problem.",
+            example: "It's just a simple form; don't make a meal out of it.",
+            equivalent: "Make a mountain out of a molehill; Make a big deal out of (something); Blow something out of proportion"
+        },
+        {
+            full: "Not give a fig (about something)",
+            prompt: "Not give a ___ (about something)",
+            answer: "fig",
+            tts: "Not give a fig about something",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/nɒt ɡɪv ə fɪɡ/",
+            meaningVi: "Không quan tâm, không mảy may bận tâm chút nào",
+            meaningEn: "To not care at all about something.",
+            example: "He doesn't give a fig about what people say behind his back.",
+            equivalent: "Not care a bit / Not give a damn; Not care two hoots; Couldn't care less"
+        },
+        {
+            full: "Sow one's wild oats",
+            prompt: "Sow one's ___",
+            answer: "wild oats",
+            tts: "Sow one's wild oats",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/səʊ wʌnz waɪld əʊts/",
+            meaningVi: "Ăn chơi, trải nghiệm hết mình thời tuổi trẻ trước khi ổn định cuộc sống",
+            meaningEn: "To have many exciting, irresponsible, or romantic experiences while young before settling down.",
+            example: "He spent his twenties travelling and sowing his wild oats before starting a family.",
+            equivalent: "Live it up; Paint the town red (chỉ việc đi chơi, tiệc tùng)"
+        },
+        {
+            full: "Spill the beans",
+            prompt: "Spill the ___",
+            answer: "beans",
+            tts: "Spill the beans",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/spɪl ðə biːnz/",
+            meaningVi: "Vô tình tiết lộ bí mật, làm lộ thông tin",
+            meaningEn: "To reveal secret information unintentionally or prematurely.",
+            example: "We planned a surprise party, but Tom accidentally spilled the beans.",
+            equivalent: "Let the cat out of the bag; Give the game away; Blab (it out)"
+        },
+        {
+            full: "Take (something) with a pinch of salt",
+            prompt: "Take (something) with a pinch of ___",
+            answer: "salt",
+            tts: "Take something with a pinch of salt",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/teɪk ˈsʌm.θɪŋ wɪð ə pɪntʃ əv sɔːlt/",
+            meaningVi: "Nghe có chọn lọc, bán tín bán nghi, không tin hoàn toàn",
+            meaningEn: "To not completely believe something because it might not be entirely true or accurate.",
+            example: "You should take his stories with a pinch of salt.",
+            equivalent: "Take (something) with a grain of salt (tiếng Anh-Mỹ)"
+        },
+        {
+            full: "Upset the apple cart",
+            prompt: "Upset the ___",
+            answer: "apple cart",
+            tts: "Upset the apple cart",
+            type: "Thành ngữ (Idiom)",
+            ipa: "/ʌpˈset ði ˈæp.əl kɑːt/",
+            meaningVi: "Làm hỏng kế hoạch, phá vỡ trật tự hoặc gây xáo trộn mọi thứ",
+            meaningEn: "To spoil a plan or disturb the normal order of things.",
+            example: "Everything was arranged smoothly until his sudden resignation upset the apple cart.",
+            equivalent: "Throw a spanner in the works (Anh); Throw a wrench in the works (Mỹ); Rock the boat"
+        }
+    ];
+
+    let questions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let isAnswering = true;
+
+    // Web Audio API cho hiệu ứng âm thanh Đúng / Sai
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContextClass();
+
+    function playTone(freq, type, duration, startTimeOffset = 0, volume = 0.12) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        const start = audioCtx.currentTime + startTimeOffset;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(volume, start);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(start);
+        osc.stop(start + duration);
+    }
+
+    function playCorrectSound() {
+        playTone(587.33, 'sine', 0.12, 0);     // D5
+        playTone(783.99, 'sine', 0.14, 0.1);   // G5
+        playTone(1046.50, 'sine', 0.22, 0.2);  // C6
+    }
+
+    function playWrongSound() {
+        playTone(260, 'sawtooth', 0.18, 0, 0.08);
+        playTone(200, 'sawtooth', 0.25, 0.14, 0.08);
+    }
+
+    function formatTTS(text) {
+        return text
+            .replace(/\bsth\b/gi, 'something')
+            .replace(/\bst\b/gi, 'something')
+            .replace(/\bsb\b/gi, 'somebody');
+    }
+
+    function playTTS(text) {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(formatTTS(text));
+        utterance.lang = 'en-US';
+        utterance.rate = 0.92;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function shuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function generateHint(answer) {
+        const words = answer.trim().split(/\s+/);
+        if (words.length === 1) {
+            return `Gợi ý: 1 từ • ${words[0].length} chữ cái • bắt đầu bằng "${words[0][0].toUpperCase()}"`;
+        } else {
+            const initials = words.map(w => `${w[0].toUpperCase()}... (${w.length})`).join(' + ');
+            return `Gợi ý: ${words.length} từ • ${initials}`;
+        }
+    }
+
+    function renderPromptHTML(promptStr) {
+        return promptStr.replace('___', '<span class="blank-slot">_____</span>');
+    }
+
+    function renderHighlightedFull(fullStr, answerStr) {
+        const escaped = answerStr.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b(${escaped})\\b`, 'i');
+        return fullStr.replace(regex, '<span class="hl">$1</span>');
+    }
+
+    function startGame() {
+        questions = shuffle(vocabData);
+        currentIndex = 0;
+        score = 0;
+
+        document.getElementById('total-q').innerText = questions.length;
+        document.getElementById('score-display').innerText = score;
+
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentIndex];
+        document.getElementById('current-q-index').innerText = currentIndex + 1;
+        document.getElementById('progress-fill').style.width = `${((currentIndex) / questions.length) * 100}%`;
+
+        document.getElementById('question-type').innerText = q.type;
+        document.getElementById('question-meaning-vi').innerText = q.meaningVi;
+        document.getElementById('question-meaning-en').innerText = q.meaningEn;
+        document.getElementById('question-phrase').innerHTML = renderPromptHTML(q.prompt);
+        document.getElementById('question-hint').innerText = generateHint(q.answer);
+
+        const inputEl = document.getElementById('answer-input');
+        inputEl.value = '';
+        inputEl.className = 'answer-input';
+        inputEl.disabled = false;
+
+        document.getElementById('feedback-section').classList.add('hidden');
+        document.getElementById('submit-btn').classList.remove('hidden');
+
+        isAnswering = true;
+        setTimeout(() => inputEl.focus(), 50);
+    }
+
+    function normalizeAnswer(str) {
+        return str.trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    function checkAnswer() {
+        if (!isAnswering) return;
+
+        const inputEl = document.getElementById('answer-input');
+        const userRaw = inputEl.value;
+        const userNorm = normalizeAnswer(userRaw);
+        const currentQ = questions[currentIndex];
+        const correctNorm = normalizeAnswer(currentQ.answer);
+
+        inputEl.disabled = true;
+        isAnswering = false;
+
+        const statusEl = document.getElementById('feedback-status');
+        const correctAnsBox = document.getElementById('correct-answer-box');
+
+        if (userNorm === correctNorm) {
+            score++;
+            document.getElementById('score-display').innerText = score;
+            inputEl.classList.add('correct-input');
+            playCorrectSound();
+            statusEl.innerText = '🎉 CHÍNH XÁC!';
+            statusEl.style.color = 'var(--correct)';
+            correctAnsBox.classList.add('hidden');
+
+            confetti({
+                particleCount: 35,
+                spread: 60,
+                origin: { y: 0.7 }
+            });
+        } else {
+            // GIỮ NGUYÊN LỖI SAI CỦA HỌC SINH TRONG Ô NHẬP ĐỂ ĐỐI CHIẾU
+            inputEl.classList.add('incorrect-input', 'shake');
+            playWrongSound();
+            statusEl.innerText = '❌ CHƯA CHÍNH XÁC!';
+            statusEl.style.color = 'var(--incorrect)';
+            correctAnsBox.innerText = `Từ cần điền: ${currentQ.answer}`;
+            correctAnsBox.classList.remove('hidden');
+        }
+
+        document.getElementById('feedback-word').innerHTML = renderHighlightedFull(currentQ.full, currentQ.answer);
+        document.getElementById('feedback-ipa').innerText = currentQ.ipa;
+        document.getElementById('feedback-example-text').innerText = currentQ.example;
+
+        const equivWrap = document.getElementById('feedback-equiv-wrap');
+        if (currentQ.equivalent) {
+            document.getElementById('feedback-equiv-text').innerText = currentQ.equivalent;
+            equivWrap.classList.remove('hidden');
+        } else {
+            equivWrap.classList.add('hidden');
+        }
+
+        document.getElementById('replay-tts-btn').onclick = () => playTTS(currentQ.tts);
+
+        document.getElementById('feedback-section').classList.remove('hidden');
+        document.getElementById('submit-btn').classList.add('hidden');
+
+        // Tự động phát âm CHỈ cụm từ / thành ngữ (không đọc ví dụ)
+        playTTS(currentQ.tts);
+
+        setTimeout(() => document.getElementById('next-btn').focus(), 100);
+    }
+
+    function nextQuestion() {
+        window.speechSynthesis.cancel();
+        currentIndex++;
+        if (currentIndex < questions.length) {
+            loadQuestion();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        document.getElementById('progress-fill').style.width = '100%';
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+
+        document.getElementById('final-score').innerText = `${score} / ${questions.length}`;
+        fireEndConfetti();
+    }
+
+    function fireEndConfetti() {
+        const duration = 3000;
+        const end = Date.now() + duration;
+        const interval = setInterval(() => {
+            if (Date.now() > end) return clearInterval(interval);
+            confetti({
+                particleCount: 45,
+                startVelocity: 30,
+                spread: 360,
+                origin: { x: Math.random() * 0.4 + 0.1, y: Math.random() * 0.4 }
+            });
+            confetti({
+                particleCount: 45,
+                startVelocity: 30,
+                spread: 360,
+                origin: { x: Math.random() * 0.4 + 0.5, y: Math.random() * 0.4 }
+            });
+        }, 280);
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const startVisible = !document.getElementById('start-screen').classList.contains('hidden');
+            const gameVisible = !document.getElementById('game-screen').classList.contains('hidden');
+            const endVisible = !document.getElementById('end-screen').classList.contains('hidden');
+
+            if (startVisible || endVisible) {
+                event.preventDefault();
+                startGame();
+            } else if (gameVisible) {
+                event.preventDefault();
+                if (isAnswering) {
+                    checkAnswer();
+                } else {
+                    nextQuestion();
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
