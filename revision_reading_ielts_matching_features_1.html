@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revision - Reading IELTS Matching Features 1</title>
+
+  <!-- Google Fonts: Playfair Display (headings) & Plus Jakarta Sans (clean legible UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Soft pastel background gradient (cream -> lavender -> mint) */
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #FDFBF7 0%, #F4EEFB 48%, #EAF7F2 100%);
+      color: #2A233D;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient floating pastel orbs */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 9999px;
+      filter: blur(90px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    /* Fullscreen confetti overlay */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* Smooth card entrance animation */
+    @keyframes cardEnter {
+      0% {
+        opacity: 0;
+        transform: translateY(14px) scale(0.99);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .animate-card-enter {
+      animation: cardEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Gentle shake animation on wrong or empty input */
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      18% { transform: translateX(-8px); }
+      36% { transform: translateX(7px); }
+      54% { transform: translateX(-5px); }
+      72% { transform: translateX(4px); }
+      88% { transform: translateX(-2px); }
+    }
+    .animate-shake {
+      animation: gentleShake 0.42s ease-in-out;
+    }
+
+    /* Inline feedback smooth fade-in */
+    @keyframes feedbackReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-feedback {
+      animation: feedbackReveal 0.24s ease-out forwards;
+    }
+
+    /* Pulse indicator while Web Speech API is speaking */
+    @keyframes speakPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(124, 99, 169, 0.38); }
+      50% { box-shadow: 0 0 0 9px rgba(124, 99, 169, 0); }
+    }
+    .is-speaking {
+      animation: speakPulse 1s infinite;
+    }
+
+    /* Highlighted blank box in the prompt */
+    .blank-box {
+      display: inline-block;
+      min-width: 124px;
+      padding: 4px 18px;
+      margin: 0 4px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #FFFBEB 0%, #FEF3C7 100%);
+      border: 2.5px dashed #D97706;
+      color: #B45309;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      vertical-align: baseline;
+    }
+
+    /* Bright yellow <mark> highlight for target answer */
+    mark.target-highlight {
+      background: linear-gradient(120deg, #FEF08A 0%, #FDE047 100%);
+      color: #3F1D06;
+      padding: 2px 11px;
+      border-radius: 10px;
+      font-weight: 800;
+      box-shadow: 0 2px 6px rgba(234, 179, 8, 0.28);
+    }
+
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F6F3FA;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4C8E8;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B9A7D8;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-purple-200 selection:text-purple-900">
+
+  <!-- Soft Pastel Background Orbs -->
+  <div class="ambient-orb w-80 h-80 bg-purple-200 -top-20 -left-20"></div>
+  <div class="ambient-orb w-96 h-96 bg-emerald-100 top-1/3 -right-24"></div>
+  <div class="ambient-orb w-80 h-80 bg-rose-100 -bottom-24 left-1/4"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main Responsive Container -->
+  <div class="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 py-5 sm:py-8 flex flex-col min-h-screen">
+
+    <!-- HEADER BAR (Score is strictly hidden during Round 1 & Review Mode) -->
+    <header class="bg-white/90 backdrop-blur-md border border-purple-100/90 rounded-3xl p-4 sm:p-5 shadow-[0_10px_35px_-12px_rgba(91,75,122,0.12)] mb-5">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <h1 class="font-serif text-xl sm:text-2xl font-bold text-[#3A2E54] tracking-tight">
+              Revision - Reading IELTS Matching Features 1
+            </h1>
+            <span id="review-badge" class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300/80 shadow-sm">
+              <span>🔁</span> Ôn lại từ sai (Không tính điểm)
+            </span>
+          </div>
+          <p id="header-subtitle" class="text-xs sm:text-sm text-slate-600 mt-0.5 font-medium">
+            Ôn tập từ vựng, Collocation &amp; Idiom (28 câu)
+          </p>
+        </div>
+
+        <!-- Sound Toggle Control -->
+        <div class="flex items-center gap-2">
+          <button
+            id="sound-toggle-btn"
+            type="button"
+            onclick="toggleSound()"
+            class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-200/80 text-slate-700 hover:text-purple-800 text-xs sm:text-sm font-semibold transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-300"
+            title="Bật / Tắt âm thanh hiệu ứng & tự động phát âm"
+            aria-label="Bật hoặc tắt âm thanh"
+          >
+            <svg id="icon-sound-on" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"></path>
+            </svg>
+            <svg id="icon-sound-off" class="w-4 h-4 sm:w-5 sm:h-5 hidden text-rose-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M23 9l-6 6M17 9l6 6"></path>
+            </svg>
+            <span id="sound-label" class="hidden sm:inline">Âm thanh: Bật</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar (ONLY question progress) -->
+      <div class="mt-4 pt-3 border-t border-purple-100/70">
+        <div class="flex items-center justify-between text-xs sm:text-sm font-bold mb-1.5 gap-2 flex-wrap">
+          <span id="progress-text" class="text-[#5B4B7A]">Sẵn sàng ôn tập (28 câu)</span>
+          <span id="progress-note" class="text-xs font-medium text-slate-500">Điểm sẽ được công bố ở cuối bài</span>
+        </div>
+        <div class="w-full h-2.5 bg-purple-100/75 rounded-full overflow-hidden">
+          <div id="progress-fill" class="h-full rounded-full bg-gradient-to-r from-purple-400 via-violet-400 to-emerald-400 transition-all duration-500 ease-out" style="width: 0%"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT STAGE -->
+    <main class="flex-1 flex flex-col justify-start">
+
+      <!-- ===============================================================
+           SCREEN 1: START SCREEN
+           =============================================================== -->
+      <section id="screen-start" class="bg-white/95 backdrop-blur-md border border-purple-100 rounded-3xl p-6 sm:p-10 shadow-[0_20px_60px_-15px_rgba(91,75,122,0.13)] text-center animate-card-enter">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-100 via-rose-50 to-emerald-100 flex items-center justify-center text-3xl shadow-sm">
+          ✨
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#3A2E54] mb-2.5">
+          Revision - Reading IELTS Matching Features 1
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-7">
+          Trò chơi điền từ ôn tập <strong>28 từ vựng, Collocation &amp; Idiom</strong> chọn lọc. Thứ tự câu hỏi được xáo trộn ngẫu nhiên ở mỗi lượt chơi mới.
+        </p>
+
+        <!-- Feature Highlights -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left max-w-2xl mx-auto mb-8">
+          <div class="rounded-2xl bg-[#FAF8FD] border border-purple-100 p-4">
+            <div class="text-lg mb-1">🎯</div>
+            <div class="text-xs font-bold text-[#3A2E54] uppercase tracking-wide mb-1">Gợi ý đầy đủ</div>
+            <p class="text-xs text-slate-600 leading-relaxed">Hiển thị từ loại, nghĩa Việt–Anh, số từ cần điền và chữ cái bắt đầu.</p>
+          </div>
+          <div class="rounded-2xl bg-[#F2FAF6] border border-emerald-100 p-4">
+            <div class="text-lg mb-1">🔊</div>
+            <div class="text-xs font-bold text-emerald-800 uppercase tracking-wide mb-1">IPA &amp; Phát âm</div>
+            <p class="text-xs text-slate-600 leading-relaxed">Tự động phát âm tiếng Anh chuẩn kèm phiên âm IPA ngay khi kiểm tra.</p>
+          </div>
+          <div class="rounded-2xl bg-[#FFFBF0] border border-amber-200/70 p-4">
+            <div class="text-lg mb-1">🔁</div>
+            <div class="text-xs font-bold text-amber-800 uppercase tracking-wide mb-1">Ôn hết từ sai</div>
+            <p class="text-xs text-slate-600 leading-relaxed">Sửa đúng 100% các câu sai trước khi mở khóa điểm chính thức lượt đầu.</p>
+          </div>
+        </div>
+
+        <button
+          id="start-btn"
+          type="button"
+          onclick="startNewGame()"
+          class="inline-flex items-center justify-center gap-2 px-9 py-4 rounded-2xl font-bold text-base sm:text-lg text-white bg-gradient-to-r from-[#6D5B97] to-[#5B4B7A] hover:from-[#5D4C86] hover:to-[#4B3D68] shadow-lg shadow-purple-200/80 transition-all active:scale-95 focus:outline-none focus:ring-4 focus:ring-purple-200"
+        >
+          <span>Bắt đầu ôn tập</span>
+          <span class="text-purple-200 text-xs font-semibold">(Enter)</span>
+          <span>→</span>
+        </button>
+      </section>
+
+      <!-- ===============================================================
+           SCREEN 2: QUESTION & INLINE FEEDBACK CARD
+           =============================================================== -->
+      <section id="screen-game" class="hidden bg-white/95 backdrop-blur-md border border-purple-100 rounded-3xl p-5 sm:p-8 shadow-[0_20px_60px_-15px_rgba(91,75,122,0.13)] transition-all">
+
+        <!-- Category Badge & Optional Review Tag -->
+        <div class="flex items-center justify-between gap-2 flex-wrap mb-4">
+          <span id="q-pos" class="inline-flex items-center px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold bg-purple-100/85 text-purple-900 border border-purple-200">
+            Noun
+          </span>
+          <span id="q-review-tag" class="hidden text-xs sm:text-sm font-bold text-amber-800 bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">
+            Chế độ sửa từ sai • Không tính điểm
+          </span>
+        </div>
+
+        <!-- Meaning Block (Vietnamese Bold + English Italic) -->
+        <div class="bg-gradient-to-br from-[#FAF8FD] to-[#F3FAF7] border border-purple-100/90 rounded-2xl p-4 sm:p-5 mb-5 space-y-1.5">
+          <div class="text-[11px] uppercase tracking-wider font-bold text-purple-500">
+            Nghĩa của từ / cụm từ
+          </div>
+          <p id="q-meaning-vi" class="text-lg sm:text-xl font-extrabold text-[#2A233D] leading-snug"></p>
+          <p id="q-meaning-en" class="text-sm sm:text-base font-medium text-slate-600 italic leading-relaxed"></p>
+        </div>
+
+        <!-- Hint Pills (Word Count & Starting Letter computed dynamically) -->
+        <div class="flex flex-wrap items-center gap-2.5 mb-6">
+          <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50/90 border border-emerald-200/80 text-emerald-900 text-xs sm:text-sm font-semibold">
+            <span class="opacity-80">Số từ cần điền:</span>
+            <span id="q-word-count" class="font-extrabold">1 từ</span>
+          </div>
+          <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-50/95 border border-amber-200/90 text-amber-950 text-xs sm:text-sm font-semibold">
+            <span class="opacity-80">Chữ cái bắt đầu:</span>
+            <span id="q-start-letter" class="font-extrabold tracking-wide">p...</span>
+          </div>
+        </div>
+
+        <!-- Prominent Fill-in-the-Blank Display -->
+        <div class="text-center py-6 px-4 sm:px-6 rounded-2xl bg-[#FDFBF7] border border-amber-200/75 mb-6">
+          <div id="q-blank-display" class="text-xl sm:text-2xl md:text-[28px] font-extrabold text-[#2A233D] leading-relaxed tracking-tight"></div>
+        </div>
+
+        <!-- Input & Submit Row -->
+        <div class="space-y-2">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              id="answer-input"
+              type="text"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="Nhập từ còn thiếu vào đây..."
+              class="flex-1 w-full px-5 py-3.5 rounded-2xl text-lg sm:text-xl font-bold text-slate-800 bg-white border-2 border-purple-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all placeholder:text-slate-400 placeholder:font-normal"
+            />
+            <button
+              id="check-btn"
+              type="button"
+              onclick="checkAnswer()"
+              class="px-7 py-3.5 rounded-2xl font-bold text-base sm:text-lg text-white bg-gradient-to-r from-[#6D5B97] to-[#5B4B7A] hover:from-[#5D4C86] hover:to-[#4B3D68] shadow-md shadow-purple-200/70 transition-all active:scale-[0.98] whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-purple-200"
+            >
+              Kiểm tra <span class="text-purple-200 text-xs font-medium ml-1">(Enter)</span>
+            </button>
+          </div>
+          <p id="empty-warning" class="hidden text-xs sm:text-sm text-rose-600 font-semibold pl-2">
+            Hãy nhập câu trả lời trước khi kiểm tra nhé!
+          </p>
+        </div>
+
+        <!-- INLINE FEEDBACK AREA (No Popups / No Modals) -->
+        <div id="feedback-area" class="hidden mt-5 pt-5 border-t border-purple-100 animate-feedback">
+
+          <!-- Status Banner -->
+          <div id="feedback-banner" class="rounded-2xl p-4 sm:p-5 mb-4 border">
+            <div class="flex items-start justify-between gap-3 flex-wrap">
+              <div class="space-y-1.5">
+                <div id="feedback-heading" class="text-base sm:text-lg font-extrabold flex items-center gap-2"></div>
+                <div id="feedback-comparison" class="text-sm sm:text-base font-medium"></div>
+              </div>
+              <span id="feedback-tag" class="px-3 py-1 rounded-full text-xs font-bold shrink-0"></span>
+            </div>
+          </div>
+
+          <!-- Full Phrase (<mark> Highlight) + IPA + Replay Button -->
+          <div class="rounded-2xl bg-gradient-to-br from-[#FDFBF7] via-white to-[#F6F2FC] border border-purple-200/80 p-4 sm:p-5 mb-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1.5">
+                <div class="text-[11px] uppercase tracking-wider font-bold text-slate-400">
+                  Đáp án đầy đủ &amp; Phiên âm IPA
+                </div>
+                <div id="feedback-phrase" class="text-xl sm:text-2xl font-extrabold text-[#2A233D] leading-snug"></div>
+                <div id="feedback-ipa" class="text-sm sm:text-base font-semibold text-purple-700 font-mono tracking-wide"></div>
+              </div>
+
+              <button
+                id="replay-audio-btn"
+                type="button"
+                onclick="replayCurrentPronunciation()"
+                class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-purple-100/90 hover:bg-purple-200/90 text-purple-900 font-bold text-sm sm:text-base border border-purple-200 transition-all active:scale-95 shrink-0 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              >
+                <span>🔊</span>
+                <span>Nghe lại</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Next Button -->
+          <button
+            id="next-btn"
+            type="button"
+            onclick="nextQuestion()"
+            class="w-full py-4 px-6 rounded-2xl font-bold text-base sm:text-lg text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 shadow-md shadow-emerald-200/70 transition-all active:scale-[0.99] flex items-center justify-center gap-2 focus:outline-none focus:ring-4 focus:ring-emerald-200"
+          >
+            <span id="next-btn-label">Tiếp theo (Enter) →</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ===============================================================
+           SCREEN 3: REVIEW INTRO (MANDATORY ERROR REPLAY BEFORE SCORE)
+           =============================================================== -->
+      <section id="screen-review-intro" class="hidden bg-white/95 backdrop-blur-md border border-amber-200/90 rounded-3xl p-6 sm:p-10 shadow-[0_20px_60px_-15px_rgba(91,75,122,0.14)] text-center animate-card-enter">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-3xl shadow-inner">
+          📝
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#3A2E54] mb-3">
+          Hoàn thành lượt chính!
+        </h2>
+        <div class="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 font-bold text-sm sm:text-base mb-4">
+          <span>🔒 Sửa đúng 100% các từ sai để xem điểm chính thức</span>
+        </div>
+        <p id="review-intro-desc" class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto leading-relaxed mb-7"></p>
+        <button
+          id="start-review-btn"
+          type="button"
+          onclick="startReviewRound()"
+          class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-base sm:text-lg text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-200/70 transition-all active:scale-95 focus:outline-none focus:ring-4 focus:ring-amber-200"
+        >
+          <span>Bắt đầu ôn lại từ sai (Enter)</span>
+          <span>→</span>
+        </button>
+      </section>
+
+      <!-- ===============================================================
+           SCREEN 4: FINAL RESULT SCREEN (UNLOCKED ONLY AT 100% MASTERY)
+           =============================================================== -->
+      <section id="screen-result" class="hidden bg-white/95 backdrop-blur-md border border-purple-100 rounded-3xl p-6 sm:p-9 shadow-[0_20px_60px_-15px_rgba(91,75,122,0.14)] animate-card-enter">
+        <div class="text-center mb-7">
+          <div id="result-emoji" class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-purple-100 to-emerald-100 flex items-center justify-center text-3xl shadow-sm">
+            🎉
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-[#3A2E54]">
+            Kết quả Revision - Reading IELTS Matching Features 1
+          </h2>
+          <p id="result-subtitle" class="text-slate-600 text-sm sm:text-base mt-1.5"></p>
+          <div id="result-mastered-pill" class="hidden mt-3 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs sm:text-sm font-bold">
+            <span>✓</span> Đã hoàn thành sửa đúng 100% các từ sai!
+          </div>
+        </div>
+
+        <!-- Score Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-7">
+          <div class="rounded-2xl bg-purple-50/90 border border-purple-200/80 p-4 text-center">
+            <div class="text-xs font-bold uppercase tracking-wider text-purple-600 mb-1">Điểm chính thức lượt 1</div>
+            <div id="res-score-raw" class="text-2xl sm:text-3xl font-extrabold text-[#3A2E54]">28 / 28</div>
+            <div id="res-score-10" class="text-base font-extrabold text-purple-700 mt-0.5">10.0 / 10</div>
+          </div>
+          <div class="rounded-2xl bg-emerald-50/90 border border-emerald-200/80 p-4 text-center">
+            <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">Đúng ngay lượt đầu</div>
+            <div id="res-correct-count" class="text-2xl sm:text-3xl font-extrabold text-emerald-700">28</div>
+            <div id="res-percent" class="text-xs font-semibold text-emerald-700/80 mt-0.5">100% chính xác</div>
+          </div>
+          <div class="rounded-2xl bg-rose-50/90 border border-rose-200/80 p-4 text-center">
+            <div class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-1">Sai lượt đầu (Đã ôn xong)</div>
+            <div id="res-wrong-count" class="text-2xl sm:text-3xl font-extrabold text-rose-600">0</div>
+            <div class="text-xs text-rose-600/80 mt-0.5">lượt ôn lại không tính điểm</div>
+          </div>
+        </div>
+
+        <!-- Perfect Banner -->
+        <div id="perfect-banner" class="hidden mb-7 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-5 text-center">
+          <p class="text-emerald-800 font-bold text-base sm:text-lg">
+            🌟 Xuất sắc tuyệt đối! Bạn trả lời đúng cả 28/28 câu ngay từ lượt đầu tiên!
+          </p>
+        </div>
+
+        <!-- List of Initially Missed Words for Reference -->
+        <div id="missed-section" class="hidden mb-7">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-base sm:text-lg text-[#3A2E54] flex items-center gap-2">
+              <span>📌</span> Các từ từng làm sai ở lượt đầu (để ghi nhớ thêm)
+            </h3>
+            <span id="missed-count-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-700"></span>
+          </div>
+          <div id="missed-list" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- Replay Button -->
+        <div class="text-center">
+          <button
+            type="button"
+            onclick="startNewGame()"
+            class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-bold text-base sm:text-lg text-white bg-gradient-to-r from-[#6D5B97] to-[#5B4B7A] hover:from-[#5D4C86] hover:to-[#4B3D68] shadow-lg shadow-purple-200/80 transition-all active:scale-95 focus:outline-none focus:ring-4 focus:ring-purple-200"
+          >
+            <span>🔀</span>
+            <span>Chơi lại (Trộn câu hỏi mới)</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Keyboard Tip -->
+    <footer class="text-center text-xs text-slate-500 mt-6 pb-2">
+      Mẹo: Nhấn <kbd class="px-1.5 py-0.5 rounded bg-white border border-slate-200 text-slate-700 font-semibold">Enter</kbd> để kiểm tra đáp án và nhấn <kbd class="px-1.5 py-0.5 rounded bg-white border border-slate-200 text-slate-700 font-semibold">Enter</kbd> lần nữa để sang câu tiếp theo.
+    </footer>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. COMPLETE VOCABULARY DATASET (EXACTLY 28 ITEMS)
+       ========================================================================= */
+    const VOCAB_DATASET = [
+      { before: "", answer: "pollinator", after: "", accept: ["pollinator"], pos: "Noun", meaningVi: "loài thụ phấn", meaningEn: "fertilising agents", ipa: "/ˈpɒlɪneɪtər/", speak: "pollinator" },
+      { before: "", answer: "dwindle", after: "", accept: ["dwindle"], pos: "Verb", meaningVi: "suy giảm dần", meaningEn: "decreasing, diminishing", ipa: "/ˈdwɪndl/", speak: "dwindle" },
+      { before: "", answer: "emphasize", after: "", accept: ["emphasize", "emphasise"], pos: "Verb", meaningVi: "nhấn mạnh", meaningEn: "stress, highlight", ipa: "/ˈemfəsaɪz/", speak: "emphasize" },
+      { before: "Be ", answer: "reliant", after: " upon", accept: ["reliant"], pos: "Adjective phrase", meaningVi: "phụ thuộc vào", meaningEn: "dependent on", ipa: "/biː rɪˈlaɪənt əˈpɒn/", speak: "be reliant upon" },
+      { before: "economic ", answer: "powerhouse", after: "", accept: ["powerhouse"], pos: "Collocation / Noun phrase", meaningVi: "cường quốc kinh tế", meaningEn: "economic giant", ipa: "/ˌiːkəˈnɒmɪk ˈpaʊəhaʊs/", speak: "economic powerhouse" },
+      { before: "", answer: "abundant", after: " natural resources", accept: ["abundant"], pos: "Collocation / Noun phrase", meaningVi: "tài nguyên thiên nhiên phong phú", meaningEn: "plentiful resources", ipa: "/əˈbʌndənt ˈnætʃrəl rɪˈzɔːsɪz/", speak: "abundant natural resources" },
+      { before: "", answer: "accessible", after: "", accept: ["accessible"], pos: "Adjective", meaningVi: "tiếp cận được", meaningEn: "reachable", ipa: "/əkˈsesəbl/", speak: "accessible" },
+      { before: "", answer: "universality", after: "", accept: ["universality"], pos: "Noun", meaningVi: "tính phổ quát", meaningEn: "generality, commonness", ipa: "/ˌjuːnɪvɜːˈsæləti/", speak: "universality" },
+      { before: "", answer: "contest", after: "", accept: ["contest"], pos: "Verb", meaningVi: "tranh cãi", meaningEn: "dispute, challenge", ipa: "/kənˈtest/", speak: "contest" },
+      { before: "", answer: "renowned", after: " for", accept: ["renowned"], pos: "Adjective phrase", meaningVi: "nổi tiếng vì", meaningEn: "famous for", ipa: "/rɪˈnaʊnd fɔːr/", speak: "renowned for" },
+      { before: "", answer: "toxicity", after: "", accept: ["toxicity"], pos: "Noun", meaningVi: "độc tính", meaningEn: "harmfulness", ipa: "/tɒkˈsɪsəti/", speak: "toxicity" },
+      { before: "", answer: "docile", after: " and amenable", accept: ["docile"], pos: "Collocation / Adjective phrase", meaningVi: "ngoan ngoãn và dễ bảo", meaningEn: "compliant, obedient", ipa: "/ˈdəʊsaɪl ænd əˈmiːnəbl/", speak: "docile and amenable" },
+      { before: "emotional ", answer: "instability", after: "", accept: ["instability"], pos: "Collocation / Noun phrase", meaningVi: "bất ổn cảm xúc", meaningEn: "volatility", ipa: "/ɪˈməʊʃənl ˌɪnstəˈbɪləti/", speak: "emotional instability" },
+      { before: "fully ", answer: "mature", after: "", accept: ["mature"], pos: "Collocation / Adjective phrase", meaningVi: "trưởng thành hoàn toàn", meaningEn: "fully developed", ipa: "/ˈfʊli məˈtʃʊər/", speak: "fully mature" },
+      { before: "", answer: "unravel", after: " the mystery", accept: ["unravel"], pos: "Collocation / Verb phrase", meaningVi: "làm sáng tỏ bí ẩn", meaningEn: "clarify, solve", ipa: "/ʌnˈrævl ðə ˈmɪstəri/", speak: "unravel the mystery" },
+      { before: "", answer: "inclination", after: " to show empathy", accept: ["inclination"], pos: "Collocation / Noun phrase", meaningVi: "khuynh hướng thể hiện sự đồng cảm", meaningEn: "tendency to empathise", ipa: "/ˌɪnklɪˈneɪʃn tuː ʃəʊ ˈempəθi/", speak: "inclination to show empathy" },
+      { before: "capitalise ", answer: "on", after: "", accept: ["on"], pos: "Phrasal verb", meaningVi: "tận dụng", meaningEn: "exploit, take advantage of", ipa: "/ˈkæpɪtəlaɪz ɒn/", speak: "capitalise on" },
+      { before: "", answer: "variants", after: "", accept: ["variants"], pos: "Noun (plural)", meaningVi: "các biến thể", meaningEn: "different forms or versions", ipa: "/ˈveəriənts/", speak: "variants" },
+      { before: "Black and ", answer: "blue", after: "", accept: ["blue"], pos: "Idiom", meaningVi: "Bầm tím, thâm tím mình mẩy (do va đập, đánh nhau)", meaningEn: "Covered with bruises (usually from being hit or falling)", ipa: "/blæk ænd bluː/", speak: "black and blue" },
+      { before: "Fair and ", answer: "square", after: "", accept: ["square"], pos: "Idiom", meaningVi: "Công bằng, sòng phẳng, đúng luật (không gian lận)", meaningEn: "Honestly and according to the rules", ipa: "/feər ænd skweər/", speak: "fair and square" },
+      { before: "", answer: "Hale", after: " and hearty", accept: ["hale"], pos: "Idiom", meaningVi: "Khỏe mạnh, tráng kiện (thường dùng cho người lớn tuổi)", meaningEn: "Healthy and strong (often used for older people)", ipa: "/heɪl ænd ˈhɑːti/", speak: "hale and hearty" },
+      { before: "High and ", answer: "low", after: "", accept: ["low"], pos: "Idiom", meaningVi: "Khắp mọi nơi, tìm kiếm kỹ lưỡng mọi ngóc ngách", meaningEn: "Everywhere; in every possible place", ipa: "/haɪ ænd ləʊ/", speak: "high and low" },
+      { before: "Hot and ", answer: "bothered", after: "", accept: ["bothered"], pos: "Idiom", meaningVi: "Bực bội, lo lắng, mất bình tĩnh", meaningEn: "Upset, worried, or annoyed", ipa: "/hɒt ænd ˈbɒðəd/", speak: "hot and bothered" },
+      { before: "The long and ", answer: "short", after: " of it", accept: ["short"], pos: "Idiom", meaningVi: "Tóm lại, nói ngắn gọn (đi thẳng vào kết quả chính)", meaningEn: "The main point or summary of a situation", ipa: "/ðə lɒŋ ænd ʃɔːt əv ɪt/", speak: "the long and short of it" },
+      { before: "Safe and ", answer: "sound", after: "", accept: ["sound"], pos: "Idiom", meaningVi: "Bình an vô sự, an toàn và không bị tổn hại gì", meaningEn: "Safe and without any injury or damage", ipa: "/seɪf ænd saʊnd/", speak: "safe and sound" },
+      { before: "Sick and ", answer: "tired", after: "", accept: ["tired"], pos: "Idiom", meaningVi: "Chán ngấy, phát ngán (vì điều gì lặp lại quá nhiều)", meaningEn: "Very annoyed or bored with something that has happened too often", ipa: "/sɪk ænd ˈtaɪəd/", speak: "sick and tired" },
+      { before: "The straight and ", answer: "narrow", after: "", accept: ["narrow"], pos: "Idiom", meaningVi: "Con đường đúng đắn, lương thiện, tuân thủ đạo đức/luật pháp", meaningEn: "An honest, moral, and law-abiding way of living", ipa: "/ðə streɪt ænd ˈnærəʊ/", speak: "the straight and narrow" },
+      { before: "Through thick and ", answer: "thin", after: "", accept: ["thin"], pos: "Idiom", meaningVi: "Dù sướng hay khổ, vượt qua mọi thăng trầm, khó khăn", meaningEn: "Through both good times and bad times", ipa: "/θruː θɪk ænd θɪn/", speak: "through thick and thin" }
+    ];
+
+    /* =========================================================================
+       2. EXPLICIT FINITE STATE MACHINE & GAME VARIABLES
+       States: 'start' | 'question' | 'feedback' | 'review_intro' | 'result'
+       ========================================================================= */
+    const TOTAL_ITEMS = VOCAB_DATASET.length; // 28
+
+    let gameState = 'start';
+    let isReviewMode = false;
+
+    let mainQueue = [];
+    let mainIndex = 0;
+    let wrongList = [];       // Missed items in Round 1 (preserved for review & result screen)
+    let reviewQueue = [];     // Active shuffled queue for Review Round
+    let reviewTotal = 0;
+    let reviewMastered = 0;
+
+    let currentItem = null;
+    let round1Score = TOTAL_ITEMS; // Starts at 28, -1 for each wrong answer in Round 1
+
+    let soundEnabled = true;
+    let ttsTimeoutId = null;
+
+    /* =========================================================================
+       3. WEB AUDIO API (SYNTHESIZED SFX) & WEB SPEECH API (ENGLISH TTS)
+       ========================================================================= */
+    let audioCtx = null;
+    let englishVoice = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) audioCtx = new AudioCtx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    /** Cheerful ascending harmonic chime for correct answers */
+    function playCorrectChime() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const freqs = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+        freqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.06);
+
+          gain.gain.setValueAtTime(0.001, now + i * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.14, now + i * 0.06 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.32);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.06);
+          osc.stop(now + i * 0.06 + 0.35);
+        });
+      } catch (_) {}
+    }
+
+    /** Gentle low buzz for incorrect answers */
+    function playWrongBuzz() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const freqs = [233.08, 185.0]; // Bb3 -> F#3
+        freqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.11);
+
+          gain.gain.setValueAtTime(0.001, now + i * 0.11);
+          gain.gain.exponentialRampToValueAtTime(0.13, now + i * 0.11 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.11 + 0.24);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.11);
+          osc.stop(now + i * 0.11 + 0.26);
+        });
+      } catch (_) {}
+    }
+
+    /** Select a clear en-GB or en-US voice */
+    function loadEnglishVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return;
+
+      englishVoice =
+        voices.find(v => v.lang === 'en-GB' && /Google|Natural|Daniel|Serena|Martha/i.test(v.name)) ||
+        voices.find(v => v.lang === 'en-US' && /Google|Natural|Samantha|Alex/i.test(v.name)) ||
+        voices.find(v => v.lang === 'en-GB') ||
+        voices.find(v => v.lang === 'en-US') ||
+        voices.find(v => v.lang && v.lang.startsWith('en')) ||
+        null;
+    }
+
+    if ('speechSynthesis' in window) {
+      loadEnglishVoice();
+      window.speechSynthesis.onvoiceschanged = loadEnglishVoice;
+    }
+
+    /** Helper: replace standalone 'sth' -> 'something', 'sb' -> 'somebody' */
+    function formatTextForSpeech(text) {
+      return String(text || '')
+        .replace(/\bsth\b/gi, 'something')
+        .replace(/\bsb\b/gi, 'somebody')
+        .trim();
+    }
+
+    /** Speak ONLY the target phrase in English */
+    function speakTargetPhrase(rawText, isManual = false) {
+      if (!isManual && !soundEnabled) return;
+      if (!('speechSynthesis' in window) || !rawText) return;
+
+      const textToSpeak = formatTextForSpeech(rawText);
+      if (!textToSpeak) return;
+
+      try {
+        window.speechSynthesis.cancel();
+        if (!englishVoice) loadEnglishVoice();
+
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        utterance.lang = englishVoice ? englishVoice.lang : 'en-GB';
+        if (englishVoice) utterance.voice = englishVoice;
+        utterance.rate = 0.92;
+        utterance.pitch = 1.0;
+
+        const replayBtn = document.getElementById('replay-audio-btn');
+        utterance.onstart = () => {
+          if (replayBtn) replayBtn.classList.add('is-speaking');
+        };
+        utterance.onend = () => {
+          if (replayBtn) replayBtn.classList.remove('is-speaking');
+        };
+        utterance.onerror = () => {
+          if (replayBtn) replayBtn.classList.remove('is-speaking');
+        };
+
+        window.speechSynthesis.speak(utterance);
+      } catch (_) {}
+    }
+
+    function replayCurrentPronunciation() {
+      if (currentItem) {
+        speakTargetPhrase(currentItem.speak, true);
+      }
+      if (document.activeElement) document.activeElement.blur();
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('icon-sound-on').classList.toggle('hidden', !soundEnabled);
+      document.getElementById('icon-sound-off').classList.toggle('hidden', soundEnabled);
+      document.getElementById('sound-label').textContent = soundEnabled ? 'Âm thanh: Bật' : 'Âm thanh: Tắt';
+
+      if (!soundEnabled && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (document.activeElement) document.activeElement.blur();
+    }
+
+    /* =========================================================================
+       4. CANVAS CONFETTI BURST EFFECT
+       ========================================================================= */
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiFrameId = null;
+
+    function resizeConfetti() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function burstConfetti(count = 46) {
+      const palette = ['#A78BFA', '#34D399', '#FBBF24', '#F472B6', '#60A5FA', '#FDE047'];
+      const cx = window.innerWidth / 2;
+      const cy = Math.min(window.innerHeight * 0.42, 330);
+
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 4 + Math.random() * 7;
+        confettiParticles.push({
+          x: cx + (Math.random() - 0.5) * 90,
+          y: cy + (Math.random() - 0.5) * 30,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 4.5,
+          size: 5 + Math.random() * 6,
+          color: palette[Math.floor(Math.random() * palette.length)],
+          rot: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 12,
+          alpha: 1,
+          shape: Math.random() > 0.4 ? 'rect' : 'circle'
+        });
+      }
+
+      if (!confettiFrameId) renderConfettiLoop();
+    }
+
+    function renderConfettiLoop() {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.24;
+        p.vx *= 0.985;
+        p.rot += p.rotSpeed;
+        p.alpha -= 0.015;
+
+        if (p.alpha <= 0 || p.y > confettiCanvas.height + 24) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+
+        confettiCtx.save();
+        confettiCtx.globalAlpha = p.alpha;
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate((p.rot * Math.PI) / 180);
+        confettiCtx.fillStyle = p.color;
+
+        if (p.shape === 'rect') {
+          confettiCtx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.65);
+        } else {
+          confettiCtx.beginPath();
+          confettiCtx.arc(0, 0, p.size / 2.2, 0, Math.PI * 2);
+          confettiCtx.fill();
+        }
+        confettiCtx.restore();
+      }
+
+      if (confettiParticles.length > 0) {
+        confettiFrameId = requestAnimationFrame(renderConfettiLoop);
+      } else {
+        confettiFrameId = null;
+      }
+    }
+
+    /* =========================================================================
+       5. UTILITY HELPERS
+       ========================================================================= */
+
+    /** Fisher-Yates shuffle returning a new randomized copy */
+    function fisherYatesShuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /** Normalize input: trim, collapse multiple spaces, lowercase */
+    function normalizeText(str) {
+      return String(str).trim().replace(/\s+/g, ' ').toLowerCase();
+    }
+
+    /** Dynamically compute word count and starting letter hint from answer */
+    function computeHintsFromAnswer(answer) {
+      const words = String(answer).trim().split(/\s+/).filter(Boolean);
+      const wordCount = words.length;
+      const startLetters = words.map(w => w.charAt(0).toLowerCase() + '...').join(' ');
+      return { wordCount, startLetters };
+    }
+
+    /** Build Fill-in-the-Blank HTML */
+    function buildBlankPromptHtml(item) {
+      const { wordCount } = computeHintsFromAnswer(item.answer);
+      const slot = wordCount > 1 ? '_____ _____' : '_______';
+      return `${escapeHtml(item.before)}<span class="blank-box">${slot}</span>${escapeHtml(item.after)}`;
+    }
+
+    /** Build Full Phrase HTML with <mark> yellow highlight on target word */
+    function buildHighlightedPhraseHtml(item) {
+      return `${escapeHtml(item.before)}<mark class="target-highlight">${escapeHtml(item.answer)}</mark>${escapeHtml(item.after)}`;
+    }
+
+    /** Switch active screen cleanly */
+    function showOnlyScreen(screenId) {
+      ['screen-start', 'screen-game', 'screen-review-intro', 'screen-result'].forEach(id => {
+        document.getElementById(id).classList.toggle('hidden', id !== screenId);
+      });
+    }
+
+    /* =========================================================================
+       6. CORE GAME FLOW
+       ========================================================================= */
+
+    function updateProgressBar() {
+      const progressText = document.getElementById('progress-text');
+      const progressNote = document.getElementById('progress-note');
+      const progressFill = document.getElementById('progress-fill');
+
+      if (gameState === 'start') {
+        progressText.textContent = `Sẵn sàng ôn tập (${TOTAL_ITEMS} câu)`;
+        progressNote.textContent = 'Điểm sẽ được công bố ở cuối bài';
+        progressFill.style.width = '0%';
+      } else if ((gameState === 'question' || gameState === 'feedback') && !isReviewMode) {
+        const displayNum = Math.min(mainIndex + 1, TOTAL_ITEMS);
+        progressText.textContent = `Câu ${displayNum} / ${TOTAL_ITEMS}`;
+        progressNote.textContent = 'Điểm sẽ được công bố ở cuối bài';
+        const completed = gameState === 'feedback' ? mainIndex + 1 : mainIndex;
+        progressFill.style.width = `${(completed / TOTAL_ITEMS) * 100}%`;
+      } else if (gameState === 'review_intro') {
+        progressText.textContent = `Hoàn thành lượt 1 (${TOTAL_ITEMS} / ${TOTAL_ITEMS})`;
+        progressNote.textContent = 'Cần ôn đúng hết các từ sai để xem điểm';
+        progressFill.style.width = '100%';
+      } else if ((gameState === 'question' || gameState === 'feedback') && isReviewMode) {
+        const remaining = reviewQueue.length;
+        progressText.textContent = `Ôn lại từ sai — Còn ${remaining} từ`;
+        progressNote.textContent = `Đã sửa đúng ${reviewMastered} / ${reviewTotal} từ`;
+        const pct = reviewTotal > 0 ? (reviewMastered / reviewTotal) * 100 : 100;
+        progressFill.style.width = `${pct}%`;
+      } else if (gameState === 'result') {
+        progressText.textContent = 'Hoàn thành 100% bài ôn tập';
+        progressNote.textContent = 'Đã mở khóa điểm chính thức lượt đầu';
+        progressFill.style.width = '100%';
+      }
+    }
+
+    /** Start a brand new randomized game (Round 1) */
+    function startNewGame() {
+      if (ttsTimeoutId) clearTimeout(ttsTimeoutId);
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+      isReviewMode = false;
+      mainQueue = fisherYatesShuffle(VOCAB_DATASET);
+      mainIndex = 0;
+      wrongList = [];
+      reviewQueue = [];
+      reviewTotal = 0;
+      reviewMastered = 0;
+      round1Score = TOTAL_ITEMS;
+      currentItem = mainQueue[0];
+
+      document.getElementById('review-badge').classList.add('hidden');
+      document.getElementById('q-review-tag').classList.add('hidden');
+      document.getElementById('header-subtitle').textContent = `Ôn tập từ vựng, Collocation & Idiom (${TOTAL_ITEMS} câu)`;
+
+      showOnlyScreen('screen-game');
+      renderQuestionCard();
+    }
+
+    /** Render the current question and set state to 'question' */
+    function renderQuestionCard() {
+      gameState = 'question';
+
+      const card = document.getElementById('screen-game');
+      card.classList.remove('animate-card-enter', 'animate-shake');
+      void card.offsetWidth;
+      card.classList.add('animate-card-enter');
+
+      const { wordCount, startLetters } = computeHintsFromAnswer(currentItem.answer);
+
+      document.getElementById('q-pos').textContent = currentItem.pos;
+      document.getElementById('q-meaning-vi').textContent = currentItem.meaningVi;
+      document.getElementById('q-meaning-en').textContent = currentItem.meaningEn;
+      document.getElementById('q-word-count').textContent = `${wordCount} từ`;
+      document.getElementById('q-start-letter').textContent = startLetters;
+      document.getElementById('q-blank-display').innerHTML = buildBlankPromptHtml(currentItem);
+
+      const inputEl = document.getElementById('answer-input');
+      inputEl.value = '';
+      inputEl.disabled = false;
+      inputEl.className = 'flex-1 w-full px-5 py-3.5 rounded-2xl text-lg sm:text-xl font-bold text-slate-800 bg-white border-2 border-purple-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 outline-none transition-all placeholder:text-slate-400 placeholder:font-normal';
+
+      const checkBtn = document.getElementById('check-btn');
+      checkBtn.disabled = false;
+      checkBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+      document.getElementById('empty-warning').classList.add('hidden');
+      document.getElementById('feedback-area').classList.add('hidden');
+
+      updateProgressBar();
+
+      // Auto-focus input field
+      setTimeout(() => {
+        if (gameState === 'question') inputEl.focus();
+      }, 35);
+    }
+
+    /** Validate the student's typed answer, update queues, play SFX + TTS */
+    function checkAnswer() {
+      if (gameState !== 'question') return;
+
+      const inputEl = document.getElementById('answer-input');
+      const rawInput = inputEl.value;
+      const cleaned = normalizeText(rawInput);
+
+      // Shake input if empty
+      if (!cleaned) {
+        document.getElementById('empty-warning').classList.remove('hidden');
+        inputEl.classList.remove('animate-shake');
+        void inputEl.offsetWidth;
+        inputEl.classList.add('animate-shake');
+        inputEl.focus();
+        return;
+      }
+
+      document.getElementById('empty-warning').classList.add('hidden');
+
+      const item = currentItem;
+      const acceptedList = (item.accept || [item.answer]).map(normalizeText);
+      const isCorrect = acceptedList.includes(cleaned);
+
+      // Lock input while keeping the student's exact text visible for comparison
+      inputEl.disabled = true;
+      inputEl.blur();
+
+      const checkBtn = document.getElementById('check-btn');
+      checkBtn.disabled = true;
+      checkBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      if (isCorrect) {
+        inputEl.className = 'flex-1 w-full px-5 py-3.5 rounded-2xl text-lg sm:text-xl font-bold text-emerald-800 bg-emerald-50/70 border-2 border-emerald-400 outline-none transition-all';
+      } else {
+        inputEl.className = 'flex-1 w-full px-5 py-3.5 rounded-2xl text-lg sm:text-xl font-bold text-rose-700 bg-rose-50/70 border-2 border-rose-400 outline-none transition-all';
+      }
+
+      // Transition state to 'feedback'
+      gameState = 'feedback';
+
+      // Update Round 1 score or Review Queue
+      const feedbackTag = document.getElementById('feedback-tag');
+      if (!isReviewMode) {
+        if (isCorrect) {
+          feedbackTag.textContent = 'Chính xác ✓';
+          feedbackTag.className = 'px-3 py-1 rounded-full text-xs font-bold shrink-0 bg-emerald-100 text-emerald-800 border border-emerald-200';
+        } else {
+          round1Score = Math.max(0, round1Score - 1);
+          wrongList.push(item);
+          feedbackTag.textContent = 'Sẽ ôn lại ở cuối lượt';
+          feedbackTag.className = 'px-3 py-1 rounded-full text-xs font-bold shrink-0 bg-rose-100 text-rose-800 border border-rose-200';
+        }
+      } else {
+        if (isCorrect) {
+          reviewMastered++;
+          reviewQueue.shift(); // Mastered -> remove from reviewQueue
+          feedbackTag.textContent = 'Đã sửa đúng ✓ (Không tính điểm)';
+          feedbackTag.className = 'px-3 py-1 rounded-full text-xs font-bold shrink-0 bg-amber-100 text-amber-800 border border-amber-200';
+        } else {
+          const missedAgain = reviewQueue.shift();
+          reviewQueue.push(missedAgain); // Still wrong -> move to back of queue
+          feedbackTag.textContent = 'Chưa đúng • Sẽ hỏi lại';
+          feedbackTag.className = 'px-3 py-1 rounded-full text-xs font-bold shrink-0 bg-rose-100 text-rose-800 border border-rose-200';
+        }
+      }
+
+      // Render inline feedback banner
+      const banner = document.getElementById('feedback-banner');
+      const heading = document.getElementById('feedback-heading');
+      const comparison = document.getElementById('feedback-comparison');
+      const safeUser = escapeHtml(rawInput.trim());
+      const safeAnswer = escapeHtml(item.answer);
+
+      if (isCorrect) {
+        playCorrectChime();
+        burstConfetti(48);
+        banner.className = 'rounded-2xl p-4 sm:p-5 mb-4 border bg-emerald-50/85 border-emerald-200';
+        heading.innerHTML = '<span class="text-emerald-700">✨ Chính xác! Làm tốt lắm!</span>';
+        comparison.innerHTML = `Câu trả lời của bạn: <span class="font-bold text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-lg">${safeUser}</span>`;
+      } else {
+        playWrongBuzz();
+        const card = document.getElementById('screen-game');
+        card.classList.remove('animate-shake');
+        void card.offsetWidth;
+        card.classList.add('animate-shake');
+
+        banner.className = 'rounded-2xl p-4 sm:p-5 mb-4 border bg-rose-50/85 border-rose-200';
+        heading.innerHTML = '<span class="text-rose-700">💡 Chưa chính xác! Hãy xem lại chính tả nhé</span>';
+        comparison.innerHTML =
+          `Bạn đã nhập: <span class="font-bold text-rose-700 line-through decoration-2 bg-rose-100/90 px-2 py-0.5 rounded-lg mr-2">${safeUser}</span>` +
+          `<span class="text-slate-600 text-sm">→ Đáp án đúng:</span> <span class="font-extrabold text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-lg ml-1">${safeAnswer}</span>`;
+      }
+
+      // Display full phrase with bright yellow <mark> + IPA
+      document.getElementById('feedback-phrase').innerHTML = buildHighlightedPhraseHtml(item);
+      document.getElementById('feedback-ipa').textContent = item.ipa;
+
+      // Context-aware Next Button Label
+      const nextLabel = document.getElementById('next-btn-label');
+      if (!isReviewMode && mainIndex === TOTAL_ITEMS - 1) {
+        nextLabel.textContent = wrongList.length > 0
+          ? 'Chuyển sang ôn lại từ sai (Enter) →'
+          : 'Xem điểm chính thức (Enter) →';
+      } else if (isReviewMode && reviewQueue.length === 0) {
+        nextLabel.textContent = 'Hoàn tất & Xem điểm chính thức (Enter) →';
+      } else {
+        nextLabel.textContent = 'Tiếp theo (Enter) →';
+      }
+
+      document.getElementById('feedback-area').classList.remove('hidden');
+      updateProgressBar();
+
+      // Auto-speak ONLY the target phrase cleanly after SFX
+      if (ttsTimeoutId) clearTimeout(ttsTimeoutId);
+      ttsTimeoutId = setTimeout(() => {
+        if (gameState === 'feedback' && currentItem === item) {
+          speakTargetPhrase(item.speak, false);
+        }
+      }, 260);
+    }
+
+    /** Move to next question, review intro, or result screen */
+    function nextQuestion() {
+      if (gameState !== 'feedback') return;
+
+      if (ttsTimeoutId) clearTimeout(ttsTimeoutId);
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+      if (!isReviewMode) {
+        mainIndex++;
+        if (mainIndex < TOTAL_ITEMS) {
+          currentItem = mainQueue[mainIndex];
+          renderQuestionCard();
+        } else if (wrongList.length > 0) {
+          showReviewIntroScreen();
+        } else {
+          showResultScreen();
+        }
+      } else {
+        if (reviewQueue.length > 0) {
+          currentItem = reviewQueue[0];
+          renderQuestionCard();
+        } else {
+          showResultScreen();
+        }
+      }
+    }
+
+    /** Transition screen before mandatory Review Round */
+    function showReviewIntroScreen() {
+      gameState = 'review_intro';
+
+      document.getElementById('review-intro-desc').innerHTML =
+        `Bạn đã làm sai <strong class="text-rose-600">${wrongList.length} câu</strong> trong lượt chính thức. ` +
+        `Hãy điền đúng toàn bộ ${wrongList.length} từ này để ghi nhớ chắc chắn và mở khóa điểm chính thức ` +
+        `<span class="text-amber-700 font-semibold">(làm đúng trong lượt ôn lại sẽ không được cộng thêm điểm)</span>.`;
+
+      showOnlyScreen('screen-review-intro');
+      updateProgressBar();
+    }
+
+    /** Start mandatory Review Round with shuffled wrongList */
+    function startReviewRound() {
+      isReviewMode = true;
+      reviewQueue = fisherYatesShuffle(wrongList);
+      reviewTotal = reviewQueue.length;
+      reviewMastered = 0;
+      currentItem = reviewQueue[0];
+
+      document.getElementById('review-badge').classList.remove('hidden');
+      document.getElementById('q-review-tag').classList.remove('hidden');
+      document.getElementById('header-subtitle').textContent = 'Điền đúng 100% các từ sai để mở khóa bảng điểm chính thức!';
+
+      showOnlyScreen('screen-game');
+      renderQuestionCard();
+    }
+
+    /** Show Final Result Screen (ONLY after 100% of wrong items are mastered) */
+    function showResultScreen() {
+      gameState = 'result';
+
+      const converted10 = ((round1Score / TOTAL_ITEMS) * 10).toFixed(1);
+      const pct = Math.round((round1Score / TOTAL_ITEMS) * 100);
+
+      document.getElementById('res-score-raw').textContent = `${round1Score} / ${TOTAL_ITEMS}`;
+      document.getElementById('res-score-10').textContent = `${converted10} / 10`;
+      document.getElementById('res-correct-count').textContent = round1Score;
+      document.getElementById('res-percent').textContent = `${pct}% chính xác`;
+      document.getElementById('res-wrong-count').textContent = wrongList.length;
+
+      const subtitle = document.getElementById('result-subtitle');
+      const masteredPill = document.getElementById('result-mastered-pill');
+      const perfectBanner = document.getElementById('perfect-banner');
+      const missedSection = document.getElementById('missed-section');
+      const missedListEl = document.getElementById('missed-list');
+
+      if (wrongList.length === 0) {
+        subtitle.textContent = 'Điểm chính thức lượt đầu — Hoàn hảo không sai câu nào!';
+        masteredPill.classList.add('hidden');
+        missedSection.classList.add('hidden');
+        perfectBanner.classList.remove('hidden');
+        document.getElementById('result-emoji').textContent = '🏆';
+        burstConfetti(85);
+      } else {
+        subtitle.textContent = `Điểm chính thức lượt đầu (đã trừ ${wrongList.length} câu sai — lượt ôn lại không cộng thêm điểm)`;
+        masteredPill.classList.remove('hidden');
+        perfectBanner.classList.add('hidden');
+        missedSection.classList.remove('hidden');
+        document.getElementById('result-emoji').textContent = '🎉';
+        document.getElementById('missed-count-badge').textContent = `${wrongList.length} từ`;
+
+        missedListEl.innerHTML = wrongList.map(item => {
+          const safeSpeak = item.speak.replace(/'/g, "\\'");
+          return `
+            <div class="flex items-start sm:items-center justify-between gap-3 p-4 rounded-2xl bg-[#FAF8FD] border border-purple-100 hover:border-purple-200 transition-colors">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-base sm:text-lg font-bold text-[#2A233D]">${buildHighlightedPhraseHtml(item)}</span>
+                  <span class="text-xs font-mono text-purple-700 bg-purple-50 px-2 py-0.5 rounded-md border border-purple-100">${escapeHtml(item.ipa)}</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                  <strong>${escapeHtml(item.meaningVi)}</strong> — <span class="italic">${escapeHtml(item.meaningEn)}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onclick="speakTargetPhrase('${safeSpeak}', true)"
+                class="px-3 py-2 rounded-xl bg-white hover:bg-purple-100 text-purple-800 font-bold text-xs border border-purple-200/80 shadow-sm transition-all active:scale-95 shrink-0"
+                title="Nghe phát âm"
+                aria-label="Nghe phát âm"
+              >
+                🔊 Nghe
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        burstConfetti(55);
+      }
+
+      showOnlyScreen('screen-result');
+      updateProgressBar();
+    }
+
+    /* =========================================================================
+       7. BULLETPROOF GLOBAL ENTER KEY HANDLER (SINGLE WINDOW LISTENER)
+       ========================================================================= */
+    window.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' || e.repeat) return;
+
+      e.preventDefault();
+
+      if (gameState === 'start') {
+        startNewGame();
+      } else if (gameState === 'question') {
+        checkAnswer();
+      } else if (gameState === 'feedback') {
+        nextQuestion();
+      } else if (gameState === 'review_intro') {
+        startReviewRound();
+      }
+    });
+
+    /* =========================================================================
+       8. INITIALIZE ON LOAD
+       ========================================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      showOnlyScreen('screen-start');
+      updateProgressBar();
+    });
+  </script>
+</body>
+</html>
